@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --topnav-height: 72px;
+    --main-nav-desktop-width: 280px;
+}
+
+/* @layer base {
+    body {
+        @apply overflow-hidden text-sm tracking-wide text-black;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-bold;
+    }
+
+    h1 {
+        @apply text-[32px] leading-10 tracking-tighter;
+    }
+
+    h2 {
+        @apply text-2xl tracking-tight;
+    }
+
+    h3 {
+        @apply text-xl tracking-tight;
+    }
+
+    h4 {
+        @apply text-lg;
+    }
+
+    h5 {
+        @apply text-base;
+    }
+
+    h6 {
+        @apply text-sm;
+    }
+
+    .link {
+        @apply flex cursor-pointer items-center text-primary transition-colors hover:text-primary-hover;
+    }
+
+    .event {
+        @apply flex cursor-pointer items-center gap-1 text-grey transition-colors hover:text-primary-hover;
+    }
+
+    .input-container {
+        @apply relative flex flex-col gap-1;
+    }
+
+    input[type='search'] {
+        &::-webkit-search-decoration,
+        &::-webkit-search-cancel-button,
+        &::-webkit-search-results-button,
+        &::-webkit-search-results-decoration {
+            display: none;
+        }
+    }
+
+    ::-webkit-scrollbar {
+        @apply h-1 w-1;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-grey400;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply rounded bg-primary hover:bg-primary700;
+    }
+
+    .control-layout textarea,
+    .control-layout input,
+    .control-layout select {
+        @apply h-full w-full rounded-lg border border-[#ced3e0] bg-[#fcfcff] px-3 py-2.5 text-sm  font-normal outline-none transition-colors placeholder:text-grey disabled:bg-grey300 disabled:text-grey hover:enabled:[&+svg]:text-primary  focus:enabled:[&+svg]:text-primary  disabled:[&:-webkit-text-fill-color]:text-grey;
+    }
+
+    .control-layout {
+        & textarea:hover:not(:disabled),
+        & input:hover:not(:disabled),
+        & select:hover:not(:disabled) {
+            @apply border-primary/50;
+        }
+
+        & textarea:focus:not(:disabled),
+        & input:focus:not(:disabled),
+        & select:focus:not(:disabled) {
+            @apply border-primary;
+        }
+    }
+
+    .control-layout:has(.message) {
+        & textarea:not(:disabled),
+        & input:not(:disabled),
+        & select:not(:disabled) {
+            @apply border-red;
+        }
+
+        & textarea:hover:not(:disabled),
+        & input:hover:not(:disabled),
+        & select:hover:not(:disabled) {
+            @apply border-red;
+        }
+
+        & textarea:focus:not(:disabled),
+        & input:focus:not(:disabled),
+        & select:focus:not(:disabled) {
+            @apply border-red;
+        }
+    }
+} */
