@@ -30,11 +30,12 @@ export type FilterProps<TFilter> = {
 export interface AppJwt extends Omit<Jwt, 'type'> {
     type: 'access' | 'identity' | 'refresh'
     user: string
-    usertype: 'companyuser' | 'enduser'
-    company: string
-    access: 'unrestricted' | 'authorized' | 'facility'
+    access: 'unrestricted' | 'authorized'
     role: string
-    facility?: string
+    grant_type: 'password_credentials' | 'refresh_token'
+    username?: string
+    password?: string
+    refreshToken?: string
 }
 
 export type Modify<T, R> = Omit<T, keyof R> & R

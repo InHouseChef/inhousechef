@@ -7,7 +7,7 @@
     --main-nav-desktop-width: 280px;
 }
 
-/* @layer base {
+@layer base {
     body {
         @apply overflow-hidden text-sm tracking-wide text-black;
     }
@@ -81,7 +81,7 @@
     .control-layout textarea,
     .control-layout input,
     .control-layout select {
-        @apply h-full w-full rounded-lg border border-[#ced3e0] bg-[#fcfcff] px-3 py-2.5 text-sm  font-normal outline-none transition-colors placeholder:text-grey disabled:bg-grey300 disabled:text-grey hover:enabled:[&+svg]:text-primary  focus:enabled:[&+svg]:text-primary  disabled:[&:-webkit-text-fill-color]:text-grey;
+        @apply h-full w-full rounded-lg border border-[#ced3e0] bg-[#fcfcff] px-3 py-2.5 text-sm font-normal outline-none transition-colors placeholder:text-grey disabled:bg-grey300 disabled:text-grey hover:enabled:[&+svg]:text-primary focus:enabled:[&+svg]:text-primary disabled:[&:-webkit-text-fill-color]:text-grey;
     }
 
     .control-layout {
@@ -117,4 +117,4 @@
             @apply border-red;
         }
     }
-} */
+}

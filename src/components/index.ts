@@ -1,1 +1,6 @@
 export { Loader } from './Loader'
+export { Logo } from './Logo'
+export { Main } from './Main'
+export { MainNavDesktop, MainNavMobile } from './MainNav'
+export { Error, Info, Warning } from './Message'
+export { TopNav } from './TopNav'
