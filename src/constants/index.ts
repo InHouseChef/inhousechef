@@ -13,7 +13,7 @@ export const DEFAULT_QUERY_KEYS = (key: (string | undefined)[]) => {
 
 export const DEFAULT_OFFSET_PAGINATION_REQUEST: OffsetPaginationRequest = {
     page: 0,
-    size: 15
+    size: 10
 } as const
 
 export const DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST: OffsetPaginationRequest = {
@@ -22,7 +22,7 @@ export const DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST: OffsetPaginationReque
 } as const
 
 export const DEFAULT_CURSOR_PAGINATION_REQUEST: CursorPaginationRequest = {
-    size: 15,
+    size: 10,
     cursor: undefined
 } as const
 

@@ -8,6 +8,7 @@ export const MainNavLogo = () => {
     return (
         <Link href={`${baseUrl}/dashboard`}>
             <span className='relative block h-[70px]'>
+                Insert Logo Here
                 {/* TODO: Add logo */}
                 {/* {logo ? <Image fill src={logo} className='object-scale-down object-left-top' alt='logo' /> : <LogoLight />} */}
             </span>

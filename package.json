@@ -9,6 +9,7 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@popperjs/core": "^2.11.8",
         "@radix-ui/react-checkbox": "^1.1.1",
         "@radix-ui/react-dialog": "^1.1.1",
         "@radix-ui/react-tooltip": "^1.1.2",
@@ -19,6 +20,7 @@
         "browser-image-compression": "^2.0.2",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.1",
+        "framer-motion": "^11.3.24",
         "jwt-decode": "^4.0.0",
         "negotiator": "^0.6.3",
         "next": "14.2.5",
@@ -27,6 +29,7 @@
         "react-datepicker": "^7.3.0",
         "react-dom": "^18",
         "react-hook-form": "^7.52.2",
+        "react-popper": "^2.3.0",
         "yup": "^1.4.0",
         "zustand": "^4.5.4"
     },

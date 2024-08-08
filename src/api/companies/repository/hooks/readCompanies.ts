@@ -7,6 +7,7 @@ import {
     useDefaultQueryParams
 } from '@/hooks/useDefaultQueryParams'
 import { axiosPrivate } from '@/lib/axios'
+import { OffsetResultsPromise } from '@/packages/types'
 import { useQuery } from '@tanstack/react-query'
 import { ReadCompanyResponse } from '../../contract'
 import { COMPANY_KEYS } from '../keys'
@@ -14,7 +15,7 @@ import { COMPANY_KEYS } from '../keys'
 interface ReadCompaniesPath {}
 interface ReadCompaniesParams extends QueryParams<ReadCompaniesPath> {}
 
-const readCompanies = ({}: ReadCompaniesParams): Promise<ReadCompanyResponse[]> => axiosPrivate.get('/companies')
+const readCompanies = ({}: ReadCompaniesParams): OffsetResultsPromise<ReadCompanyResponse> => axiosPrivate.get('/companies')
 
 interface UseReadCompaniesParams extends DefaultQueryParams<ReadCompaniesPath>, QueryOptions {}
 

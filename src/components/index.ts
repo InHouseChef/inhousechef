@@ -1,3 +1,4 @@
+export { Header } from './Header'
 export { Loader } from './Loader'
 export { Logo } from './Logo'
 export { Main } from './Main'

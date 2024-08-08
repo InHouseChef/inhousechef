@@ -1,2 +1,7 @@
+export { ArrowLeft } from './src/ArrowLeft'
+export { ChevronDown } from './src/ChevronDown'
+export { ChevronLeft } from './src/ChevronLeft'
+export { ChevronRight } from './src/ChevronRight'
 export { Eye } from './src/Eye'
 export { EyeOff } from './src/EyeOff'
+export { X } from './src/X'
