@@ -32,7 +32,7 @@ export const identityStore = create<UseIdentityStore>()(
 export const useIdentity = () => {
     const { identity, setIdentity } = identityStore()
 
-    const jwt = identity?.token ? jwtDecode<AppJwt>(identity.token) : undefined
+    const jwt = identity?.accessToken ? jwtDecode<AppJwt>(identity.accessToken) : undefined
 
     return { identity, setIdentity, jwt }
 }

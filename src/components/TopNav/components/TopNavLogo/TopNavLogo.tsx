@@ -1,4 +1,3 @@
-import { Logo } from '@/components'
 import { useBaseUrl } from '@/hooks'
 import Link from 'next/link'
 
@@ -7,9 +6,8 @@ export const TopNavLogo = () => {
 
     return (
         <Link className='lg:hidden' href={`${baseUrl}/dashboard`}>
-            <div className='relative h-[50px] w-52'>
-                <Logo />
-            </div>
+            {/* TODO: insert logo here */}
+            <div className='relative h-[50px] w-52'>{/* <Logo /> */}</div>
         </Link>
     )
 }

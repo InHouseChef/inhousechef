@@ -1,9 +1,11 @@
 'use client'
 import { ReadCompanyResponse } from '@/api/companies'
 import { useReadCompanies } from '@/api/companies/repository/hooks/readCompanies'
+import { Place } from '@/components'
 import { useDefaultQuery } from '@/hooks'
 import { Table } from '@/packages/components'
 import { createColumnHelper } from '@tanstack/react-table'
+import Link from 'next/link'
 import { useMemo } from 'react'
 
 export const CompanyList = () => {
@@ -16,12 +18,7 @@ export const CompanyList = () => {
             column.accessor('name', {
                 header: 'Company Name',
                 enableSorting: false,
-                cell: props => <p>{props.getValue()}</p>
-            }),
-            column.accessor('subdomain', {
-                header: 'Subdomain',
-                enableSorting: false,
-                cell: props => <p>{props.getValue()}</p>
+                cell: props => <Link href={`/companies/${props.row.original.id}`}>{props.getValue()}</Link>
             }),
             column.accessor('telephone', {
                 header: 'Phone Number',
@@ -31,7 +28,7 @@ export const CompanyList = () => {
             column.accessor('address', {
                 header: 'Address',
                 enableSorting: false,
-                cell: props => <p>{props.getValue()}</p>
+                cell: props => (props.getValue() ? <Place address={props.getValue()} /> : undefined)
             }),
 
             column.display({

@@ -11,7 +11,7 @@ export const authorize = (request: InternalAxiosRequestConfig): InternalAxiosReq
     const passwordCredentials = identityStore.getState().identity
 
     if (request.headers && !request.headers.Authorization) {
-        request.headers.Authorization = `Bearer ${passwordCredentials?.token}`
+        request.headers.Authorization = `Bearer ${passwordCredentials?.accessToken}`
     }
 
     return request
@@ -34,7 +34,7 @@ export const refreshToken = async (error: any) => {
             })
             identityStore.setState({ identity: refreshCredentials })
             queryClient.invalidateQueries({ queryKey: ['identity'] })
-            config.headers.Authorization = `Bearer ${refreshCredentials.token}`
+            config.headers.Authorization = `Bearer ${refreshCredentials.accessToken}`
             return axiosPrivate(config)
         } catch (error) {
             localStorage.clear()

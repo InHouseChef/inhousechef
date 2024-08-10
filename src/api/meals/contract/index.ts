@@ -19,7 +19,3 @@ export interface UpdateMealRequest extends Meal {}
 export interface UpdateMealResponse extends Meal {
     id: string
 }
-
-export interface DeleteMealRequest {
-    mealId: string
-}

@@ -1,3 +1,5 @@
+export { getArrayDifference, getArrayDifferenceDetails, getListOfIds, isArrayEqual, removeArrayItemByIndex } from './array'
+
 export { isDeepEqualObject, isObject } from './isObjectEqual'
 
 export {

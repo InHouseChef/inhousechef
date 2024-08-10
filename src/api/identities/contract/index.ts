@@ -2,7 +2,7 @@ type TokenType = 'identity' | 'access'
 type GrantType = 'password_credentials' | 'refresh_token'
 
 export interface Identity {
-    token: string
+    accessToken: string
     tokenType: TokenType
     expiresIn: number
     refreshToken: string

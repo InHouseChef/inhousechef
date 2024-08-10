@@ -1,10 +1,10 @@
 import { ReactNode } from 'react'
 import { ProtectedLayout } from './layouts/ProtectedLayout'
 
-interface FacilityLayoutProps {
+interface ProtectedLayoutProps {
     children?: ReactNode
 }
 
-export default function Layout({ children }: FacilityLayoutProps) {
+export default function Layout({ children }: ProtectedLayoutProps) {
     return <ProtectedLayout>{children}</ProtectedLayout>
 }

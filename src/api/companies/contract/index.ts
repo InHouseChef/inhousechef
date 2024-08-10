@@ -1,13 +1,20 @@
 export interface Company {
-    id: string
-    name: string
-    subdomain: string
-    branding: string
-    address: string
-    telephone: string
+    name?: string
+    branding: {
+        primaryColor: string
+        secondaryColor: string
+        logoUrl?: string
+    }
+    address: {
+        street: string
+        city: string
+    }
+    telephone?: string
 }
 
-export interface ReadCompanyResponse extends Company {}
+export interface ReadCompanyResponse extends Company {
+    id: string
+}
 
 export interface CreateCompanyRequest extends Company {}
 export interface CreateCompanyResponse extends Company {

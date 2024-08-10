@@ -12,7 +12,7 @@ export const Header = ({ heading, children }: HeaderProps) => {
             <div>
                 {typeof heading === 'string' ? (
                     <div>
-                        <h1 className='text-2xl md:text-3xl md:leading-10'>{heading}</h1>
+                        <h1 className='text-2xl text-white md:text-3xl md:leading-10'>{heading}</h1>
                     </div>
                 ) : (
                     heading

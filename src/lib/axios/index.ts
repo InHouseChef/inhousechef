@@ -12,7 +12,10 @@ export const axiosPublic = axios.create({
     headers: DEFAULT_AXIOS_CONFIG_HEADERS
 })
 
-axiosPublic.interceptors.response.use(returnData, error => Promise.reject(error.response.data))
+axiosPublic.interceptors.response.use(returnData, error => {
+    Promise.reject(error.response.data)
+    console.log('error', error)
+})
 
 // Protected
 export const axiosPrivate = axios.create({

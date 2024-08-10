@@ -1,4 +1,5 @@
 import { CursorPaginationRequest, DefaultOffsetQuery, OffsetPaginationRequest } from '@/packages/types'
+import { FileTypes } from '@/types'
 
 export const DEFAULT_QUERY_KEYS = (key: (string | undefined)[]) => {
     const keys = {
@@ -37,3 +38,20 @@ export const DEFAULT_OFFSET_QUERY_REQUEST: DefaultOffsetQuery = {
     sorting: [],
     filter: undefined
 }
+
+export const MAX_FILE_UPLOAD_SIZE = 20971520
+
+export const MIME_TYPES: Record<FileTypes, string> = {
+    doc: 'application/msword',
+    docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    pdf: 'application/pdf',
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    png: 'image/png',
+    xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    svg: 'image/svg+xml',
+    csv: 'text/csv',
+    image: 'image/*'
+}
+
+export const LOGO_ACCEPTED_FILE_TYPES: FileTypes[] = ['svg', 'jpg', 'jpeg', 'png']
