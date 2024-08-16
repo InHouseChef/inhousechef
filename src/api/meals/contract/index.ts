@@ -3,7 +3,7 @@ interface Meal {
     description: string
     purchasePrice: number
     sellingPrice: number
-    imageUrl: string
+    imageUrl?: string
 }
 
 export interface ReadMealResponse extends Meal {

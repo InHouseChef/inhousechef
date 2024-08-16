@@ -12,6 +12,10 @@ export type PathParams = { [key: string]: any }
 
 export type DefaultPathParams<T> = T & PathParams
 
+export interface CompanyPath {
+    companyCode?: string
+}
+
 export interface LocationPath {
     href: string
     pathname: string
@@ -31,7 +35,7 @@ export interface AppJwt extends Omit<Jwt, 'type'> {
     type: 'access' | 'identity' | 'refresh'
     user: string
     access: 'unrestricted' | 'authorized'
-    role: string
+    role: Role
     grant_type: 'password_credentials' | 'refresh_token'
     username?: string
     password?: string
@@ -41,3 +45,5 @@ export interface AppJwt extends Omit<Jwt, 'type'> {
 export type Modify<T, R> = Omit<T, keyof R> & R
 
 export type FileTypes = 'docx' | 'doc' | 'pdf' | 'jpg' | 'jpeg' | 'png' | 'xlsx' | 'svg' | 'csv' | 'image'
+
+export type Role = 'Admin' | 'CompanyManager' | 'Employee'

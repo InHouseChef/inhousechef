@@ -11,8 +11,9 @@ export const MainNavDesktop = () => {
     const pathName = usePathname()
 
     return (
-        <nav className='relative hidden min-h-dvh w-[--main-nav-desktop-width] min-w-[--main-nav-desktop-width] lg:block'>
-            <div className='absolute inset-0 z-0 bg-grey'>
+        // TODO: figure out a color for the main nav
+        <nav className='relative hidden min-h-dvh w-[--main-nav-desktop-width] min-w-[--main-nav-desktop-width] bg-[#3a2a46] lg:block'>
+            <div className='absolute inset-0 z-0'>
                 {/* <Image
                     className='pointer-events-none h-full w-full object-cover'
                     src={DesktopMenuBg}

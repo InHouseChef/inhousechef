@@ -1,19 +1,21 @@
-import { object, string } from 'yup'
+import { object, string, z } from 'zod'
 
-export const nameSchema = string().trim().max(255, 'Maximum number of characters is 255.')
+export const nameSchema = string().trim().max(255, { message: 'Maximum number of characters is 255.' })
 
-export const phoneSchema = string()
+export const phoneSchema = z
+    .string()
     .trim()
-    .max(16, 'Maximum number of characters is 16.')
-    .required('Telephone is a required field.')
+    .max(16, { message: 'Maximum number of characters is 16.' })
+    .min(1, { message: 'Telephone is a required field.' })
 
-export const optionalPhoneSchema = string().trim().max(16, 'Maximum number of characters is 16.')
+export const optionalPhoneSchema = string().trim().max(16, { message: 'Maximum number of characters is 16.' })
 
 export const addressSchema = object({
-    street: nameSchema.required('Address 1 is a required field.'),
-    city: nameSchema.required('City is a required field.')
+    street: nameSchema.min(1, { message: 'Address 1 is a required field.' }),
+    city: nameSchema.min(1, { message: 'City is a required field.' })
 })
+
 export const optionalAddressSchema = object({
-    street: nameSchema,
-    city: nameSchema
+    street: nameSchema.optional(),
+    city: nameSchema.optional()
 })

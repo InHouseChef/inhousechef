@@ -32,6 +32,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                     {LINKS.map(({ path, label }) => {
                         const href = `${baseUrl}/${path}`
                         const isCurrentPath = pathname.includes(path)
+                        // TODO: check secondary color
                         return (
                             <Link
                                 className={clsx(

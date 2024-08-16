@@ -11,12 +11,12 @@ import { ReadCompanyResponse } from '../../contract'
 import { COMPANY_KEYS } from '../keys'
 
 interface ReadCompanyPath {
-    companyId: string
+    companyCode: string
 }
 interface ReadCompanyParams extends QueryParams<ReadCompanyPath> {}
 
-const readCompany = ({ path: { companyId } }: ReadCompanyParams): Promise<ReadCompanyResponse> =>
-    axiosPrivate.get(`/companies/${companyId}`)
+const readCompany = ({ path: { companyCode } }: ReadCompanyParams): Promise<ReadCompanyResponse> =>
+    axiosPrivate.get(`/companies/${companyCode}`)
 
 interface UseReadCompanyParams<T> extends DefaultQueryParams<ReadCompanyPath>, QueryOptions {
     select?: (response: ReadCompanyResponse) => T
@@ -25,10 +25,10 @@ interface UseReadCompanyParams<T> extends DefaultQueryParams<ReadCompanyPath>, Q
 export const useReadCompany = <T = ReadCompanyResponse>(params?: UseReadCompanyParams<T>) => {
     const defaultParams = useDefaultQueryParams(params)
     return useQuery({
-        queryKey: COMPANY_KEYS.resource(defaultParams.path.companyId),
+        queryKey: COMPANY_KEYS.resource(defaultParams.path.companyCode),
         queryFn: () => readCompany(defaultParams),
         select: params?.select,
-        enabled: Boolean(defaultParams.path.companyId) && getDefaultBooleanValue(params?.options?.enabled),
+        enabled: Boolean(defaultParams.path.companyCode) && getDefaultBooleanValue(params?.options?.enabled),
         placeholderData: getDefaultBooleanValue(params?.options?.keepPreviousData) ? keepPreviousData : undefined
     })
 }

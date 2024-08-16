@@ -8,6 +8,7 @@ import {
 } from '@/hooks/useDefaultQueryParams'
 import { axiosPrivate } from '@/lib/axios'
 import { OffsetResultsPromise } from '@/packages/types'
+import { createBaseUrlQuery } from '@/utils'
 import { useQuery } from '@tanstack/react-query'
 import { ReadMealResponse } from '../../contract'
 import { MEAL_KEYS } from '../keys'
@@ -15,7 +16,8 @@ import { MEAL_KEYS } from '../keys'
 interface ReadMealsPath {}
 interface ReadMealsParams extends QueryParams<ReadMealsPath> {}
 
-const readMeals = ({}: ReadMealsParams): OffsetResultsPromise<ReadMealResponse[]> => axiosPrivate.get('/meals')
+const readMeals = ({ query }: ReadMealsParams): OffsetResultsPromise<ReadMealResponse> =>
+    axiosPrivate.get(`/meals?${createBaseUrlQuery(query)}`)
 
 interface UseReadMealsParams extends DefaultQueryParams<ReadMealsPath>, QueryOptions {}
 

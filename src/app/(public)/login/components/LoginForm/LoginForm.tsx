@@ -1,31 +1,35 @@
 'use client'
 import { useCreateLogin } from '@/api/logins'
 import { Error } from '@/components'
+import CardWrapper from '@/components/auth/card-wrapper'
+import { Button } from '@/components/ui/button'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { useSafeReplace } from '@/hooks'
 import { useIdentity } from '@/hooks/useIdentity'
-import { Button, Form, Input, Password } from '@/packages/components'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useRouter } from 'next/navigation'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { createClientCredentialsSchema, CreateClientCredentialsSchema } from './schemas'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { createClientCredentialsSchema } from './schemas'
 
 export const LoginForm = () => {
     const { setIdentity } = useIdentity()
 
-    const router = useRouter()
+    const { safeReplace } = useSafeReplace()
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors }
-    } = useForm({
-        mode: 'onChange',
-        reValidateMode: 'onChange',
-        resolver: yupResolver(createClientCredentialsSchema)
+    const form = useForm<z.infer<typeof createClientCredentialsSchema>>({
+        resolver: zodResolver(createClientCredentialsSchema),
+        defaultValues: {
+            username: '',
+            password: ''
+        }
     })
+
+    const { control, handleSubmit } = form
 
     const { mutate, isPending, isError, error } = useCreateLogin()
 
-    const onSubmit: SubmitHandler<CreateClientCredentialsSchema> = formData => {
+    const onSubmit = (formData: z.infer<typeof createClientCredentialsSchema>) => {
         mutate(
             {
                 path: '',
@@ -38,7 +42,7 @@ export const LoginForm = () => {
                 onSuccess: data => {
                     setIdentity(data)
 
-                    router.replace('/dashboard')
+                    safeReplace('/companies')
                 }
             }
         )
@@ -46,45 +50,42 @@ export const LoginForm = () => {
 
     return (
         <>
-            <h1>Welcome to Kristal Ketering</h1>
-
-            {isError ? <Error error={error} /> : undefined}
-            <Form onSubmit={handleSubmit(onSubmit)}>
-                <div className='mt-5' />
-                <div className='grid gap-5'>
-                    <div className='col-span-12'>
-                        <Input
-                            label='Username'
-                            placeholder='John Smith'
-                            type='text'
-                            autoComplete='username'
-                            {...register('username')}
-                            message={errors.username?.message}
-                            required
+            <CardWrapper label='Login to your account' title='Welcome to Kristal Ketering'>
+                <Form {...form}>
+                    <form onSubmit={handleSubmit(onSubmit)} className='space-y-8'>
+                        <FormField
+                            control={control}
+                            name='username'
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Username</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} placeholder='John Smith' required autoComplete='username' />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
                         />
-                    </div>
-                    <div className='col-span-12'>
-                        <Password
-                            label='Password'
-                            {...register('password')}
-                            autoComplete='password'
-                            message={errors.password?.message}
-                            required
+                        <FormField
+                            control={control}
+                            name='password'
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Password</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} type='password' required autoComplete='password' />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
                         />
-                        <div className='mt-3' />
-                        {/* <div className='flex justify-end'>
-                            <Link href='forgot-password'>
-                                <span className='text-grey'>Forgot Password?</span>
-                            </Link>
-                        </div> */}
-                    </div>
-                    <div className='col-span-12 mt-8'>
-                        <Button className='w-full max-w-none justify-center' size='lg' isLoading={isPending}>
-                            Login to Kristal Ketering
+                        {isError ? <Error error={error} /> : undefined}
+                        <Button type='submit' className='w-full' disabled={isPending}>
+                            {!isPending ? 'Login to Kristal Ketering' : 'Loading...'}
                         </Button>
-                    </div>
-                </div>
-            </Form>
+                    </form>
+                </Form>
+            </CardWrapper>
         </>
     )
 }

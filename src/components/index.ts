@@ -1,3 +1,4 @@
+export { DataTable } from './DataTable'
 export { Header } from './Header'
 export { Loader } from './Loader'
 export { Logo } from './Logo'
