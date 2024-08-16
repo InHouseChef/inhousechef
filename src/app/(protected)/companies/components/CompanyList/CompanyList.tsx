@@ -1,15 +1,13 @@
 'use client'
 import { ReadCompanyResponse } from '@/api/companies'
 import { useReadCompanies } from '@/api/companies/repository/hooks/readCompanies'
-import { Place } from '@/components'
-import { useDefaultQuery } from '@/hooks'
-import { Table } from '@/packages/components'
-import { createColumnHelper } from '@tanstack/react-table'
+import { DataTable, Place } from '@/components'
+import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import Link from 'next/link'
 import { useMemo } from 'react'
 
 export const CompanyList = () => {
-    const { query, setFilter, setPagination, setSorting } = useDefaultQuery({}, true)
+    // const { query, setFilter, setPagination, setSorting } = useDefaultQuery({}, true)
     const { data: companies, isLoading, isFetching } = useReadCompanies()
 
     const column = createColumnHelper<ReadCompanyResponse>()
@@ -18,7 +16,7 @@ export const CompanyList = () => {
             column.accessor('name', {
                 header: 'Company Name',
                 enableSorting: false,
-                cell: props => <Link href={`/companies/${props.row.original.id}`}>{props.getValue()}</Link>
+                cell: props => <Link href={`/companies/${props.row.original.code}`}>{props.getValue()}</Link>
             }),
             column.accessor('telephone', {
                 header: 'Phone Number',
@@ -52,7 +50,9 @@ export const CompanyList = () => {
     return (
         <div>
             <div className='mt-4'></div>
-            <Table
+            {/* TODO: check this */}
+            <DataTable columns={columns as ColumnDef<ReadCompanyResponse, unknown>[]} data={companies?.results || []} />
+            {/* <Table
                 isFetching={isFetching}
                 isLoading={isLoading}
                 data={companies?.results}
@@ -62,7 +62,7 @@ export const CompanyList = () => {
                 sorting={query.sorting}
                 onSortingChange={setSorting}
                 columns={columns}
-            />
+            /> */}
         </div>
     )
 }

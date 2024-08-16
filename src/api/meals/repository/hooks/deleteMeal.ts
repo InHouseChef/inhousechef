@@ -9,7 +9,7 @@ interface DeleteMealPath {
 }
 interface DeleteMealParams extends MutationParams<DeleteMealPath> {}
 
-const deleteMeal = ({ path: { mealId } }: DeleteMealParams) => axiosPrivate.delete(`/companies/${mealId}`)
+const deleteMeal = ({ path: { mealId } }: DeleteMealParams) => axiosPrivate.delete(`/meals/${mealId}`)
 
 export const useDeleteMeal = () =>
     useMutation({

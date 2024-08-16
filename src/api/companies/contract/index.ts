@@ -1,13 +1,14 @@
 export interface Company {
-    name?: string
+    name: string
+    code: string
     branding: {
-        primaryColor: string
-        secondaryColor: string
+        primaryColor?: string
+        secondaryColor?: string
         logoUrl?: string
     }
     address: {
-        street: string
-        city: string
+        street?: string
+        city?: string
     }
     telephone?: string
 }
@@ -16,12 +17,20 @@ export interface ReadCompanyResponse extends Company {
     id: string
 }
 
-export interface CreateCompanyRequest extends Company {}
+export interface CreateCompanyRequest extends Omit<Company, 'branding'> {}
 export interface CreateCompanyResponse extends Company {
     id: string
 }
 
-export interface UpdateCompanyRequest extends Company {}
+export interface UpdateCompanyRequest {
+    company: Omit<Company, 'branding'> & {
+        branding: {
+            primaryColor?: string
+            secondaryColor?: string
+            files: FileList
+        }
+    }
+}
 export interface UpdateCompanyResponse extends Company {
     id: string
 }

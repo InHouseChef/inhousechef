@@ -6,8 +6,8 @@ export interface PhoneRequest extends Phone {}
 export interface PhoneResponse extends Phone {}
 
 export interface Address {
-    street: string
-    city: string
+    street?: string
+    city?: string
 }
 
 export interface AddressResponse extends Address {}

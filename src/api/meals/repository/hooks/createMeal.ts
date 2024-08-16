@@ -7,6 +7,6 @@ interface CreateMealPath {}
 interface CreateMealParams extends MutationParams<CreateMealPath, CreateMealRequest> {}
 
 export const createMeal = ({ path: {}, body }: CreateMealParams): Promise<CreateMealResponse> =>
-    axiosPrivate.post('/companies/', body)
+    axiosPrivate.post('/meals/', body)
 
 export const useCreateMeal = () => useMutation({ mutationFn: createMeal })

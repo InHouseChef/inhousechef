@@ -1,7 +1,7 @@
 'use client'
 
 import { Header } from '@/components'
-import { Button } from '@/packages/components'
+import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import { CompanyList } from './components/CompanyList/CompanyList'
 

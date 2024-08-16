@@ -40,11 +40,11 @@ export const ColorInput = forwardRef<ColorInputRef, ColorInputProps>(
 
         return (
             <div className={clsx('relative flex flex-col gap-1', className)}>
-                {label && (
+                {label ? (
                     <Label htmlFor={_id} required={required}>
                         {label}
                     </Label>
-                )}
+                ) : undefined}
                 <div className='relative h-11'>
                     <input
                         id={_id}
@@ -68,12 +68,12 @@ export const ColorInput = forwardRef<ColorInputRef, ColorInputProps>(
                             ref={inputRef}
                             value={value || ''}
                             onChange={handleOnChange}
+                            className='h-full w-full cursor-pointer opacity-0'
                             {...rest}
                             type='color'
-                            className='h-full w-full cursor-pointer opacity-0'
                         />
                         <div
-                            className='absolute inset-0 h-full w-full rounded-md content-none'
+                            className='absolute inset-0 h-full w-full rounded-md'
                             style={{ backgroundColor: value || '#000' }}></div>
                     </div>
                 </div>

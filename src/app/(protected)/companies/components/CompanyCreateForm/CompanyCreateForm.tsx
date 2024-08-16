@@ -1,31 +1,27 @@
 'use client'
 
-import { CreateCompanyRequest, useCreateCompany } from '@/api/companies'
-import { Header } from '@/components'
-import { Button, Form } from '@/packages/components'
-import { ColorInput, Input } from '@/packages/components/Form/components'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useRouter } from 'next/navigation'
-import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { createCompanySchema } from '../../schemas'
+import { useCreateCompany } from '@/api/companies'
+import { Header, Logo } from '@/components'
 
-interface CreateCompanyFormData extends CreateCompanyRequest {}
+import { Button } from '@/components/ui/button'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { createCompanySchema } from '../../schemas'
 
 export const CompanyCreateForm = () => {
     const router = useRouter()
     const { mutate: createCompany } = useCreateCompany()
-    const {
-        control,
-        handleSubmit,
-        register,
-        formState: { errors }
-    } = useForm<CreateCompanyFormData>({
-        mode: 'onChange',
-        reValidateMode: 'onChange',
-        resolver: yupResolver(createCompanySchema)
+    const form = useForm<z.infer<typeof createCompanySchema>>({
+        resolver: zodResolver(createCompanySchema)
     })
 
-    const onSubmit: SubmitHandler<CreateCompanyRequest> = formData => {
+    const { control, handleSubmit } = form
+
+    const onSubmit = (formData: z.infer<typeof createCompanySchema>) => {
         createCompany(
             { path: {}, body: formData },
             {
@@ -37,103 +33,90 @@ export const CompanyCreateForm = () => {
     }
 
     return (
-        <Form onSubmit={handleSubmit(onSubmit)} className='h-full'>
-            <Header heading='Create Company' />
-            <div className='grid grid-cols-12'>
-                <div className='col-span-6'>
-                    <div className='grid grid-cols-12 gap-3'>
-                        <div className='col-span-6'>
-                            <Input
-                                {...register('name')}
-                                message={errors.name?.message}
-                                label='Company Name'
-                                placeholder='Kristal Ketering'
+        <Form {...form}>
+            <form onSubmit={handleSubmit(onSubmit)} className='space-y-8'>
+                <Header heading='Create Company' />
+                <div className='grid grid-cols-12 gap-6'>
+                    <div className='col-span-6 space-y-4'>
+                        <div className='w-1/2 space-y-4'>
+                            <FormField
+                                control={control}
+                                name='name'
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Name</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} placeholder='Kristal Ketering' required />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
                             />
-                        </div>
-                        <div className='col-span-12'>
-                            <div className='flex items-center gap-4'>
-                                <Input
-                                    {...register('address.street')}
-                                    message={errors.address?.street?.message}
-                                    label='Street'
-                                    placeholder='Save Kovačevića 1'
-                                />
-                                <Input
-                                    {...register('address.city')}
-                                    message={errors.address?.city?.message}
-                                    label='City'
-                                    placeholder='Novi Sad'
-                                />
-                            </div>
-                        </div>
-                        <div className='col-span-6'>
-                            <Input
-                                {...register('telephone')}
-                                message={errors.telephone?.message}
-                                label='Telephone'
-                                placeholder='123-456-7890'
+                            <FormField
+                                control={control}
+                                name='code'
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Code</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} placeholder='kris' required />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={control}
+                                name='address.street'
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Street</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} placeholder='Save Kovačevića 1' required />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={control}
+                                name='address.city'
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>City</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} placeholder='Novi Sad' required />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={control}
+                                name='telephone'
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Telephone</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} placeholder='+38160123123' required />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
                             />
                         </div>
                     </div>
-                </div>
-                <div className='col-span-6'>
-                    <h2 className='text-center text-3xl text-white'>Logo</h2>
-                </div>
-            </div>
-            <h2 className='mt-16 text-center text-3xl font-semibold text-white'>Branding</h2>
-            <div className='mt-2 flex items-center justify-between'>
-                <div className='flex items-center gap-8'>
-                    <div>
-                        <Controller
-                            control={control}
-                            name='branding.primaryColor'
-                            render={({ field }) => (
-                                <ColorInput
-                                    label='Primary Color'
-                                    required
-                                    {...field}
-                                    message={errors.branding?.primaryColor?.message}
-                                />
-                            )}
-                        />
-                    </div>
-                    <div>
-                        <Controller
-                            control={control}
-                            name='branding.secondaryColor'
-                            render={({ field }) => (
-                                <ColorInput
-                                    label='Secondary Color'
-                                    required
-                                    {...field}
-                                    message={errors.branding?.secondaryColor?.message}
-                                />
-                            )}
-                        />
+
+                    <div className='col-span-6 flex items-center justify-center'>
+                        <div className='flex h-48 w-48 items-center justify-center'>
+                            <Logo width={150} height={150} />
+                        </div>
                     </div>
                 </div>
-                {/* <div>
-                    <Controller
-                        control={control}
-                        name='branding.logoUrl'
-                        render={({ field }) => (
-                            <FileInput
-                                label='Logo'
-                                {...field}
-                                options={{ accept: LOGO_ACCEPTED_FILE_TYPES }}
-                                requirements
-                                showSize={false}
-                                showName={false}
-                                message={errors.branding?.logoUrl?.message}
-                            />
-                        )}
-                    />
-                </div> */}
-            </div>
-            <div className='mt-4'></div>
-            <div className='mt-8 flex items-center justify-end'>
-                <Button>Create Company</Button>
-            </div>
+                <div className='mt-8 flex items-center justify-end'>
+                    <Button>Create Company</Button>
+                </div>
+            </form>
         </Form>
     )
 }

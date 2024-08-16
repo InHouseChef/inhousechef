@@ -16,7 +16,7 @@ interface ReadMealPath {
 interface ReadMealParams extends QueryParams<ReadMealPath> {}
 
 const readMeal = ({ path: { mealId } }: ReadMealParams): Promise<ReadMealResponse> =>
-    axiosPrivate.get(`/companies/${mealId}`)
+    axiosPrivate.get(`/meals/${mealId}`)
 
 interface UseReadMealParams<T> extends DefaultQueryParams<ReadMealPath>, QueryOptions {
     select?: (response: ReadMealResponse) => T

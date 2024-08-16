@@ -1,24 +1,23 @@
-import { addressSchema, nameSchema, optionalPhoneSchema } from '@/schemas'
-import { object, string } from 'yup'
+import { nameSchema, optionalAddressSchema, optionalPhoneSchema } from '@/schemas'
+import { object, string, z } from 'zod'
 
 export const createCompanySchema = object({
-    name: nameSchema,
+    name: nameSchema.min(1, 'Company name is a required field.'),
+    code: string().min(1, 'Company code is a required field.'),
     telephone: optionalPhoneSchema,
-    address: addressSchema,
-    branding: object({
-        primaryColor: string().required('Primary color is a required field.'),
-        secondaryColor: string().required('Secondary color is a required field.'),
-        logoUrl: string()
-    })
+    address: optionalAddressSchema
 })
 
 export const updateCompanySchema = object({
-    name: nameSchema,
-    telephone: optionalPhoneSchema,
-    addresses: addressSchema,
-    branding: object({
-        primaryColor: string().required('Primary color is a required field.'),
-        secondaryColor: string().required('Secondary color is a required field.'),
-        logoUrl: string()
+    company: object({
+        name: nameSchema,
+        code: string().min(1, 'Company code is a required field.'),
+        telephone: optionalPhoneSchema,
+        address: optionalAddressSchema,
+        branding: object({
+            primaryColor: string(),
+            secondaryColor: string(),
+            files: z.instanceof(FileList)
+        })
     })
 })

@@ -5,11 +5,11 @@ import { useMutation } from '@tanstack/react-query'
 import { COMPANY_KEYS } from '../keys'
 
 interface DeleteCompanyPath {
-    companyId: string
+    companyCode: string
 }
 interface DeleteCompanyParams extends MutationParams<DeleteCompanyPath> {}
 
-const deleteCompany = ({ path: { companyId } }: DeleteCompanyParams) => axiosPrivate.delete(`/companies/${companyId}`)
+const deleteCompany = ({ path: { companyCode } }: DeleteCompanyParams) => axiosPrivate.delete(`/companies/${companyCode}`)
 
 export const useDeleteCompany = () =>
     useMutation({

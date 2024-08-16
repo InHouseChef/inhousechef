@@ -6,7 +6,6 @@ export const TopNavLogo = () => {
 
     return (
         <Link className='lg:hidden' href={`${baseUrl}/dashboard`}>
-            {/* TODO: insert logo here */}
             <div className='relative h-[50px] w-52'>{/* <Logo /> */}</div>
         </Link>
     )

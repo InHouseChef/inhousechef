@@ -11,7 +11,7 @@ interface UpdateMealPath {
 interface UpdateMealParams extends MutationParams<UpdateMealPath, UpdateMealRequest> {}
 
 export const updateMeal = ({ path: { mealId }, body }: UpdateMealParams): Promise<UpdateMealResponse> =>
-    axiosPrivate.put(`/companies/${mealId}`, body)
+    axiosPrivate.put(`/meals/${mealId}`, body)
 
 export const useUpdateMeal = () =>
     useMutation({

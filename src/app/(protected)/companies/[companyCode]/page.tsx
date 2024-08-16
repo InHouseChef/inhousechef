@@ -4,7 +4,7 @@ import { usePathParams } from '@/hooks'
 import { CompanyUpdateForm } from './components/CompanyUpdateForm/CompanyUpdateForm'
 
 export default function CompanyPage() {
-    const { companyId } = usePathParams<{ companyId: string }>()
+    const { companyCode } = usePathParams<{ companyCode: string }>()
 
-    return <CompanyUpdateForm companyId={companyId} />
+    return <CompanyUpdateForm companyCode={companyCode} />
 }

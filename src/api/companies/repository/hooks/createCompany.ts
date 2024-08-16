@@ -7,6 +7,6 @@ interface CreateCompanyPath {}
 interface CreateCompanyParams extends MutationParams<CreateCompanyPath, CreateCompanyRequest> {}
 
 export const createCompany = ({ path: {}, body }: CreateCompanyParams): Promise<CreateCompanyResponse> =>
-    axiosPrivate.post('/companies/', body)
+    axiosPrivate.post('/companies', body)
 
 export const useCreateCompany = () => useMutation({ mutationFn: createCompany })

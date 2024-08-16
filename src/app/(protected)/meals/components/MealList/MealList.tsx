@@ -1,9 +1,10 @@
 'use client'
 import { ReadMealResponse } from '@/api/meals'
 import { useReadMeals } from '@/api/meals/repository/hooks/readMeals'
+import { DataTable } from '@/components'
 import { useDefaultQuery } from '@/hooks'
-import { Table } from '@/packages/components'
-import { createColumnHelper } from '@tanstack/react-table'
+import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
+import Link from 'next/link'
 import { useMemo } from 'react'
 
 export const MealList = () => {
@@ -16,7 +17,7 @@ export const MealList = () => {
             column.accessor('name', {
                 header: 'Meal Name',
                 enableSorting: false,
-                cell: props => <p>{props.getValue()}</p>
+                cell: props => <Link href={`/meals/${props.row.original.id}`}>{props.getValue()}</Link>
             }),
             column.accessor('description', {
                 header: 'Description',
@@ -50,17 +51,7 @@ export const MealList = () => {
     return (
         <div>
             <div className='mt-4'></div>
-            <Table
-                isFetching={isFetching}
-                isLoading={isLoading}
-                data={meals?.results}
-                totalCount={meals?.totalCount}
-                pagination={query.pagination}
-                onPaginationChange={setPagination}
-                sorting={query.sorting}
-                onSortingChange={setSorting}
-                columns={columns}
-            />
+            <DataTable columns={columns as ColumnDef<ReadMealResponse, unknown>[]} data={meals?.results || []} />
         </div>
     )
 }
