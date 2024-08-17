@@ -25,9 +25,9 @@ export interface CreateCompanyResponse extends Company {
 export interface UpdateCompanyRequest {
     company: Omit<Company, 'branding'> & {
         branding: {
-            primaryColor?: string
-            secondaryColor?: string
-            files: FileList
+            primaryColor?: number
+            secondaryColor?: number
+            logo: File
         }
     }
 }

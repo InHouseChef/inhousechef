@@ -15,14 +15,13 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { ColorInput } from '@/packages/components/Form/components'
 import { zodResolver } from '@hookform/resolvers/zod'
 
+import { updateCompanySchema } from '@/app/(protected)/companies/schemas'
 import { Input } from '@/components/ui/input'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { updateCompanySchema } from '../../../schemas'
 
 interface CompanyUpdateFormProps {
     companyCode: string
@@ -38,7 +37,12 @@ export const CompanyUpdateForm = ({ companyCode }: CompanyUpdateFormProps) => {
         resolver: zodResolver(updateCompanySchema)
     })
 
-    const { control, reset, handleSubmit } = form
+    const {
+        control,
+        reset,
+        handleSubmit,
+        formState: { errors }
+    } = form
 
     useEffect(() => {
         if (!company) return
@@ -54,6 +58,10 @@ export const CompanyUpdateForm = ({ companyCode }: CompanyUpdateFormProps) => {
 
     const handleDeleteCompany = () => deleteCompany({ path: { companyCode } })
 
+    const fileRef = form.register('Company.Branding.Logo')
+
+    console.log(errors)
+
     return (
         <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)} className='h-full'>
@@ -64,7 +72,7 @@ export const CompanyUpdateForm = ({ companyCode }: CompanyUpdateFormProps) => {
                             <div className='col-span-6'>
                                 <FormField
                                     control={control}
-                                    name='company.name'
+                                    name='Company.Name'
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Name</FormLabel>
@@ -79,7 +87,7 @@ export const CompanyUpdateForm = ({ companyCode }: CompanyUpdateFormProps) => {
                             <div className='col-span-6'>
                                 <FormField
                                     control={control}
-                                    name='company.code'
+                                    name='Company.Code'
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Code</FormLabel>
@@ -95,7 +103,7 @@ export const CompanyUpdateForm = ({ companyCode }: CompanyUpdateFormProps) => {
                                 <div className='flex items-center gap-4'>
                                     <FormField
                                         control={control}
-                                        name='company.address.street'
+                                        name='Company.Address.Street'
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Street</FormLabel>
@@ -113,7 +121,7 @@ export const CompanyUpdateForm = ({ companyCode }: CompanyUpdateFormProps) => {
                                     />
                                     <FormField
                                         control={control}
-                                        name='company.address.city'
+                                        name='Company.Address.City'
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>City</FormLabel>
@@ -129,7 +137,7 @@ export const CompanyUpdateForm = ({ companyCode }: CompanyUpdateFormProps) => {
                             <div className='col-span-6'>
                                 <FormField
                                     control={control}
-                                    name='company.telephone'
+                                    name='Company.Telephone'
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Telephone</FormLabel>
@@ -145,7 +153,7 @@ export const CompanyUpdateForm = ({ companyCode }: CompanyUpdateFormProps) => {
                     </div>
                     <div className='col-span-6'>
                         <div className='flex h-64 items-center justify-center rounded-lg'>
-                            {/* TODO: insert company logo here */}
+                            {/* TODO: insert Company logo here */}
                             {/* <Image
                                 src={<Logo />}
                                 alt='Company Logo'
@@ -161,44 +169,17 @@ export const CompanyUpdateForm = ({ companyCode }: CompanyUpdateFormProps) => {
                 <div className='mt-8 flex items-center justify-between'>
                     <div className='flex items-center gap-8'>
                         <FormField
-                            control={control}
-                            name='company.branding.primaryColor'
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Primary Color</FormLabel>
-                                    <FormControl>
-                                        <ColorInput {...field} required />
-                                        {/* <Input {...field} type='color' placeholder='#123123' required /> */}
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={control}
-                            name='company.branding.secondaryColor'
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Secondary Color</FormLabel>
-                                    <FormControl>
-                                        <ColorInput {...field} required />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={control}
-                            name='company.branding.files'
+                            control={form.control}
+                            name='Company.Branding.Logo'
                             render={({ field: { value, onChange, ...fieldProps } }) => (
                                 <FormItem>
                                     <FormLabel>Logo</FormLabel>
                                     <FormControl>
                                         <Input
                                             {...fieldProps}
+                                            placeholder='Logo'
                                             type='file'
                                             accept='image/*'
-                                            required
                                             onChange={event => onChange(event.target.files && event.target.files[0])}
                                         />
                                     </FormControl>

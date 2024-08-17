@@ -1,15 +1,15 @@
 export const COMPANY_LINKS = [
     {
-        to: '',
+        path: '',
         label: 'Overview'
     },
     {
-        to: '/users',
+        path: '/users',
         label: 'Users'
     },
 
     {
-        to: '/settings',
+        path: '/settings',
         label: 'Settings'
     }
 ]

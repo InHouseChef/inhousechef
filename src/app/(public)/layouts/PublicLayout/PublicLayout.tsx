@@ -19,7 +19,7 @@ export const PublicLayout = ({ children }: PublicLayoutProps) => {
     useEffect(() => {
         if (isFetchingIdentity || !identity) return
 
-        safeReplace('/')
+        safeReplace('/companies')
     }, [identity, isFetchingIdentity])
 
     if (isFetchingIdentity || identity) return <Loader />

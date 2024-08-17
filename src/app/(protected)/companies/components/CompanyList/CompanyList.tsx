@@ -50,19 +50,7 @@ export const CompanyList = () => {
     return (
         <div>
             <div className='mt-4'></div>
-            {/* TODO: check this */}
             <DataTable columns={columns as ColumnDef<ReadCompanyResponse, unknown>[]} data={companies?.results || []} />
-            {/* <Table
-                isFetching={isFetching}
-                isLoading={isLoading}
-                data={companies?.results}
-                totalCount={companies?.totalCount}
-                pagination={query.pagination}
-                onPaginationChange={setPagination}
-                sorting={query.sorting}
-                onSortingChange={setSorting}
-                columns={columns}
-            /> */}
         </div>
     )
 }

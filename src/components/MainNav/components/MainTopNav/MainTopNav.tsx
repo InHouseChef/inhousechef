@@ -22,13 +22,13 @@ export const MainTopNav = ({ links, isMultiRow }: MainTopNavProps) => {
                 }
             )}>
             <ul className={clsx('flex h-full items-center gap-6 bg-white px-5', { 'flex-wrap gap-2': isMultiRow })}>
-                {links.map(({ to, label }) => (
-                    <li className={clsx('relative')} key={to}>
+                {links.map(({ path, label }) => (
+                    <li className={clsx('relative')} key={path}>
                         <Link
-                            href={to}
+                            href={path}
                             className={clsx(
                                 'relative block rounded-md px-2 py-1 text-sm font-medium leading-6 text-gray-600 no-underline hover:text-primary',
-                                { 'bg-primary text-white hover:text-secondary': currentPath === to }
+                                { 'bg-primary text-white hover:text-secondary': currentPath === path }
                             )}>
                             {label}
                         </Link>

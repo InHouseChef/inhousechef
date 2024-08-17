@@ -9,15 +9,15 @@ export const createCompanySchema = object({
 })
 
 export const updateCompanySchema = object({
-    company: object({
-        name: nameSchema,
-        code: string().min(1, 'Company code is a required field.'),
-        telephone: optionalPhoneSchema,
-        address: optionalAddressSchema,
-        branding: object({
-            primaryColor: string(),
-            secondaryColor: string(),
-            files: z.instanceof(FileList)
+    Company: object({
+        Name: nameSchema,
+        Code: string().min(1, 'Company code is a required field.'),
+        Telephone: optionalPhoneSchema,
+        Address: optionalAddressSchema,
+        Branding: object({
+            // primaryColor: string().optional(),
+            // secondaryColor: string().optional(),
+            Logo: z.instanceof(FileList).optional()
         })
     })
 })

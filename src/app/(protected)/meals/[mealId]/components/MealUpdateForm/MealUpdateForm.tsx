@@ -147,7 +147,7 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                     <div className='flex items-center gap-2'>
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
-                                <Button type='button' variant='secondary'>
+                                <Button type='button' variant='destructive'>
                                     Delete Meal
                                 </Button>
                             </AlertDialogTrigger>

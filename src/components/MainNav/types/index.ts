@@ -1,4 +1,4 @@
 export interface MainNavLink {
-    to: string
+    path: string
     label: string
 }
