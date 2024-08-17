@@ -41,7 +41,7 @@ export const LoginForm = () => {
             {
                 onSuccess: data => {
                     setIdentity(data)
-
+                    console.log('login success')
                     safeReplace('/companies')
                 }
             }
