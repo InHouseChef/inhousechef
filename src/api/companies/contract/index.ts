@@ -1,12 +1,12 @@
 export interface Company {
     name: string
     code: string
-    branding: {
+    branding?: {
         primaryColor?: string
         secondaryColor?: string
         logoUrl?: string
     }
-    address: {
+    address?: {
         street?: string
         city?: string
     }
