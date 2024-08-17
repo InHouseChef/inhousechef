@@ -35,7 +35,7 @@ export interface AppJwt extends Omit<Jwt, 'type'> {
     type: 'access' | 'identity' | 'refresh'
     user: string
     access: 'unrestricted' | 'authorized'
-    role: Role
+    role: Roles
     grant_type: 'password_credentials' | 'refresh_token'
     username?: string
     password?: string
@@ -46,4 +46,4 @@ export type Modify<T, R> = Omit<T, keyof R> & R
 
 export type FileTypes = 'docx' | 'doc' | 'pdf' | 'jpg' | 'jpeg' | 'png' | 'xlsx' | 'svg' | 'csv' | 'image'
 
-export type Role = 'Admin' | 'CompanyManager' | 'Employee'
+export type Roles = 'Admin' | 'CompanyManager' | 'Employee'

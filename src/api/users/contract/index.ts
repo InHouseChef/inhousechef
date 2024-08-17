@@ -1,10 +1,10 @@
-import { Role } from '@/types'
+import { Roles } from '@/types'
 
 interface UserResponse {
     id: string
     companyId: string
     username: string
-    role: Role
+    role: Roles
     name: string
 }
 

@@ -16,6 +16,6 @@ export const addressSchema = object({
 })
 
 export const optionalAddressSchema = object({
-    street: nameSchema.optional(),
-    city: nameSchema.optional()
+    Street: nameSchema.optional(),
+    City: nameSchema.optional()
 })

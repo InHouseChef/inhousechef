@@ -12,7 +12,7 @@ interface CompanyLayoutProps {
 export default function CompanyLayout({ children }: CompanyLayoutProps) {
     const { companyCode } = usePathParams<{ companyCode: string }>()
 
-    const links = COMPANY_LINKS.map(({ to, label }) => ({ to: `/companies/${companyCode}${to}`, label }))
+    const links = COMPANY_LINKS.map(({ path, label }) => ({ path: `/companies/${companyCode}${path}`, label }))
 
     return (
         <>
