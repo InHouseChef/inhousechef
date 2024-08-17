@@ -8,5 +8,6 @@ export const useSafeReplace = () => {
             replace(path)
         }, 0)
     }
+
     return { safeReplace }
 }

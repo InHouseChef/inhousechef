@@ -5,6 +5,10 @@
 :root {
     --topnav-height: 72px;
     --main-nav-desktop-width: 280px;
+    --topnav-horizontal {
+        max-height: calc(100vh - 142px);
+        max-height: calc(100dvh - 142px);
+    }
 
     /* Slate */
     --slate-50: 210 40% 98%;

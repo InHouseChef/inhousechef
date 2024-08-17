@@ -1,10 +1,13 @@
 'use client'
 
-import { usePathParams } from '@/hooks'
 import { CompanyUpdateForm } from './components/CompanyUpdateForm/CompanyUpdateForm'
 
-export default function CompanyPage() {
-    const { companyCode } = usePathParams<{ companyCode: string }>()
+export default function CompanyPage({ params }: { params: { companyCode: string } }) {
+    const { companyCode } = params
 
-    return <CompanyUpdateForm companyCode={companyCode} />
+    return (
+        <>
+            <CompanyUpdateForm companyCode={companyCode} />
+        </>
+    )
 }
