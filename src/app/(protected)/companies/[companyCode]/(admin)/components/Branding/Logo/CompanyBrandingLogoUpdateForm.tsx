@@ -50,7 +50,6 @@ const FileSvgDraw = () => {
 
 export const CompanyBrandingLogoUpdateForm = ({ companyCode }: CompanyUpdateFormProps) => {
     const [files, setFiles] = useState<File[] | null>(null);
-    const [state, setState] = useState<Company | null>(null);
     const [imageURL, setImageURL] = useState<string | null | undefined>(null); // State to hold image URL
     const { data: company, isLoading } = useReadCompany({ path: { companyCode } })
 
@@ -69,16 +68,10 @@ export const CompanyBrandingLogoUpdateForm = ({ companyCode }: CompanyUpdateForm
         resolver: zodResolver(updateCompanyBrandingLogoSchema)
     })
 
-    const {
-        control,
-        reset,
-        handleSubmit,
-        formState: { errors }
-    } = form
+    const { handleSubmit } = form
 
     useEffect(() => {
         if (company) {
-            setState(company)
             setImageURL(company.branding?.logoUrl)
         }
     }, [company])
@@ -87,19 +80,18 @@ export const CompanyBrandingLogoUpdateForm = ({ companyCode }: CompanyUpdateForm
         return <Loader />
     }
 
-    const onSubmit = async () => {
+    const onSubmit = () => {
         const body = new FormData();
 
         if (files && files.length > 0)
             body.append('logo', files[0])
 
-        const updateResult = await updateCompanyBrandingLogo({
+        updateCompanyBrandingLogo({
             path: { companyCode },
             // @ts-ignore
             body: body
         });
 
-        setState(updateResult);
         setFiles([]);
     }
 

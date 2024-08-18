@@ -19,7 +19,6 @@ interface CompanyUpdateFormProps {
 type CompanyBrandingColorsUpdateFormData = z.infer<typeof updateCompanyBrandingColorsSchema>
 
 export const CompanyBrandingColorsUpdateForm = ({ companyCode }: CompanyUpdateFormProps) => {
-    const [state, setState] = useState<Company | null>(null);
     const { data: company, isLoading } = useReadCompany({ path: { companyCode } })
 
     const form = useForm<CompanyBrandingColorsUpdateFormData>({
@@ -43,7 +42,6 @@ export const CompanyBrandingColorsUpdateForm = ({ companyCode }: CompanyUpdateFo
                 primaryColor: company.branding?.primaryColor,
                 secondaryColor: company.branding?.secondaryColor
             });
-            setState(company)
         }
     }, [company, reset])
 
