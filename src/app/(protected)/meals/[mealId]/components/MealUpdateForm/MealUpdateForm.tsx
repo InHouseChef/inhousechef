@@ -238,12 +238,12 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
 
                         <div className='flex justify-end gap-4 mt-6'>
                             <Button type='submit'>
-                                Save Meal
+                                Save
                             </Button>
                             <AlertDialog>
                                 <AlertDialogTrigger asChild>
                                     <Button type='button' variant='destructive'>
-                                        Delete Meal
+                                        Delete
                                     </Button>
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>
