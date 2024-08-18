@@ -34,6 +34,11 @@ export const MealList = () => {
                 enableSorting: false,
                 cell: props => <p>{props.getValue()}</p>
             }),
+            column.accessor('type', {
+                header: 'Type',
+                enableSorting: false,
+                cell: props => <p>{props.getValue()}</p>
+            }),
 
             column.display({
                 id: 'actions',

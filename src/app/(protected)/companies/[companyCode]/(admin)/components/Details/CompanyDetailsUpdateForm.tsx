@@ -190,7 +190,7 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
                                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction onClick={handleDeleteCompany}>Continue</AlertDialogAction>
+                                    <AlertDialogAction onClick={handleDeleteCompany}>Delete</AlertDialogAction>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
                         </AlertDialog>
