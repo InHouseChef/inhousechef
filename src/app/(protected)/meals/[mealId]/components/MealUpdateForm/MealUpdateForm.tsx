@@ -1,6 +1,6 @@
 'use client'
 
-import { updateMealDetails, useDeleteMeal, useReadMeal, updateMealImage } from '@/api/meals'
+import { updateMealDetails, useDeleteMeal, useReadMeal, updateMealImage, MealType } from '@/api/meals'
 import { Header, Loader } from '@/components'
 import { FileUploader } from '@/components/FileUploader'
 import { FileUploaderContent, FileInput, FileUploaderItem, FileSvgDraw } from '@/components/FileUploader/FileUploader'
@@ -23,6 +23,7 @@ import { AlertDialogFooter,
     AlertDialogDescription,
     AlertDialogTitle,
     AlertDialogTrigger, } from '@/components/ui/alert-dialog'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 interface MealUpdateFormProps {
     mealId: string
@@ -44,7 +45,8 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
             name: meal?.name || '',
             purchasePrice: meal?.purchasePrice || 0,
             sellingPrice: meal?.sellingPrice || 0,
-            description: meal?.description || ''
+            description: meal?.description || '',
+            type: meal?.type || MealType.MainCourse // Set default type
         }
     })
 
@@ -56,7 +58,8 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                 name: meal?.name || '',
                 purchasePrice: meal?.purchasePrice || 0,
                 sellingPrice: meal?.sellingPrice || 0,
-                description: meal?.description || ''
+                description: meal?.description || '',
+                type: meal?.type || MealType.MainCourse // Set default type
             })
             setImageURL(meal?.imageUrl || '')
         }
@@ -220,6 +223,27 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                         />
                         <FormField
                             control={control}
+                            name='type'
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Type</FormLabel>
+                                    <FormControl>
+                                        <Select onValueChange={field.onChange} defaultValue={meal?.type} required>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select meal type" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="MainCourse">Main Course</SelectItem>
+                                                <SelectItem value="SideDish">Side Dish</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={control}
                             name='description'
                             render={({ field }) => (
                                 <FormItem>
@@ -228,6 +252,7 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                                         <Textarea
                                             placeholder='Describe the meal, ingredients, and flavors.'
                                             className='resize-none'
+                                            required
                                             {...field}
                                         />
                                     </FormControl>
@@ -237,7 +262,7 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                         />
 
                         <div className='flex justify-end gap-4 mt-6'>
-                            <Button type='submit'>
+                            <Button type='submit' disabled={!form.formState.isDirty}>
                                 Save
                             </Button>
                             <AlertDialog>
@@ -253,7 +278,7 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                                     </AlertDialogDescription>
                                     <AlertDialogFooter>
                                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                        <AlertDialogAction onClick={handleDeleteMeal}>Continue</AlertDialogAction>
+                                        <AlertDialogAction onClick={handleDeleteMeal}>Delete</AlertDialogAction>
                                     </AlertDialogFooter>
                                 </AlertDialogContent>
                             </AlertDialog>
