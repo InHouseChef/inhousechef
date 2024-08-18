@@ -104,7 +104,7 @@ export const CompanyBrandingColorsUpdateForm = ({ companyCode }: CompanyUpdateFo
                 <div className='mt-4'></div>
                 <div className='mt-8 flex items-center justify-end'>
                     <div className='flex items-center gap-2'>
-                        <Button>Update Branding</Button>
+                        <Button>Save</Button>
                     </div>
                 </div>
             </form>

@@ -178,7 +178,7 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
                                 <Button type='button' variant='destructive'>
-                                    Delete Company
+                                    Delete
                                 </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
@@ -195,7 +195,7 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
                             </AlertDialogContent>
                         </AlertDialog>
 
-                        <Button>Update Details</Button>
+                        <Button>Save</Button>
                     </div>
                 </div>
             </form>

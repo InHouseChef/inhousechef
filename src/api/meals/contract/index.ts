@@ -15,7 +15,10 @@ export interface CreateMealResponse extends Meal {
     id: string
 }
 
-export interface UpdateMealRequest extends Meal {}
+export interface UpdateMealDetailsRequest extends Omit<Meal, 'imageUrl'> {}
+export interface UpdateMealImageRequest {
+    image: File
+}
 export interface UpdateMealResponse extends Meal {
     id: string
 }

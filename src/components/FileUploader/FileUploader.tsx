@@ -387,7 +387,7 @@ export const FileSvgDraw = () => {
         &nbsp; or drag and drop
       </p>
       <p className="text-xs text-gray-500 dark:text-gray-400">
-        PNG, JPG or JPEG
+        PNG, JPG or JPEG ({`Max file size is ${MAX_FILE_UPLOAD_SIZE / 1024 / 1024}MB`})
       </p>
     </>
   );
