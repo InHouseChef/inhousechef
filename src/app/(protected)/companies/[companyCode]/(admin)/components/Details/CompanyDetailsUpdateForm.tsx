@@ -195,7 +195,7 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
                             </AlertDialogContent>
                         </AlertDialog>
 
-                        <Button>Update Company</Button>
+                        <Button>Update Details</Button>
                     </div>
                 </div>
             </form>

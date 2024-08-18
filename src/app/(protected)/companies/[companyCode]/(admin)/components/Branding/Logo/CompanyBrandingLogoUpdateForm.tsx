@@ -153,7 +153,7 @@ export const CompanyBrandingLogoUpdateForm = ({ companyCode }: CompanyUpdateForm
                 </div>
                 <div className='mt-8 flex items-center justify-end'>
                     <div className='flex items-center gap-2'>
-                        <Button>Update</Button>
+                        <Button>Update Logo</Button>
                     </div>
                 </div>
             </form>
