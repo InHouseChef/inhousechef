@@ -44,6 +44,6 @@ export interface AppJwt extends Omit<Jwt, 'type'> {
 
 export type Modify<T, R> = Omit<T, keyof R> & R
 
-export type FileTypes = 'docx' | 'doc' | 'pdf' | 'jpg' | 'jpeg' | 'png' | 'xlsx' | 'svg' | 'csv' | 'image'
+export type FileTypes = 'jpg' | 'jpeg' | 'png'
 
 export type Roles = 'Admin' | 'CompanyManager' | 'Employee'
