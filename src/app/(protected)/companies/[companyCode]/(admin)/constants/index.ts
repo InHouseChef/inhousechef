@@ -6,10 +6,5 @@ export const COMPANY_LINKS = [
     {
         path: '/users',
         label: 'Users'
-    },
-
-    {
-        path: '/settings',
-        label: 'Settings'
     }
 ]
