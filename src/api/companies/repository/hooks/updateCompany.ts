@@ -2,6 +2,7 @@ import { axiosPrivate } from '@/lib/axios'
 import { queryClient } from '@/lib/react-query'
 import { MutationParams } from '@/types'
 import { useMutation } from '@tanstack/react-query'
+import { useRouter } from 'next/router'
 import { UpdateCompanyRequest, UpdateCompanyResponse } from '../../contract'
 import { COMPANY_KEYS } from '../keys'
 
@@ -17,11 +18,16 @@ export const updateCompany = ({ path: { companyCode }, body }: UpdateCompanyPara
         }
     })
 
-export const useUpdateCompany = () =>
+export const useUpdateCompany = () => {
+    const router = useRouter()
+
     useMutation({
         mutationFn: updateCompany,
-        onSuccess: () =>
+        onSuccess: (data, variables) => {
             queryClient.invalidateQueries({
                 queryKey: COMPANY_KEYS.base
             })
+            router.replace(`/companies/${variables.path.companyCode}`)
+        }
     })
+}

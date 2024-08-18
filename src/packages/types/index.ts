@@ -86,3 +86,11 @@ export interface DefaultCursorQuery<TFilter = FilterRequest> {
     sorting?: SortingRequest
     filter?: TFilter
 }
+
+export interface DateFormatProps {
+    options?: DateFormatOptions
+    format?: DatePartType[]
+    separator?: string
+}
+
+export type VariantBase = 'primary' | 'secondary'

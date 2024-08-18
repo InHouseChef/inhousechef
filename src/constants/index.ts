@@ -55,3 +55,12 @@ export const MIME_TYPES: Record<FileTypes, string> = {
 }
 
 export const LOGO_ACCEPTED_FILE_TYPES: FileTypes[] = ['svg', 'jpg', 'jpeg', 'png']
+
+export const DEFAULT_DATE_TIME_FORMAT_OPTIONS: Intl.DateTimeFormatOptions = {
+    timeZone: 'UTC',
+    day: 'numeric',
+    month: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric'
+}

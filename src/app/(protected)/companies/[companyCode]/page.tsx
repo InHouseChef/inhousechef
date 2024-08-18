@@ -1,6 +1,6 @@
 'use client'
 
-import { CompanyUpdateForm } from './(admin)/components/CompanyUpdateForm/CompanyUpdateForm'
+import { CompanyOrderForm } from './(client)/components/CompanyOrderForm/CompanyOrderForm'
 
 export default function CompanyPage({ params }: { params: { companyCode: string } }) {
     const { companyCode } = params
@@ -9,7 +9,8 @@ export default function CompanyPage({ params }: { params: { companyCode: string 
 
     return (
         <>
-            <CompanyUpdateForm companyCode={companyCode} />
+            <CompanyOrderForm />
+            {/* <CompanyUpdateForm companyCode={companyCode} /> */}
         </>
     )
 }

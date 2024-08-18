@@ -1,6 +1,6 @@
 import { DateIso } from '@/types'
 
-interface DailyMenuMeal {
+export interface DailyMenuMeal {
     name: string
     description: string
     price: number
