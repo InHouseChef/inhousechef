@@ -8,7 +8,7 @@ export const phoneSchema = z
     .max(16, { message: 'Maximum number of characters is 16.' })
     .min(1, { message: 'Telephone is a required field.' })
 
-export const optionalPhoneSchema = string().trim().max(16, { message: 'Maximum number of characters is 16.' })
+export const optionalPhoneSchema = string().trim().max(16, { message: 'Maximum number of characters is 16.' }).optional()
 
 export const addressSchema = object({
     street: nameSchema.min(1, { message: 'Address 1 is a required field.' }),
@@ -16,6 +16,6 @@ export const addressSchema = object({
 })
 
 export const optionalAddressSchema = object({
-    Street: nameSchema.optional(),
-    City: nameSchema.optional()
+    street: nameSchema.optional(),
+    city: nameSchema.optional()
 })
