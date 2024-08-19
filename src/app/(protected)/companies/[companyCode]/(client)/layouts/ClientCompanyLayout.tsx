@@ -5,5 +5,11 @@ interface ClientCompanyLayoutProps {
 }
 
 export default function ClientCompanyLayout({ children }: ClientCompanyLayoutProps) {
-    return <>{children}</>
+    return (
+        <>
+            {/* smena nav */}
+            {/* kalendar sa korpom */}
+            {children}
+        </>
+    )
 }

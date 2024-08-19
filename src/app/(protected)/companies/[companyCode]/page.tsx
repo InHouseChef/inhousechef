@@ -1,8 +1,8 @@
 'use client'
 
-import { CompanyDetailsUpdateForm } from './(admin)/components/Details/CompanyDetailsUpdateForm'
 import { CompanyBrandingColorsUpdateForm } from './(admin)/components/Branding/Colors/CompanyBrandingColorsUpdateForm'
 import { CompanyBrandingLogoUpdateForm } from './(admin)/components/Branding/Logo/CompanyBrandingLogoUpdateForm'
+import { CompanyDetailsUpdateForm } from './(admin)/components/Details/CompanyDetailsUpdateForm'
 
 export default function CompanyPage({ params }: { params: { companyCode: string } }) {
     const { companyCode } = params
@@ -11,13 +11,13 @@ export default function CompanyPage({ params }: { params: { companyCode: string 
 
     return (
         <>
-            <div className="pb-4 border-b border-gray-300">
+            <div className='border-b border-gray-300 pb-4'>
                 <CompanyDetailsUpdateForm companyCode={companyCode} />
             </div>
-            <div className="pb-4 border-b border-gray-300">
+            <div className='border-b border-gray-300 pb-4'>
                 <CompanyBrandingLogoUpdateForm companyCode={companyCode} />
             </div>
-            <div className="pb-4">
+            <div className='pb-4'>
                 <CompanyBrandingColorsUpdateForm companyCode={companyCode} />
             </div>
         </>

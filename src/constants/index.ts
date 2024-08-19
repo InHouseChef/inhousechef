@@ -47,4 +47,14 @@ export const MIME_TYPES: Record<FileTypes, string> = {
     png: 'image/png'
 }
 
+export const DEFAULT_DATE_TIME_FORMAT_OPTIONS: Intl.DateTimeFormatOptions = {
+    timeZone: 'UTC',
+    day: 'numeric',
+    month: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric'
+}
 export const LOGO_ACCEPTED_FILE_TYPES: FileTypes[] = ['jpg', 'jpeg', 'png']
+
+export const APP_TIMEZONE = 'Europe/Belgrade'
