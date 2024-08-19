@@ -56,3 +56,5 @@ export const DEFAULT_DATE_TIME_FORMAT_OPTIONS: Intl.DateTimeFormatOptions = {
     minute: 'numeric'
 }
 export const LOGO_ACCEPTED_FILE_TYPES: FileTypes[] = ['jpg', 'jpeg', 'png']
+
+export const APP_TIMEZONE = 'Europe/Belgrade'

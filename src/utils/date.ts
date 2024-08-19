@@ -6,7 +6,7 @@ import {
     TIME_FORMAT
 } from '@/packages/constants'
 import { DateFormatProps, TimeFormatOptions } from '@/packages/types'
-import { DateIso, DateTimeIsoUtc } from '@/types'
+import { DateIso, DateTimeIsoUtc, Time } from '@/types'
 
 const toDateFromString = (date: string, options: Intl.DateTimeFormatOptions = DEFAULT_DATE_TIME_FORMAT_OPTIONS) =>
     new Date(getDateFormatter(options).format(new Date(date)))
@@ -203,3 +203,10 @@ export const getYear = (date?: Date | DateIso) => {
 export const getLastDayOfMonthDateTime = (date: Date) => new Date(date.getFullYear(), date.getMonth() + 1, 0)
 export const getLastDayOfMonthDate = (date: Date) => toDateIso(getLastDayOfMonthDateTime(date))
 export const isLastDayInMonth = (date: Date) => getLastDayOfMonthDateTime(date).getDate() === date.getDate()
+
+export const toTimeFromString = (time: Time) => {
+    const [hours, minutes, seconds] = time.split(':').map(Number)
+    const date = new Date()
+    date.setHours(hours, minutes, seconds, 0)
+    return date
+}

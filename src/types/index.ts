@@ -2,6 +2,8 @@ export type DateTimeIsoUtc = string & { readonly __brand?: unique symbol }
 
 export type DateIso = string & { readonly __brand?: unique symbol }
 
+export type Time = string & { readonly __brand?: unique symbol }
+
 export interface BaseEntity {
     id: string
     createdAt: DateTimeIsoUtc
