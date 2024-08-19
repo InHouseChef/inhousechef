@@ -22,15 +22,25 @@ export interface CreateCompanyResponse extends Company {
     id: string
 }
 
-export interface UpdateCompanyRequest {
-    company: Omit<Company, 'branding'> & {
-        branding: {
-            primaryColor?: number
-            secondaryColor?: number
-            logo: File
-        }
+export interface UpdateCompanyDetailsRequest {
+    name: string,
+    code: string,
+    address?: {
+        street?: string
+        city?: string
     }
+    telephone?: string
 }
+
+export interface UpdateCompanyBrandingColorsRequest {
+    primaryColor?: string
+    secondaryColor?: string
+}
+
+export interface UpdateCompanyBrandingLogoRequest {
+    logo: File
+}
+
 export interface UpdateCompanyResponse extends Company {
     id: string
 }
