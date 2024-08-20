@@ -10,7 +10,7 @@ import { CheckCircle, XCircle } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 
-export const CompanyUserList = ({ params }: { params: { companyCode: string } }) => {
+export const UserList = ({ params }: { params: { companyCode: string } }) => {
     const { companyCode } = params
 
     const [selectedRole, setSelectedRole] = useState<string>('All')
@@ -53,7 +53,7 @@ export const CompanyUserList = ({ params }: { params: { companyCode: string } })
             column.accessor('fullName', {
                 header: 'Name',
                 enableSorting: false,
-                cell: props => <Link href={`companies/${companyCode}/users/${props.row.original.id}`}>{props.getValue()}</Link>
+                cell: props => <Link href={`users/${props.row.original.id}`}>{props.getValue()}</Link>
             }),
             column.accessor('username', {
                 header: 'Username',

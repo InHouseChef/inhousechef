@@ -21,10 +21,10 @@ const enhancedCreateUserSchema = createUserSchema.extend({
     message: "Passwords must match",
 });
 
-export const CompanyUserCreateForm = ({ params }: { params: { companyCode: string } }) => {
+export const UserCreateForm = ({ params }: { params: { companyCode: string } }) => {
     const { companyCode } = params
     const router = useRouter()
-    const { mutate: createCompanyUser } = useCreateUser()
+    const { mutate: createUser } = useCreateUser()
 
     const form = useForm<z.infer<typeof enhancedCreateUserSchema>>({
         resolver: zodResolver(enhancedCreateUserSchema)
@@ -33,7 +33,7 @@ export const CompanyUserCreateForm = ({ params }: { params: { companyCode: strin
     const { control, handleSubmit } = form
 
     const onSubmit = async (formData: z.infer<typeof enhancedCreateUserSchema>) => {
-        await createCompanyUser(
+        await createUser(
             { path: { companyCode }, body: formData },
             {
                 onSuccess: data => {
@@ -46,7 +46,7 @@ export const CompanyUserCreateForm = ({ params }: { params: { companyCode: strin
     return (
         <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)} className='space-y-8'>
-                <Header heading='Create CompanyUser' />
+                <Header heading='Create User' />
                 <div className='grid grid-cols-12 gap-4'>
                     <div className='col-span-6'>
                         <FormField

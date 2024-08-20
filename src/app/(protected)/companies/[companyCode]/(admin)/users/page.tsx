@@ -3,7 +3,7 @@
 import { Header } from "@/components"
 import { Button } from "@/components/ui/button"
 import { useRouter } from 'next/navigation'
-import { CompanyUserList } from "./components/CompanyUserList/CompanyUserList"
+import { UserList } from "./components/UserList/UserList"
 
 export default function Users({ params }: { params: { companyCode: string } }) {
     const router = useRouter()
@@ -15,7 +15,7 @@ export default function Users({ params }: { params: { companyCode: string } }) {
                     Create User
                 </Button>
             </Header>
-            <CompanyUserList params={params} />
+            <UserList params={params} />
         </>
     )
 }

@@ -9,3 +9,12 @@ export const createUserSchema = object({
     aLaCardPermission: boolean(),
     role: z.enum([RolesEnum.CompanyManager, RolesEnum.Employee])
 })
+
+export const updateUserProfileSchema = object({
+    fullName: nameSchema.max(100, 'Name cannot be longer than 100 characters.'),
+    role: z.enum([RolesEnum.CompanyManager, RolesEnum.Employee])
+})
+
+export const updateUserALaCardPermissionSchema = object({
+    aLaCard: boolean()
+})
