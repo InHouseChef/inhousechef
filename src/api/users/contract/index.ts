@@ -5,7 +5,8 @@ interface UserResponse {
     companyId: string
     username: string
     role: Roles
-    name: string
+    fullName: string,
+    aLaCardPermission: boolean
 }
 
 export interface ReadMyUserResponse extends UserResponse {}
@@ -13,12 +14,23 @@ export interface ReadMyUserResponse extends UserResponse {}
 export interface ReadUserResponse extends UserResponse {}
 
 export interface CreateUserRequest {
-    userName: string
+    username: string
     password: string
     fullName: string
+    role: Roles
+    aLaCardPermission: boolean
 }
 
 export interface CreateUserResponse {
     userId: string
     userName: string
+    role: Roles
+    fullName: string
+}
+
+
+export enum RolesEnum {
+    Admin = 'Admin',
+    CompanyManager = 'CompanyManager',
+    Employee = 'Employee'
 }
