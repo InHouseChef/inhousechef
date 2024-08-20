@@ -15,7 +15,7 @@ export const updateUserALaCardPermission = ({
     path: { companyCode, userId },
     body
 }: UpdateUserALaCardPermissionParams): Promise<UpdateUserALaCardPermissionResponse> =>
-    axiosPrivate.put(`/companies/${companyCode}/users/${userId}/aLaCard`, body)
+    axiosPrivate.patch(`/companies/${companyCode}/users/${userId}/aLaCard`, body)
 
 export const useUpdateUserALaCardPermission = () =>
     useMutation({

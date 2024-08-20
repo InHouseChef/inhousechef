@@ -15,7 +15,7 @@ export const updateUserProfile = ({
     path: { companyCode, userId },
     body
 }: UpdateUserProfileParams): Promise<UpdateUserProfileResponse> =>
-    axiosPrivate.put(`/companies/${companyCode}/users/${userId}/profile`, body)
+    axiosPrivate.patch(`/companies/${companyCode}/users/${userId}/profile`, body)
 
 export const useUpdateUserProfile = () =>
     useMutation({
