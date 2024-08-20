@@ -17,7 +17,7 @@ import { USER_KEYS } from '../keys'
 interface ReadUsersPath extends CompanyPath {}
 interface ReadUsersParams extends QueryParams<ReadUsersPath> {}
 
-const readUsers = ({ path: { companyCode }, query }: ReadUsersParams): OffsetResultsPromise<ReadUserResponse> =>
+export const readUsers = ({ path: { companyCode }, query }: ReadUsersParams): OffsetResultsPromise<ReadUserResponse> =>
     axiosPrivate.get(`/companies/${companyCode}/users?${createBaseUrlQuery(query)}`)
 
 interface UseReadUsersParams extends DefaultQueryParams<ReadUsersPath>, QueryOptions {}
