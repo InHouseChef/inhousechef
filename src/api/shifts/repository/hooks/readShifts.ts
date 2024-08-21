@@ -14,7 +14,7 @@ import { SHIFT_KEYS } from '../keys'
 interface ReadShiftsPath extends CompanyPath {}
 interface ReadShiftsParams extends QueryParams<ReadShiftsPath> {}
 
-const readShifts = ({ path: { companyCode } }: ReadShiftsParams): Promise<ReadShiftResponse[]> =>
+export const readShifts = ({ path: { companyCode } }: ReadShiftsParams): Promise<ReadShiftResponse[]> =>
     axiosPrivate.get(`/companies/${companyCode}/shifts`)
 
 interface UseReadShiftsParams extends DefaultQueryParams<ReadShiftsPath>, QueryOptions {}
