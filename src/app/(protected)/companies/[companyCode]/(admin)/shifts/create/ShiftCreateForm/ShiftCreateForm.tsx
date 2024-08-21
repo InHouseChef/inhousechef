@@ -108,7 +108,7 @@ export const ShiftCreateForm = ({ params }: { params: { companyCode: string } })
                             name='orderingDeadlineBeforeShiftStart'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Order Deadline (Minutes Before Shift Start)</FormLabel>
+                                    <FormLabel>Ordering Deadline Before Shift Start (in hours)</FormLabel>
                                     <FormControl>
                                         <Input {...field} type='number' value={field.value || 0} required />
                                     </FormControl>

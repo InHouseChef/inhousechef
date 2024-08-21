@@ -77,7 +77,7 @@ export const ShiftUpdateForm = ({ companyCode, shiftId }: ShiftUpdateFormProps) 
                                         <FormItem>
                                             <FormLabel>Name</FormLabel>
                                             <FormControl>
-                                                <Input {...field} placeholder='Shift Name' required />
+                                                <Input {...field} placeholder='Shift Name' required disabled />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -87,12 +87,12 @@ export const ShiftUpdateForm = ({ companyCode, shiftId }: ShiftUpdateFormProps) 
                             <div className='col-span-6'>
                                 <FormField
                                     control={control}
-                                    name="shiftStartAt"
+                                    name='shiftStartAt'
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Shift Start At</FormLabel>
+                                            <FormLabel>Shift Start Time (HH:mm)</FormLabel>
                                             <FormControl>
-                                                <Input {...field} type="datetime-local" required />
+                                                <Input {...field} type='time' value={field.value || ''} required disabled />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -102,12 +102,12 @@ export const ShiftUpdateForm = ({ companyCode, shiftId }: ShiftUpdateFormProps) 
                             <div className='col-span-6'>
                                 <FormField
                                     control={control}
-                                    name="shiftEndAt"
+                                    name='shiftEndAt'
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Shift End At</FormLabel>
+                                            <FormLabel>Shift End Time (HH:mm)</FormLabel>
                                             <FormControl>
-                                                <Input {...field} type="datetime-local" required />
+                                                <Input {...field} type='time' value={field.value || ''} required disabled />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -122,7 +122,7 @@ export const ShiftUpdateForm = ({ companyCode, shiftId }: ShiftUpdateFormProps) 
                                         <FormItem>
                                             <FormLabel>Ordering Deadline Before Shift Start (in hours)</FormLabel>
                                             <FormControl>
-                                                <Input {...field} type="number" required />
+                                                <Input {...field} type="number" value={field.value || 0} required disabled />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
