@@ -27,7 +27,15 @@ export const UserCreateForm = ({ params }: { params: { companyCode: string } }) 
     const { mutate: createUser } = useCreateUser()
 
     const form = useForm<z.infer<typeof enhancedCreateUserSchema>>({
-        resolver: zodResolver(enhancedCreateUserSchema)
+        resolver: zodResolver(enhancedCreateUserSchema),
+        defaultValues: {
+            fullName: '',
+            username: '',
+            password: '',
+            confirmPassword: '',
+            role: RolesEnum.Employee,
+            aLaCardPermission: false // Set default value for checkbox
+        }
     })
 
     const { control, handleSubmit } = form
@@ -37,7 +45,7 @@ export const UserCreateForm = ({ params }: { params: { companyCode: string } }) 
             { path: { companyCode }, body: formData },
             {
                 onSuccess: data => {
-                    router.push(`companies/${companyCode}/users/${data.userId}`)
+                    router.push(`/companies/${companyCode}/users/${data.id}`)
                 }
             }
         )
@@ -116,7 +124,7 @@ export const UserCreateForm = ({ params }: { params: { companyCode: string } }) 
                                 <FormItem>
                                     <FormLabel>Role</FormLabel>
                                     <FormControl>
-                                        <Select onValueChange={field.onChange}>
+                                        <Select onValueChange={field.onChange} value={field.value}>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select role" />
                                             </SelectTrigger>
@@ -139,7 +147,10 @@ export const UserCreateForm = ({ params }: { params: { companyCode: string } }) 
                                 <FormItem>
                                     <FormLabel>A La Card Permission</FormLabel>
                                     <FormControl>
-                                        <Checkbox checked={field.value} onChange={field.onChange} />
+                                        <Checkbox
+                                            checked={field.value} // Bind checked state to form value
+                                            onChange={(checked) => field.onChange(checked)} // Handle change
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
