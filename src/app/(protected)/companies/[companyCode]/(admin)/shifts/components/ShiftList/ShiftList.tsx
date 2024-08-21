@@ -35,11 +35,11 @@ export const ShiftList = ({ params }: { params: { companyCode: string } }) => {
             }),
             column.accessor('shiftStartAt', {
                 header: 'Shift Start',
-                cell: props => <p>{new Date(props.getValue()).toLocaleString()}</p>
+                cell: props => <p>{props.getValue()}</p>
             }),
             column.accessor('shiftEndAt', {
                 header: 'Shift End',
-                cell: props => <p>{new Date(props.getValue()).toLocaleString()}</p>
+                cell: props => <p>{props.getValue()}</p>
             }),
             column.accessor('orderingDeadlineBeforeShiftStart', {
                 header: 'Order Deadline (Hours)',
