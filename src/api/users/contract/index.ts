@@ -22,8 +22,9 @@ export interface CreateUserRequest {
 }
 
 export interface CreateUserResponse {
-    userId: string
-    userName: string
+    id: string
+    companyId: string
+    username: string
     role: Roles
     fullName: string
     aLaCardPermission: boolean
