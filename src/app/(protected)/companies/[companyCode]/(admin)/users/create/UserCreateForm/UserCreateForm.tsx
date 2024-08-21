@@ -21,23 +21,31 @@ const enhancedCreateUserSchema = createUserSchema.extend({
     message: "Passwords must match",
 });
 
-export const CompanyUserCreateForm = ({ params }: { params: { companyCode: string } }) => {
+export const UserCreateForm = ({ params }: { params: { companyCode: string } }) => {
     const { companyCode } = params
     const router = useRouter()
-    const { mutate: createCompanyUser } = useCreateUser()
+    const { mutate: createUser } = useCreateUser()
 
     const form = useForm<z.infer<typeof enhancedCreateUserSchema>>({
-        resolver: zodResolver(enhancedCreateUserSchema)
+        resolver: zodResolver(enhancedCreateUserSchema),
+        defaultValues: {
+            fullName: '',
+            username: '',
+            password: '',
+            confirmPassword: '',
+            role: RolesEnum.Employee,
+            aLaCardPermission: false // Set default value for checkbox
+        }
     })
 
     const { control, handleSubmit } = form
 
     const onSubmit = async (formData: z.infer<typeof enhancedCreateUserSchema>) => {
-        await createCompanyUser(
+        await createUser(
             { path: { companyCode }, body: formData },
             {
                 onSuccess: data => {
-                    router.push(`companies/${companyCode}/users/${data.userId}`)
+                    router.push(`/companies/${companyCode}/users/${data.id}`)
                 }
             }
         )
@@ -46,7 +54,7 @@ export const CompanyUserCreateForm = ({ params }: { params: { companyCode: strin
     return (
         <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)} className='space-y-8'>
-                <Header heading='Create CompanyUser' />
+                <Header heading='Create User' />
                 <div className='grid grid-cols-12 gap-4'>
                     <div className='col-span-6'>
                         <FormField
@@ -116,7 +124,7 @@ export const CompanyUserCreateForm = ({ params }: { params: { companyCode: strin
                                 <FormItem>
                                     <FormLabel>Role</FormLabel>
                                     <FormControl>
-                                        <Select onValueChange={field.onChange}>
+                                        <Select onValueChange={field.onChange} value={field.value}>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select role" />
                                             </SelectTrigger>
@@ -139,7 +147,10 @@ export const CompanyUserCreateForm = ({ params }: { params: { companyCode: strin
                                 <FormItem>
                                     <FormLabel>A La Card Permission</FormLabel>
                                     <FormControl>
-                                        <Checkbox checked={field.value} onChange={field.onChange} />
+                                        <Checkbox
+                                            checked={field.value} // Bind checked state to form value
+                                            onChange={(checked) => field.onChange(checked)} // Handle change
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

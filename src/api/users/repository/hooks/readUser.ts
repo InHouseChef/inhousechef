@@ -16,7 +16,7 @@ interface ReadUserPath extends CompanyPath {
 }
 interface ReadUserParams extends QueryParams<ReadUserPath> {}
 
-const readUser = ({ path: { companyCode, userId } }: ReadUserParams): Promise<ReadUserResponse> =>
+export const readUser = ({ path: { companyCode, userId } }: ReadUserParams): Promise<ReadUserResponse> =>
     axiosPrivate.get(`/companies/${companyCode}/users/${userId}`)
 
 interface UseReadUserParams<T> extends DefaultQueryParams<ReadUserPath>, QueryOptions {

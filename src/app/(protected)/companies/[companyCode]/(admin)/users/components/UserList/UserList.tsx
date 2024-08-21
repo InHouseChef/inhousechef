@@ -10,7 +10,7 @@ import { CheckCircle, XCircle } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 
-export const CompanyUserList = ({ params }: { params: { companyCode: string } }) => {
+export const UserList = ({ params }: { params: { companyCode: string } }) => {
     const { companyCode } = params
 
     const [selectedRole, setSelectedRole] = useState<string>('All')
@@ -18,8 +18,10 @@ export const CompanyUserList = ({ params }: { params: { companyCode: string } })
     const [usersData, setUsersData] = useState<ReadUserResponse[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [totalCount, setTotalCount] = useState<number>(0)
+    const [pageSize, setPageSize] = useState<number>(10)
+    const [currentPage, setCurrentPage] = useState<number>(0)
 
-    // Fetch users based on selected filters
+    // Fetch users based on selected filters, pagination size, and page
     const fetchUsers = () => {
         setIsLoading(true)
         const roleFilter = selectedRole !== 'All' ? selectedRole : undefined
@@ -27,7 +29,7 @@ export const CompanyUserList = ({ params }: { params: { companyCode: string } })
 
         readUsers({
             path: { companyCode },
-            query: { filter: { role: roleFilter, aLaCardPermission: permissionFilter } }
+            query: { filter: { role: roleFilter, aLaCardPermission: permissionFilter }, pagination: { page: currentPage, size: pageSize } }
         }).then(res => {
             setUsersData(res.results || [])
             setTotalCount(res.totalCount || 0)
@@ -35,16 +37,22 @@ export const CompanyUserList = ({ params }: { params: { companyCode: string } })
         }).catch(() => setIsLoading(false))
     }
 
-    // Trigger fetch when filters change
+    // Trigger fetch when filters, pagination size, or page change
     useEffect(() => {
         fetchUsers()
-    }, [selectedRole, selectedPermission, companyCode])
+    }, [selectedRole, selectedPermission, pageSize, currentPage, companyCode])
 
     // Reset filters to default values
     const handleResetFilters = () => {
         setSelectedRole('All')
         setSelectedPermission('All')
-        fetchUsers() // Fetch users with default filters
+        setCurrentPage(0) // Reset to first page when filters change
+    }
+
+    const handlePageChange = (newPage: number) => {
+        if (newPage >= 0 && newPage < Math.ceil(totalCount / pageSize)) {
+            setCurrentPage(newPage)
+        }
     }
 
     const column = createColumnHelper<ReadUserResponse>()
@@ -53,7 +61,7 @@ export const CompanyUserList = ({ params }: { params: { companyCode: string } })
             column.accessor('fullName', {
                 header: 'Name',
                 enableSorting: false,
-                cell: props => <Link href={`companies/${companyCode}/users/${props.row.original.id}`}>{props.getValue()}</Link>
+                cell: props => <Link href={`users/${props.row.original.id}`}>{props.getValue()}</Link>
             }),
             column.accessor('username', {
                 header: 'Username',
@@ -129,6 +137,31 @@ export const CompanyUserList = ({ params }: { params: { companyCode: string } })
             </div>
 
             <DataTable columns={columns as ColumnDef<ReadUserResponse, unknown>[]} data={usersData} />
+
+            <div className="flex justify-end mt-4 w-32">
+                <Select onValueChange={value => {
+                    setPageSize(Number(value))
+                    setCurrentPage(0) // Reset to first page when page size changes
+                }} value={String(pageSize)}>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Users per page" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="10">10 per page</SelectItem>
+                        <SelectItem value="25">25 per page</SelectItem>
+                        <SelectItem value="50">50 per page</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
+
+            <div className="flex justify-between mt-4">
+                <Button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 0}>
+                    Previous
+                </Button>
+                <Button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= Math.ceil(totalCount / pageSize) - 1}>
+                    Next
+                </Button>
+            </div>
         </div>
     )
 }

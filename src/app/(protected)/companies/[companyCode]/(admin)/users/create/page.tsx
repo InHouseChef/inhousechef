@@ -1,7 +1,7 @@
-import { CompanyUserCreateForm } from "./CompanyUserCreateForm/CompanyUserCreateForm";
+import { UserCreateForm } from "./UserCreateForm/UserCreateForm";
 
 
 export default function CreateUserPage({ params }: { params: { companyCode: string } }) {
 
-    return <CompanyUserCreateForm params={params} />
+    return <UserCreateForm params={params} />
 }
