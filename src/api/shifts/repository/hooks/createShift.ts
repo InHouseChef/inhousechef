@@ -1,11 +1,12 @@
 import { axiosPrivate } from '@/lib/axios'
-import { MutationParams } from '@/types'
+import { CompanyPath, MutationParams } from '@/types'
 import { useMutation } from '@tanstack/react-query'
 import { CreateShiftRequest, CreateShiftResponse } from '../../contract'
 
-interface CreateShiftPath {}
+interface CreateShiftPath extends CompanyPath {}
 interface CreateShiftParams extends MutationParams<CreateShiftPath, CreateShiftRequest> {}
 
-export const createShift = ({ body }: CreateShiftParams): Promise<CreateShiftResponse> => axiosPrivate.post('/shifts/', body)
+export const createShift = ({ path: { companyCode }, body }: CreateShiftParams): Promise<CreateShiftResponse> => 
+    axiosPrivate.post(`/companies/${companyCode}/shifts`, body)
 
 export const useCreateShift = () => useMutation({ mutationFn: createShift })

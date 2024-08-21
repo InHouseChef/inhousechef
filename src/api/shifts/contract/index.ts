@@ -4,7 +4,7 @@ interface Shift {
     name: string
     shiftStartAt: Time
     shiftEndAt: Time
-    orderingDeadlineBeforeShiftStart: string
+    orderingDeadlineBeforeShiftStart: number
 }
 
 export interface ReadShiftResponse extends Shift {
