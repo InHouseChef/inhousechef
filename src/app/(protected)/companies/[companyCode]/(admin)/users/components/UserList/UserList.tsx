@@ -115,6 +115,7 @@ export const UserList = ({ params }: { params: { companyCode: string } }) => {
                         <SelectItem value="All">All Roles</SelectItem>
                         <SelectItem value={RolesEnum.CompanyManager}>Company Manager</SelectItem>
                         <SelectItem value={RolesEnum.Employee}>Employee</SelectItem>
+                        <SelectItem value={RolesEnum.RestaurantWorker}>Restaurant Worker</SelectItem>
                     </SelectContent>
                 </Select>
 
