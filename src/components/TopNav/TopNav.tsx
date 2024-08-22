@@ -22,7 +22,7 @@ export const TopNav = () => {
         <>
             <div
                 className={clsx(
-                    'lg:border-grey700/50 z-50 flex min-h-[var(--topnav-height)] items-center justify-between border-b px-6 transition-colors',
+                    'lg:border-grey700/50 z-50 flex min-h-[var(--topnav-height)] items-center justify-between border-b px-6 transition-colors lg:justify-end',
                     {
                         'border-grey700/0': isOpen,
                         'border-grey700/50': !isOpen
@@ -31,7 +31,7 @@ export const TopNav = () => {
                 <TopNavHamburger isNavOpen={isOpen} onToggle={handleToggle} />
 
                 {/* <TopNavLogo /> */}
-                <div className='flex items-center gap-2 lg:gap-4'>
+                <div className='flex items-center justify-end gap-2 lg:gap-4'>
                     <TopNavLogout />
                 </div>
             </div>
