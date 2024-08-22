@@ -1,44 +1,63 @@
 import { ReadDailyMenuResponse } from '@/api/daily-menus'
-import { addDaysToDate, formatAppDateTime } from '@/utils/date'
+import { ReadShiftResponse } from '@/api/shifts'
+import { DateIso } from '@/types'
+import { addDaysToDate, toDateFromDateIso, toDateIso, toTimeFromString } from '@/utils/date'
 
-export const getDayName = (dateString: string, timeZone: string = 'UTC'): string => {
+export const getDayName = (dateString: string) => {
     const date = new Date(dateString)
-    return date.toLocaleDateString('sr-Latn-RS', { weekday: 'short', timeZone }).toUpperCase()
+    return date.toLocaleDateString('sr-Latn-RS', { weekday: 'short' }).toUpperCase()
 }
 
-interface UpcomingDate {
+export const calculateDateRange = (today: DateIso) => {
+    const formattedToday = toDateFromDateIso(today)
+    const totalDays = 10
+    const toDate = addDaysToDate(totalDays - 1, formattedToday)
+
+    return {
+        from: toDateIso(formattedToday),
+        to: toDateIso(new Date(toDate))
+    }
+}
+
+export interface UpcomingDailyMenuDate {
     day: string
     name: string
-    dateString: string
+    date: DateIso
     available: boolean
     disabled: boolean
 }
 
-export const generateUpcomingDates = (today: Date, dailyMenus?: ReadDailyMenuResponse[]): UpcomingDate[] => {
-    const belgradeTimeZone = 'Europe/Belgrade'
-    const dayOfWeek = today.getDay()
-    const upcomingDates: UpcomingDate[] = []
+export const generateUpcomingDates = (today: DateIso, dailyMenus?: ReadDailyMenuResponse[]) => {
+    const formattedToday = toDateFromDateIso(today)
+    const upcomingDates: UpcomingDailyMenuDate[] = []
 
-    const startDay = dayOfWeek === 0 ? 0 : dayOfWeek
-    const endDay = dayOfWeek === 0 ? 7 : 7 - dayOfWeek
-
-    const totalDays = dayOfWeek === 0 ? 8 : endDay + 1
+    const totalDays = 10
 
     for (let i = 0; i < totalDays; i++) {
-        const futureDate = addDaysToDate(i - startDay, today)
-        const formattedDate = formatAppDateTime(new Date(futureDate), belgradeTimeZone)
-        const dayName = getDayName(formattedDate, belgradeTimeZone)
-        const isAvailable = i >= 0
-        const isDisabled = isAvailable && !dailyMenus?.some(menu => menu.date === formattedDate)
+        const futureDate = addDaysToDate(i, formattedToday)
+
+        const dayName = getDayName(futureDate)
+        const isAvailable = dailyMenus?.some(({ date }) => date === futureDate) || false
+        const isDisabled = !isAvailable
 
         upcomingDates.push({
             day: futureDate.slice(-2),
             name: dayName,
-            dateString: formattedDate,
+            date: futureDate,
             available: isAvailable,
             disabled: isDisabled
         })
     }
 
     return upcomingDates
+}
+
+export const isShiftActive = (shift: ReadShiftResponse, currentDateTime: Date) => {
+    const shiftStart = toTimeFromString(shift.shiftStartAt)
+    const shiftEnd = toTimeFromString(shift.shiftEndAt)
+    return currentDateTime >= shiftStart && currentDateTime <= shiftEnd
+}
+
+export const getActiveShift = (shifts: ReadShiftResponse[], currentDateTime: Date) => {
+    return shifts?.find(shift => isShiftActive(shift, currentDateTime))
 }

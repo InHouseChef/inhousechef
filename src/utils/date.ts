@@ -210,3 +210,16 @@ export const toTimeFromString = (time: Time) => {
     date.setHours(hours, minutes, seconds, 0)
     return date
 }
+
+export const formatDateSerbianLatin = (date: Date) => {
+    const options: Intl.DateTimeFormatOptions = {
+        weekday: 'long',
+        day: '2-digit',
+        month: '2-digit'
+    }
+    const formattedDate = date.toLocaleDateString('sr-Latn-RS', options)
+    return formattedDate
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+}

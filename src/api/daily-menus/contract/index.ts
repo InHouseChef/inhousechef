@@ -1,9 +1,12 @@
 import { DateIso } from '@/types'
 
 export interface DailyMenuMeal {
+    id: string
     name: string
     description: string
     price: number
+    // TODO: check type
+    type: string
     imageUrl: string
 }
 
