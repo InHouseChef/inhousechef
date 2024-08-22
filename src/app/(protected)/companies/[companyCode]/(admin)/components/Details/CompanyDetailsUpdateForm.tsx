@@ -2,24 +2,13 @@
 
 import { updateCompanyDetails, useDeleteCompany, useReadCompany } from '@/api/companies'
 import { Header, Loader } from '@/components'
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger
-} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { updateCompanyDetailsSchema } from '@/app/(protected)/companies/schemas'
 import { Input } from '@/components/ui/input'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -33,13 +22,18 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
     const { data: company, isLoading } = useReadCompany({ path: { companyCode } })
     const { mutate: deleteCompany } = useDeleteCompany()
 
+    const [hasChanges, setHasChanges] = useState(false)
+
     const form = useForm<CompanyDetailsUpdateFormData>({
         resolver: zodResolver(updateCompanyDetailsSchema),
         defaultValues: {
-            name: company?.name || '',
-            code: company?.code || '',
-            address: company?.address || {},
-            telephone: company?.telephone || ''
+            name: '',
+            code: '',
+            address: {
+                street: '',
+                city: ''
+            },
+            telephone: ''
         }
     })
 
@@ -47,7 +41,7 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
         control,
         reset,
         handleSubmit,
-        formState: { errors }
+        formState: { errors, isDirty }
     } = form
 
     useEffect(() => {
@@ -55,25 +49,25 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
             reset({
                 name: company?.name || '',
                 code: company?.code || '',
-                address: company?.address || {},
+                address: company?.address || { street: '', city: '' },
                 telephone: company?.telephone || ''
-            });
+            })
+            setHasChanges(false)
         }
     }, [company, reset])
+
+    useEffect(() => {
+        setHasChanges(isDirty)
+    }, [isDirty])
 
     const onSubmit = async (formData: CompanyDetailsUpdateFormData) => {
         const updateResult = await updateCompanyDetails({
             path: { companyCode },
             body: formData
-        });
+        })
 
-        // Reset the form with the new values
-        reset({
-            name: updateResult.name,
-            code: updateResult.code,
-            address: updateResult.address || {},
-            telephone: updateResult.telephone || '',
-        });
+        reset(updateResult)
+        setHasChanges(false)
     }
 
     const handleDeleteCompany = () => deleteCompany({ path: { companyCode } })
@@ -85,7 +79,7 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
     return (
         <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)} className='h-full'>
-                <Header heading='Company Information' />
+                <Header heading='Profile' />
                 <div className='grid grid-cols-12'>
                     <div className='col-span-12'>
                         <div className='grid grid-cols-12 gap-3'>
@@ -97,9 +91,9 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
                                         <FormItem>
                                             <FormLabel>Name</FormLabel>
                                             <FormControl>
-                                                <Input {...field} value={field.value || ''} placeholder='Kristal Ketering' required />
+                                                <Input {...field} placeholder='Kristal Ketering' required />
                                             </FormControl>
-                                            <FormMessage />
+                                            <FormMessage>{errors.name?.message}</FormMessage>
                                         </FormItem>
                                     )}
                                 />
@@ -112,9 +106,9 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
                                         <FormItem>
                                             <FormLabel>Code</FormLabel>
                                             <FormControl>
-                                                <Input {...field} value={field.value || ''} placeholder='KK' required />
+                                                <Input {...field} placeholder='KK' required />
                                             </FormControl>
-                                            <FormMessage />
+                                            <FormMessage>{errors.code?.message}</FormMessage>
                                         </FormItem>
                                     )}
                                 />
@@ -127,14 +121,9 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
                                         <FormItem>
                                             <FormLabel>Street</FormLabel>
                                             <FormControl>
-                                                <Input
-                                                    {...field}
-                                                    value={field.value || ''}
-                                                    placeholder='Save Kovačevića 1'
-                                                    required
-                                                />
+                                                <Input {...field} placeholder='Save Kovačevića 1' required />
                                             </FormControl>
-                                            <FormMessage />
+                                            <FormMessage>{errors.address?.street?.message}</FormMessage>
                                         </FormItem>
                                     )}
                                 />
@@ -147,9 +136,9 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
                                         <FormItem>
                                             <FormLabel>City</FormLabel>
                                             <FormControl>
-                                                <Input {...field} value={field.value || ''} placeholder='Novi Sad' required />
+                                                <Input {...field} placeholder='Novi Sad' required />
                                             </FormControl>
-                                            <FormMessage />
+                                            <FormMessage>{errors.address?.city?.message}</FormMessage>
                                         </FormItem>
                                     )}
                                 />
@@ -162,9 +151,9 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
                                         <FormItem>
                                             <FormLabel>Telephone</FormLabel>
                                             <FormControl>
-                                                <Input {...field} value={field.value || ''} placeholder='+38160123123' />
+                                                <Input {...field} placeholder='+38160123123' />
                                             </FormControl>
-                                            <FormMessage />
+                                            <FormMessage>{errors.telephone?.message}</FormMessage>
                                         </FormItem>
                                     )}
                                 />
@@ -172,31 +161,10 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
                         </div>
                     </div>
                 </div>
-                <div className='mt-4'></div>
-                <div className='mt-8 flex items-center justify-end'>
-                    <div className='flex items-center gap-2'>
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <Button type='button' variant='destructive'>
-                                    Delete
-                                </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>Are you sure you want to delete {company?.name}?</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        This action cannot be undone. This will permanently delete your company.
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction onClick={handleDeleteCompany}>Delete</AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-
-                        <Button>Save</Button>
-                    </div>
+                <div className='mt-8 flex items-center justify-end gap-4'>
+                    <Button type="submit" disabled={!hasChanges}>
+                        Save
+                    </Button>
                 </div>
             </form>
         </Form>

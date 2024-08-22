@@ -1,5 +1,9 @@
 'use client'
 
+import { CompanyBrandingColorsUpdateForm } from './(admin)/components/Branding/Colors/CompanyBrandingColorsUpdateForm'
+import { CompanyBrandingLogoUpdateForm } from './(admin)/components/Branding/Logo/CompanyBrandingLogoUpdateForm'
+import { DangerZone } from './(admin)/components/DangerZone/DangerZoneForm'
+import { CompanyDetailsUpdateForm } from './(admin)/components/Details/CompanyDetailsUpdateForm'
 import { CompanyOrderForm } from './(client)/components/CompanyOrderForm/CompanyOrderForm'
 
 export default function CompanyPage({ params }: { params: { companyCode: string } }) {
@@ -19,7 +23,10 @@ export default function CompanyPage({ params }: { params: { companyCode: string 
             </div>
             <div className='pb-4'>
                 <CompanyBrandingColorsUpdateForm companyCode={companyCode} />
-            </div> */}
+            </div>
+
+            <DangerZone companyCode={companyCode} />*/}
+
         </>
     )
 }
