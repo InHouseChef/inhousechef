@@ -2,6 +2,7 @@
 
 import { CompanyBrandingColorsUpdateForm } from './(admin)/components/Branding/Colors/CompanyBrandingColorsUpdateForm'
 import { CompanyBrandingLogoUpdateForm } from './(admin)/components/Branding/Logo/CompanyBrandingLogoUpdateForm'
+import { DangerZone } from './(admin)/components/DangerZone/DangerZoneForm'
 import { CompanyDetailsUpdateForm } from './(admin)/components/Details/CompanyDetailsUpdateForm'
 
 export default function CompanyPage({ params }: { params: { companyCode: string } }) {
@@ -20,6 +21,9 @@ export default function CompanyPage({ params }: { params: { companyCode: string 
             <div className='pb-4'>
                 <CompanyBrandingColorsUpdateForm companyCode={companyCode} />
             </div>
+
+            <DangerZone companyCode={companyCode} />
+
         </>
     )
 }

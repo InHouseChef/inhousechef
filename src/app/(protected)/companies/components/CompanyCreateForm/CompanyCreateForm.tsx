@@ -67,7 +67,7 @@ export const CompanyCreateForm = () => {
                             />
                             <FormField
                                 control={control}
-                                name='address.Street'
+                                name='address.street'
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Street</FormLabel>
@@ -80,7 +80,7 @@ export const CompanyCreateForm = () => {
                             />
                             <FormField
                                 control={control}
-                                name='address.City'
+                                name='address.city'
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>City</FormLabel>
