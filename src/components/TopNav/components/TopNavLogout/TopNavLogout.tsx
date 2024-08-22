@@ -5,11 +5,7 @@ export const TopNavLogout = () => {
     const logout = useLogout()
 
     return (
-        <Button
-            onClick={logout}
-            variant='outline'
-            // className='hidden rounded bg-secondary/10 p-2.5 text-secondary transition-colors hover:bg-secondary hover:text-white lg:flex'>
-        >
+        <Button onClick={logout} variant='outline' className='hidden lg:flex'>
             Logout
         </Button>
     )

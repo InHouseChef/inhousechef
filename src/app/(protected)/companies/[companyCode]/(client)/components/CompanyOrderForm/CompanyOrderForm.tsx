@@ -1,58 +1,86 @@
+import { DailyMenuMeal } from '@/api/daily-menus'
 import { useReadDailyMenus } from '@/api/daily-menus/repository/hooks/readDailyMenus'
-import clsx from 'clsx'
-import { Loader, ShoppingCartIcon } from 'lucide-react'
+import { useReadShifts } from '@/api/shifts'
+import { Loader } from '@/components'
+import { useAppDate } from '@/hooks'
+import { DateIso } from '@/types'
 import { useEffect, useState } from 'react'
-import { generateUpcomingDates } from '../../utils'
+import { useCartStore } from '../../state'
+import { calculateDateRange, generateUpcomingDates, UpcomingDailyMenuDate } from '../../utils'
+import DaySelectorNav from './components/DaySelectorNav/DaySelectorNav'
+import MealCard from './components/MealCard/MealCard'
+import { ShiftSelectorNav } from './components/ShiftSelectorNav/ShiftSelectorNav'
+import ShoppingCart from './components/ShoppingCart/ShoppingCart'
 
 export const CompanyOrderForm = () => {
-    const { data: dailyMenus, isLoading: isLoadingDailyMenus } = useReadDailyMenus()
-    const [dates, setDates] = useState<
-        { day: string; name: string; dateString: string; available: boolean; disabled: boolean }[]
-    >([])
+    const { getAppDate } = useAppDate()
+    const today = getAppDate()
+    const { from, to } = calculateDateRange(today)
+    const { addToCart } = useCartStore()
+
+    const { data: shifts } = useReadShifts()
+
+    const { data: dailyMenus, isLoading: isLoadingDailyMenus } = useReadDailyMenus({
+        query: {
+            filter: {
+                from,
+                to
+            }
+        }
+    })
+    const [dates, setDates] = useState<UpcomingDailyMenuDate[]>([])
+    const [selectedDate, setSelectedDate] = useState<DateIso>('')
+    const [activeShiftId, setActiveShiftId] = useState<string>('')
+    const [selectedMeals, setSelectedMeals] = useState<DailyMenuMeal[]>([])
+    const [orderedMeals, setOrderedMeals] = useState<DailyMenuMeal[]>([])
 
     useEffect(() => {
-        const today = new Date()
         const upcomingDates = generateUpcomingDates(today, dailyMenus)
         setDates(upcomingDates)
-    }, [dailyMenus])
+        if (upcomingDates.length > 0) {
+            setSelectedDate(upcomingDates[0].date)
+        }
+    }, [dailyMenus, today])
+
+    useEffect(() => {
+        if (selectedDate) {
+            const selectedMeals = dailyMenus?.find(({ date }) => date === selectedDate)?.meals || []
+            setSelectedMeals(selectedMeals)
+        }
+    }, [selectedDate, dailyMenus])
+
+    useEffect(() => {
+        if (!shifts?.length) return
+
+        setActiveShiftId(shifts[0].id)
+    }, [shifts])
+
+    const handleOrderMeal = (meal: DailyMenuMeal) => {
+        addToCart(activeShiftId, selectedDate, { ...meal, quantity: 1 })
+        setOrderedMeals(prev => [...prev, meal]) // Update ordered meals state
+    }
 
     if (isLoadingDailyMenus) return <Loader />
 
     return (
-        <div className='flex h-full'>
-            <div className='flex flex-col items-center'>
-                <div className='flex items-center justify-center border bg-black px-4 py-3'>
-                    <ShoppingCartIcon className='text-white' />
+        <>
+            <ShiftSelectorNav activeShiftId={activeShiftId} onShiftSelect={setActiveShiftId} />
+            <div className='mt-4 flex h-full justify-between'>
+                <div className='flex flex-col'>
+                    <ShoppingCart selectedDate={selectedDate} shiftId={activeShiftId} />
+                    <DaySelectorNav dates={dates} selectedDate={selectedDate} onSelectDate={setSelectedDate} />
                 </div>
-                {dates.map((date, index) => (
-                    <div
-                        key={index}
-                        className={clsx(
-                            'flex flex-1 flex-col items-center justify-center border px-4 py-3',
-                            date.available
-                                ? date.disabled
-                                    ? 'bg-yellow-600 text-white'
-                                    : 'bg-blue-600 text-white'
-                                : 'bg-gray-400 text-gray-800'
-                        )}>
-                        <span className={clsx('text-sm font-medium', date.available && !date.disabled && 'text-white')}>
-                            {date.day}
-                        </span>
-                        <span
-                            className={clsx(
-                                'text-xs font-semibold',
-                                date.available && !date.disabled ? 'text-white' : 'text-gray-800'
-                            )}>
-                            {date.name}
-                        </span>
-                        {/* {!date.available && <span className='text-xs text-red-600'>Unavailable</span>}
-                        {date.available && date.disabled && <span className='text-xs text-yellow-600'>No Menu</span>} */}
-                    </div>
-                ))}
+                <div className='mt-4 flex flex-col items-center gap-2'>
+                    {selectedMeals.map(meal => (
+                        <MealCard
+                            key={meal.name}
+                            {...meal}
+                            isOrdered={orderedMeals.includes(meal)} // Pass ordered state to MealCard
+                            onOrder={() => handleOrderMeal(meal)}
+                        />
+                    ))}
+                </div>
             </div>
-            {/* <div className='flex flex-col gap-2'>
-                {dailyMenus?.meals.map(meal => <MealCard key={meal.name} {...meal} isOrdered={false} />)}
-            </div> */}
-        </div>
+        </>
     )
 }
