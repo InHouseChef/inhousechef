@@ -94,6 +94,7 @@ export const UserUpdateProfileForm = ({ companyCode, userId }: UserUpdateProfile
                                                     <SelectContent>
                                                         <SelectItem value={RolesEnum.CompanyManager}>Company Manager</SelectItem>
                                                         <SelectItem value={RolesEnum.Employee}>Employee</SelectItem>
+                                                        <SelectItem value={RolesEnum.RestaurantWorker}>Restaurant Worker</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                             </FormControl>

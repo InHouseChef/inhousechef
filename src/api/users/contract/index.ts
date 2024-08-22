@@ -4,7 +4,7 @@ interface UserResponse {
     id: string
     companyId: string
     username: string
-    role: RolesEnum.CompanyManager | RolesEnum.Employee
+    role: RolesEnum.CompanyManager | RolesEnum.Employee | RolesEnum.RestaurantWorker
     fullName: string,
     aLaCardPermission: boolean
 }
@@ -46,5 +46,6 @@ export interface UpdateUserALaCardPermissionResponse extends UserResponse {}
 export enum RolesEnum {
     Admin = 'Admin',
     CompanyManager = 'CompanyManager',
-    Employee = 'Employee'
+    Employee = 'Employee',
+    RestaurantWorker = 'RestaurantWorker',
 }

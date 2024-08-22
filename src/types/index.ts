@@ -48,4 +48,4 @@ export type Modify<T, R> = Omit<T, keyof R> & R
 
 export type FileTypes = 'jpg' | 'jpeg' | 'png'
 
-export type Roles = 'Admin' | 'CompanyManager' | 'Employee'
+export type Roles = 'Admin' | 'CompanyManager' | 'Employee' | 'RestaurantWorker'
