@@ -1,6 +1,6 @@
 export { createMeal, useCreateMeal } from './hooks/createMeal'
 export { useDeleteMeal } from './hooks/deleteMeal'
 export { useReadMeal } from './hooks/readMeal'
-export { useReadMeals } from './hooks/readMeals'
+export { readMeals, useReadMeals } from './hooks/readMeals'
 export { updateMealDetails, useUpdateMealDetails } from './hooks/updateMealDetails'
 export { updateMealImage, useUpdateMealImage } from './hooks/updateMealImage'

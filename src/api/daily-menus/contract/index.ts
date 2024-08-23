@@ -20,7 +20,7 @@ export interface ReadDailyMenuResponse extends DailyMenu {
 }
 export interface AddMealsToDailyMenusRequest {
     dates: DateIso[]
-    mealsIds: string[]
+    mealIds: string[]
 }
 export interface AddMealsToDailyMenusResponse {
     // newDailyMenus: DailyMenu[]

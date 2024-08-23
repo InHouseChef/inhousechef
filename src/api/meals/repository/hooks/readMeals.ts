@@ -16,7 +16,7 @@ import { MEAL_KEYS } from '../keys'
 interface ReadMealsPath {}
 interface ReadMealsParams extends QueryParams<ReadMealsPath> {}
 
-const readMeals = ({ query }: ReadMealsParams): OffsetResultsPromise<ReadMealResponse> =>
+export const readMeals = ({ query }: ReadMealsParams): OffsetResultsPromise<ReadMealResponse> =>
     axiosPrivate.get(`/meals?${createBaseUrlQuery(query)}`)
 
 interface UseReadMealsParams extends DefaultQueryParams<ReadMealsPath>, QueryOptions {}
@@ -24,7 +24,7 @@ interface UseReadMealsParams extends DefaultQueryParams<ReadMealsPath>, QueryOpt
 export const useReadMeals = (params?: UseReadMealsParams) => {
     const defaultParams = useDefaultQueryParams({
         ...params,
-        query: { pagination: { ...DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST } }
+        query: { pagination: { ...DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST }},
     })
 
     return useQuery({
