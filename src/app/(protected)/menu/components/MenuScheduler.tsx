@@ -1,6 +1,6 @@
 'use client'
 
-import { createDailyMenu, ReadDailyMenuResponse, readDailyMenus } from '@/api/daily-menus'
+import { createDailyMenu, ReadDailyMenuResponse, readDailyMenus, removeMealFromDailyMenu } from '@/api/daily-menus'
 import { ReadMealResponse, readMeals } from '@/api/meals'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -18,6 +18,7 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { toDateIso } from '@/utils/date'
 import { Header, Loader } from '@/components'
 import { DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST } from '@/constants'
+import { deleteDailyMenu } from '@/api/daily-menus/repository/hooks/deleteDailyMenu'
 
 interface MenuScheduleFormData {
     meals: ReadMealResponse[]
@@ -42,6 +43,7 @@ export const MealScheduler = () => {
     const [isAssignmentMode, setIsAssignmentMode] = useState(false)
     const [currentMonth, setCurrentMonth] = useState<Date>(new Date())
     const [value, setValue] = useState<string[]>([])
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
     const form = useForm<MenuScheduleFormData>({
         defaultValues: {
@@ -82,6 +84,23 @@ export const MealScheduler = () => {
         setCurrentMonth(date)
     }
 
+
+    const toggleDeleteConfirmation = () => {
+        setShowDeleteConfirmation(!showDeleteConfirmation);
+    };
+    
+    const confirmDeleteDailyMenu = () => {
+        const dailyMenuId = dailyMenus.find(menu => new Date(menu.date).toDateString() === selectedDates[0].toDateString())!.id;
+        deleteDailyMenu({ path: { dailyMenuId }})
+            .then(() => {
+                initialFetch();  // Refresh the data after deletion
+                toggleDeleteConfirmation();  // Close the confirmation dialog
+            })
+            .catch(error => {
+                console.error("Error deleting daily menu:", error);
+            });
+    };
+
     const handleDateSelection = (dates: Date[] | Date | undefined) => {
         if (dates === undefined) {
             setSelectedDates([])
@@ -119,12 +138,27 @@ export const MealScheduler = () => {
         )
     }
 
+    const handleDeleteMeal = (event: any, mealId: string) => {
+        event.preventDefault() // Prevent the form from submitting
+        const selectedDate = selectedDates[0]
+        const dailyMenuId = dailyMenus.find(menu => new Date(menu.date).toDateString() === selectedDate.toDateString())!.id
+        removeMealFromDailyMenu({ path: { dailyMenuId, mealId }})
+            .then(() => {
+                // optimistic update
+                const meals = selectedMeals.filter(meal => meal.id !== mealId)
+                setSelectedMeals(meals)
+            })
+            .catch(error => {
+                console.error("Error removing meal from daily menu:", error);
+            });
+    };
+
     const onSubmit = () => {
         const dates = selectedDates.map(date => toDateIso(date))
         const mealIds = fields.map(meal => meal.id)
         createDailyMenu(
             { path: '', body: { dates, mealIds } }
-        ).then(res => {
+        ).then(_ => {
             setSelectedDates([])
             setSelectedMeals([])
             setValue([])
@@ -156,40 +190,57 @@ export const MealScheduler = () => {
                 className="bg-white shadow-lg rounded-lg"
             />
 
-            <div className="flex-grow min-w-[300px] bg-white shadow-lg rounded-lg p-4 flex flex-col flex-start">
-                <h3 className="text-lg font-semibold mb-4">
-                    {isAssignmentMode ? 'Assign Meals to Dates' : `Meals for ${selectedDates.length === 1 ? selectedDates[0].toDateString() : 'Selected Dates'}`}
-                </h3>
+            <div className="flex-grow min-w-[300px] bg-white shadow-lg rounded-lg p-4 flex flex-col flex-start relative">
+                <div className='flex justify-between mb-4'>
+                    <h3 className="text-lg font-semibold">
+                        {isAssignmentMode ? 'Assign Meals to Dates' : `Meals for ${selectedDates.length === 1 ? selectedDates[0].toDateString() : 'Selected Dates'}`}
+                    </h3>
+                    {!isAssignmentMode && selectedDates.length === 1 && selectedMeals.length > 0 && (
+                        <Button type="button" variant="destructive" onClick={toggleDeleteConfirmation}>
+                            Delete Daily Menu
+                        </Button>
+                    )}
+                </div>
                 <div className="flex-grow max-h-[500px] overflow-y-auto">
                     {!isAssignmentMode && selectedMeals.length > 0 && (
                         <div className="grid gap-4">
                             {selectedMeals.map(meal => (
-                                <div key={meal.id} className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center">
-                                    <div className="w-20 h-20 bg-gray-200 rounded-lg mr-4">
-                                        {meal.imageUrl ? (
-                                            <img
-                                                src={meal.imageUrl}
-                                                alt={meal.name}
-                                                className="w-20 h-20 object-cover rounded-lg"
-                                            />
-                                        ) : (
-                                            <div className="w-20 h-20 bg-gray-200 rounded-lg"></div>
-                                        )}
+                                <div key={meal.id} className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center justify-between">
+                                    <div className="flex items-center">
+                                        <div className="w-20 h-20 bg-gray-200 rounded-lg mr-4">
+                                            {meal.imageUrl ? (
+                                                <img
+                                                    src={meal.imageUrl}
+                                                    alt={meal.name}
+                                                    className="w-20 h-20 object-cover rounded-lg"
+                                                />
+                                            ) : (
+                                                <div className="w-20 h-20 bg-gray-200 rounded-lg"></div>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <h4 className="text-md font-semibold">{meal.name}</h4>
+                                            <p className="text-sm text-gray-600"><b>Description:</b> {meal.description}</p>
+                                            <p className='text-sm text-gray-600'><b>Type:</b> {meal.type}</p>
+                                            <p className="text-sm text-gray-600">
+                                                <b>Purchase Price:</b> {meal.purchasePrice.toFixed(2)} RSD | <b>Selling Price:</b> {meal.sellingPrice.toFixed(2)} RSD
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h4 className="text-md font-semibold">{meal.name}</h4>
-                                        <p className="text-sm text-gray-600"><b>Description:</b> {meal.description}</p>
-                                        <p className='text-sm text-gray-600'><b>Type:</b> {meal.type}</p>
-                                        <p className="text-sm text-gray-600">
-                                            <b>Purchase Price:</b> {meal.purchasePrice.toFixed(2)} RSD | <b>Selling Price:</b> {meal.sellingPrice.toFixed(2)} RSD
-                                        </p>
-                                    </div>
+                                    <Button 
+                                        variant="destructive" 
+                                        size="sm" 
+                                        onClick={(event) => handleDeleteMeal(event, meal.id)}>
+                                        Delete
+                                    </Button>
                                 </div>
                             ))}
                         </div>
                     )}
                     {!isAssignmentMode && selectedDates.length > 0 && selectedMeals.length === 0 && (
-                        <p className="text-gray-500">No meals assigned for the selected day</p>
+                        <div className="flex items-center justify-center h-full">
+                        <p className="text-gray-500 text-center">No meals assigned for the selected day.</p>
+                        </div>
                     )}
                     {!isAssignmentMode && selectedDates.length === 0 && (
                         <div className="flex items-center justify-center h-full">
@@ -248,10 +299,25 @@ export const MealScheduler = () => {
                         )}
                     </>
                 )}
+                {/* Overlay for delete confirmation */}
+                {!isAssignmentMode && selectedDates.length === 1 && selectedMeals.length > 0 && showDeleteConfirmation && (
+                    <div className="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+                        <div className="bg-white p-6 rounded-lg shadow-lg">
+                            <h4 className="text-lg font-semibold mb-4">Are you sure you want to delete this daily menu?</h4>
+                            <div className="flex justify-end space-x-4">
+                                <Button variant="outline" onClick={toggleDeleteConfirmation}>Cancel</Button>
+                                <Button variant="destructive" onClick={confirmDeleteDailyMenu}>Confirm</Button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     </form>
 </Form>
+
+
+
 
 
     )
