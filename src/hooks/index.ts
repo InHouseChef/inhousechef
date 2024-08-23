@@ -1,4 +1,5 @@
 export { useAppDate } from './useAppDate'
+export { useCompanyAuthorization } from './useAuthorization/hooks/useCompanyAuthorization'
 export { useBaseUrl } from './useBaseUrl'
 export { useDefaultQuery } from './useDefaultQuery'
 export { getDefaultBooleanValue, useDefaultQueryParams, usePathParams, useQueryParams } from './useDefaultQueryParams'

@@ -37,7 +37,7 @@ export interface AppJwt extends Omit<Jwt, 'type'> {
     type: 'access' | 'identity' | 'refresh'
     user: string
     access: 'unrestricted' | 'authorized'
-    role: Roles
+    'cognito:groups': [CompanyUserRole]
     grant_type: 'password_credentials' | 'refresh_token'
     username?: string
     password?: string
@@ -48,4 +48,6 @@ export type Modify<T, R> = Omit<T, keyof R> & R
 
 export type FileTypes = 'jpg' | 'jpeg' | 'png'
 
-export type Roles = 'Admin' | 'CompanyManager' | 'Employee' | 'RestaurantWorker'
+export type CompanyUserRole = 'Admin' | 'CompanyManager' | 'Employee' | 'RestaurantWorker'
+
+export type CompanyUserRoles = Record<CompanyUserRole, boolean>

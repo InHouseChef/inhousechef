@@ -1,24 +1,38 @@
-import { Roles } from '@/types'
+import { useIdentity } from '@/hooks/useIdentity'
+import { CompanyUserRoles } from '@/types'
 import { isDeepEqualObject } from '@/utils'
 import { useEffect, useState } from 'react'
 import { UseAuthorization, UseAuthorizationResult } from '../types'
 
-type UseCompanyAuthorization = UseAuthorization<Roles>
+type UseCompanyAuthorization = UseAuthorization<CompanyUserRoles>
 
 export const useCompanyAuthorization = (): UseCompanyAuthorization => {
-    // const { isFetched, data } = useMyCompanyPermissions()
+    const { jwt } = useIdentity()
     const [result, setResult] = useState<UseAuthorizationResult>({ AuthorizationReady: false })
-    const [roles, setRoles] = useState()
+    const [roles, setRoles] = useState<CompanyUserRoles>({
+        Admin: false,
+        CompanyManager: false,
+        Employee: false,
+        RestaurantWorker: false
+    })
 
     useEffect(() => {
-        if (!isFetched || !data) return
-        if (isDeepEqualObject(data, roles)) return setResult({ AuthorizationReady: true })
-        setResult({ AuthorizationReady: isFetched })
-        setRoles(data)
-    }, [isFetched, data])
+        if (!jwt?.['cognito:groups']) return
 
-    return {
-        result,
-        roles
-    }
+        const cognitoGroups = jwt['cognito:groups'] as string[]
+        const updatedRoles: CompanyUserRoles = {
+            Admin: cognitoGroups.includes('Admin'),
+            CompanyManager: cognitoGroups.includes('CompanyManager'),
+            Employee: cognitoGroups.includes('Employee'),
+            RestaurantWorker: cognitoGroups.includes('RestaurantWorker')
+        }
+
+        if (!isDeepEqualObject(updatedRoles, roles)) {
+            setRoles(updatedRoles)
+        }
+
+        setResult(prev => (prev.AuthorizationReady ? prev : { AuthorizationReady: true }))
+    }, [jwt, roles])
+
+    return { result, roles }
 }
