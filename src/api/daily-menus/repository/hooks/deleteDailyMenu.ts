@@ -9,7 +9,7 @@ interface DeleteDailyMenuPath {
 }
 interface DeleteDailyMenuParams extends MutationParams<DeleteDailyMenuPath> {}
 
-const deleteDailyMenu = ({ path: { dailyMenuId } }: DeleteDailyMenuParams) =>
+export const deleteDailyMenu = ({ path: { dailyMenuId } }: DeleteDailyMenuParams) =>
     axiosPrivate.delete(`/daily-menus/${dailyMenuId}`)
 
 export const useDeleteDailyMenu = () =>

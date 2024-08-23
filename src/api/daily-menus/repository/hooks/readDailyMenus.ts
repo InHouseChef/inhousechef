@@ -10,11 +10,12 @@ import { createBaseUrlQuery } from '@/utils'
 import { useQuery } from '@tanstack/react-query'
 import { ReadDailyMenuResponse } from '../../contract'
 import { DAILY_MENU_KEYS } from '../keys'
+import { DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST } from '@/constants'
 
 interface ReadDailyMenusPath {}
 interface ReadDailyMenusParams extends QueryParams<ReadDailyMenusPath> {}
 
-const readDailyMenus = ({ query }: ReadDailyMenusParams): Promise<ReadDailyMenuResponse[]> =>
+export const readDailyMenus = ({ query }: ReadDailyMenusParams): Promise<ReadDailyMenuResponse[]> =>
     axiosPrivate.get(`/daily-menus?${createBaseUrlQuery(query)}`)
 
 interface UseReadDailyMenusParams<T> extends DefaultQueryParams<ReadDailyMenusPath>, QueryOptions {
@@ -22,7 +23,10 @@ interface UseReadDailyMenusParams<T> extends DefaultQueryParams<ReadDailyMenusPa
 }
 
 export const useReadDailyMenus = <T = ReadDailyMenuResponse[]>(params?: UseReadDailyMenusParams<T>) => {
-    const defaultParams = useDefaultQueryParams(params)
+    const defaultParams = useDefaultQueryParams({
+        ...params,
+        query: { pagination: { ...DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST }}
+    })
 
     return useQuery({
         queryKey: DAILY_MENU_KEYS.collection(defaultParams),
