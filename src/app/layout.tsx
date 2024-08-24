@@ -1,5 +1,4 @@
 import { DynamicTheme, QueryProvider } from '@/providers'
-import { RoleProvider } from '@/providers/RoleProvider/RoleProvider'
 import { ReactNode } from 'react'
 import './global.css'
 
@@ -15,7 +14,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <html lang='en'>
             <QueryProvider>
                 <DynamicTheme>
-                    <RoleProvider>{children}</RoleProvider>
+                    {children}
                 </DynamicTheme>
             </QueryProvider>
         </html>

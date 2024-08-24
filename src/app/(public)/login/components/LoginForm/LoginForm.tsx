@@ -1,7 +1,7 @@
 'use client'
 import { useReadUserCompany } from '@/api/companies'
 import { useCreateLogin } from '@/api/logins'
-import { useCompanyStore } from '@/app/state'
+import { useCompanyStore } from '@/state'
 import { Error } from '@/components'
 import CardWrapper from '@/components/auth/card-wrapper'
 import { Button } from '@/components/ui/button'
