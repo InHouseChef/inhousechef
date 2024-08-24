@@ -15,7 +15,7 @@ import { COMPANY_KEYS } from '../keys'
 interface ReadCompaniesPath {}
 interface ReadCompaniesParams extends QueryParams<ReadCompaniesPath> {}
 
-const readCompanies = ({}: ReadCompaniesParams): OffsetResultsPromise<ReadCompanyResponse> => axiosPrivate.get('/companies')
+export const readCompanies = ({}: ReadCompaniesParams): OffsetResultsPromise<ReadCompanyResponse> => axiosPrivate.get('/companies')
 
 interface UseReadCompaniesParams extends DefaultQueryParams<ReadCompaniesPath>, QueryOptions {}
 
