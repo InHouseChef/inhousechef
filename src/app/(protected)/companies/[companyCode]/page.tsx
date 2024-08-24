@@ -13,9 +13,9 @@ export default function CompanyPage({ params }: { params: { companyCode: string 
 
     return (
         <>
-            <CompanyOrderForm />
+            {/* <CompanyOrderForm /> */}
 
-            {/* <div className='border-b border-gray-300 pb-4'>
+            <div className='border-b border-gray-300 pb-4'>
                 <CompanyDetailsUpdateForm companyCode={companyCode} />
             </div>
             <div className='border-b border-gray-300 pb-4'>
@@ -25,7 +25,7 @@ export default function CompanyPage({ params }: { params: { companyCode: string 
                 <CompanyBrandingColorsUpdateForm companyCode={companyCode} />
             </div>
 
-            <DangerZone companyCode={companyCode} />*/}
+            <DangerZone companyCode={companyCode} />
 
         </>
     )

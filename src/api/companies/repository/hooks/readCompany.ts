@@ -15,7 +15,7 @@ interface ReadCompanyPath {
 }
 interface ReadCompanyParams extends QueryParams<ReadCompanyPath> {}
 
-const readCompany = ({ path: { companyCode } }: ReadCompanyParams): Promise<ReadCompanyResponse> =>
+export const readCompany = ({ path: { companyCode } }: ReadCompanyParams): Promise<ReadCompanyResponse> =>
     axiosPrivate.get(`/companies/${companyCode}`)
 
 interface UseReadCompanyParams<T> extends DefaultQueryParams<ReadCompanyPath>, QueryOptions {
