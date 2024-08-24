@@ -1,11 +1,11 @@
-import { Roles } from '@/types'
+import { CompanyUserRole } from '@/types'
 
 interface UserResponse {
     id: string
     companyId: string
     username: string
-    role: RolesEnum.CompanyManager | RolesEnum.Employee | RolesEnum.RestaurantWorker
-    fullName: string,
+    role: RolesEnum.Admin | RolesEnum.CompanyManager | RolesEnum.Employee | RolesEnum.RestaurantWorker
+    fullName: string
     aLaCardPermission: boolean
 }
 
@@ -17,7 +17,7 @@ export interface CreateUserRequest {
     username: string
     password: string
     fullName: string
-    role: Roles
+    role: CompanyUserRole
     aLaCardPermission: boolean
 }
 
@@ -25,13 +25,13 @@ export interface CreateUserResponse {
     id: string
     companyId: string
     username: string
-    role: Roles
+    role: CompanyUserRole
     fullName: string
     aLaCardPermission: boolean
 }
 
 export interface UpdateUserProfileRequest {
-    role: Roles
+    role: CompanyUserRole
     fullName: string
 }
 
@@ -47,5 +47,5 @@ export enum RolesEnum {
     Admin = 'Admin',
     CompanyManager = 'CompanyManager',
     Employee = 'Employee',
-    RestaurantWorker = 'RestaurantWorker',
+    RestaurantWorker = 'RestaurantWorker'
 }

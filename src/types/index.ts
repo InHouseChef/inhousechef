@@ -51,3 +51,7 @@ export type FileTypes = 'jpg' | 'jpeg' | 'png'
 export type CompanyUserRole = 'Admin' | 'CompanyManager' | 'Employee' | 'RestaurantWorker'
 
 export type CompanyUserRoles = Record<CompanyUserRole, boolean>
+
+export type OrderState = 'Draft' | 'Placed' | 'Confirmed' | 'Cancelled'
+
+export type OrderType = 'Scheduled' | 'ALaCard'
