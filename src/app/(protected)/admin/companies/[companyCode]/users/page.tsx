@@ -11,7 +11,7 @@ export default function Users({ params }: { params: { companyCode: string } }) {
     return (
         <>
             <Header heading='Users'>
-                <Button type='button' onClick={() => router.push(`users/create`)}>
+                <Button type='button' onClick={() => router.push(`admin/users/create`)}>
                     Create User
                 </Button>
             </Header>

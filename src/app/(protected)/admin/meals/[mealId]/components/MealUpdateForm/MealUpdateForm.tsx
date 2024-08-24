@@ -100,7 +100,7 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
         reset(updateResult)
     }
 
-    const handleDeleteMeal = () => deleteMeal({ path: { mealId } }, { onSuccess: () => router.push('/meals') })
+    const handleDeleteMeal = () => deleteMeal({ path: { mealId } }, { onSuccess: () => router.push('/admin/meals') })
 
     return (
         <Form {...form}>

@@ -59,7 +59,7 @@ export const MealList = () => {
     return (
         <div>
             <Header heading='Meals'>
-                <Button type='button' onClick={() => router.push('/meals/create')}>
+                <Button type='button' onClick={() => router.push('/admin/meals/create')}>
                     Create Meal
                 </Button>
             </Header>

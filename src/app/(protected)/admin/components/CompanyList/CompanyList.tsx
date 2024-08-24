@@ -16,7 +16,7 @@ export const CompanyList = () => {
             column.accessor('name', {
                 header: 'Company Name',
                 enableSorting: false,
-                cell: props => <Link href={`/companies/${props.row.original.code}`}>{props.getValue()}</Link>
+                cell: props => <Link href={`/admin/companies/${props.row.original.code}`}>{props.getValue()}</Link>
             }),
             column.accessor('telephone', {
                 header: 'Phone Number',

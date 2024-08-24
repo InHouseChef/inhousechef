@@ -19,7 +19,7 @@ export const CompanyList = () => {
             column.accessor('name', {
                 header: 'Company Name',
                 enableSorting: false,
-                cell: props => <Link href={`/companies/${props.row.original.code}`}>{props.getValue()}</Link>
+                cell: props => <Link href={`/admin/companies/${props.row.original.code}`}>{props.getValue()}</Link>
             }),
             column.accessor('telephone', {
                 header: 'Phone Number',
@@ -53,7 +53,7 @@ export const CompanyList = () => {
     return (
         <div>
             <Header heading='Companies'>
-                <Button type='button' onClick={() => router.push('/companies/create')}>
+                <Button type='button' onClick={() => router.push('admin/companies/create')}>
                     Create Company
                 </Button>
             </Header>

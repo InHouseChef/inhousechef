@@ -11,7 +11,7 @@ export default function Shifts({ params }: { params: { companyCode: string } }) 
     return (
         <>
             <Header heading='Shifts'>
-                <Button type='button' onClick={() => router.push(`shifts/create`)}>
+                <Button type='button' onClick={() => router.push(`admin/shifts/create`)}>
                     Create Shift
                 </Button>
             </Header>

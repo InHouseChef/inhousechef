@@ -1,5 +1,6 @@
 'use client'
 
+import { TopNav } from '@/components'
 import { ReactNode } from 'react'
 
 interface LayoutProps {
@@ -9,6 +10,7 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
     return (
         <>
+            <TopNav />
             {children}
         </>
     )

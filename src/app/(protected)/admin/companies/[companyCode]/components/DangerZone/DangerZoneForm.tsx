@@ -28,7 +28,7 @@ export const DangerZone = ({ companyCode }: DangerZoneProps) => {
     const handleDeleteCompany = () => {
         deleteCompany({ path: { companyCode } }, {
             onSuccess: () => {
-                router.push('/companies') // Redirect after deletion
+                router.push('/admin/companies') // Redirect after deletion
             }
         })
     }

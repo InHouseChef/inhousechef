@@ -28,7 +28,7 @@ export const MealCreateForm = () => {
             { path: {}, body: formData },
             {
                 onSuccess: data => {
-                    router.push(`/meals/${data.id}`)
+                    router.push(`/admin/meals/${data.id}`)
                 }
             }
         )

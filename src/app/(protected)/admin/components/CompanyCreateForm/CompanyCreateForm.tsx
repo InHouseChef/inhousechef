@@ -26,7 +26,7 @@ export const CompanyCreateForm = () => {
             { path: {}, body: formData },
             {
                 onSuccess: data => {
-                    router.push(`/companies/${data.code}`)
+                    router.push(`/admin/companies/${data.code}`)
                 }
             }
         )

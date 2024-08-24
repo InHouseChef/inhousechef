@@ -45,7 +45,7 @@ export const UserCreateForm = ({ params }: { params: { companyCode: string } }) 
             { path: { companyCode }, body: formData },
             {
                 onSuccess: data => {
-                    router.push(`/companies/${companyCode}/users/${data.id}`)
+                    router.push(`/admin/companies/${companyCode}/users/${data.id}`)
                 }
             }
         )

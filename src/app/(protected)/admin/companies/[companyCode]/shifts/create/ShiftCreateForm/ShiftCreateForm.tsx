@@ -46,7 +46,7 @@ export const ShiftCreateForm = ({ params }: { params: { companyCode: string } })
             },
             {
                 onSuccess: data => {
-                    router.push(`/companies/${companyCode}/shifts/${data.id}`)
+                    router.push(`/admin/companies/${companyCode}/shifts/${data.id}`)
                 }
             }
         )
