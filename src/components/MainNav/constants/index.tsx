@@ -10,8 +10,12 @@ export const LINKS: MainNavLink[] = [
         path: 'companies'
     },
     {
-        label: 'Menu',
-        path: 'menu'
+        label: 'Daily Menus',
+        path: 'daily-menus'
+    },
+    {
+        label: 'A La Card Menus',
+        path: 'alacard-menus'
     },
     {
         label: 'Meals',
