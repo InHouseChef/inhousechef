@@ -2,12 +2,13 @@
 
 import { ReadMealResponse } from '@/api/meals'
 import { readMeals } from '@/api/meals/repository/hooks/readMeals'
-import { DataTable, Loader } from '@/components'
+import { DataTable, Header, Loader } from '@/components'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import Link from 'next/link'
 import { useMemo, useState, useEffect } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation'
 
 export const MealList = () => {
     const [selectedType, setSelectedType] = useState<string>('All')
@@ -16,6 +17,8 @@ export const MealList = () => {
     const [totalCount, setTotalCount] = useState<number>(0)
     const [pageSize, setPageSize] = useState<number>(10)
     const [currentPage, setCurrentPage] = useState<number>(0)
+
+    const router = useRouter()
 
     // Fetch meals based on selected filters, pagination size, and page
     const fetchMeals = () => {
@@ -109,6 +112,12 @@ export const MealList = () => {
 
     return (
         <div>
+            <Header heading="Meals">
+                <Button type='button' onClick={() => router.push('/admin/meals/create')}>
+                    Create Meal
+                </Button>
+            </Header>
+            <div className='mt-4'></div>
             <div className="flex items-center gap-4 mb-4">
                 <Select onValueChange={setSelectedType} value={selectedType}>
                     <SelectTrigger>

@@ -10,7 +10,7 @@ export default function Layout({ children }: ProtectedLayoutProps) {
     return (
         <AdminProtectedLayout>
             <MainNavDesktop />
-            <div className='w-full p-4 overflow-y-auto overflow-x-hidden'>
+            <div className='w-full px-4 overflow-y-auto overflow-x-hidden'>
                 {children}
             </div>
         </AdminProtectedLayout>
