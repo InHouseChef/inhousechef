@@ -215,9 +215,8 @@ export const DailyMenuManagement = () => {
                                                     <h4 className="text-md font-semibold">{meal.name}</h4>
                                                     <p className="text-sm text-gray-600"><b>Description:</b> {meal.description}</p>
                                                     <p className='text-sm text-gray-600'><b>Type:</b> {meal.type}</p>
-                                                    <p className="text-sm text-gray-600">
-                                                        <b>Purchase Price:</b> {meal.purchasePrice.toFixed(2)} RSD | <b>Selling Price:</b> {meal.sellingPrice.toFixed(2)} RSD
-                                                    </p>
+                                                    <p className='text-sm text-gray-600'><b>Purchase Price:</b> {meal.purchasePrice.toFixed(2)} RSD</p>
+                                                    <p className='text-sm text-gray-600'><b>Selling Price:</b> {meal.sellingPrice.toFixed(2)} RSD</p>
                                                 </div>
                                             </div>
                                             <Button 
@@ -259,9 +258,8 @@ export const DailyMenuManagement = () => {
                                                 <h4 className="text-md font-semibold">{meal.name}</h4>
                                                 <p className="text-sm text-gray-600"><b>Description:</b> {meal.description}</p>
                                                 <p className='text-sm text-gray-600'><b>Type:</b> {meal.type}</p>
-                                                <p className="text-sm text-gray-600">
-                                                    <b>Purchase Price:</b> {meal.purchasePrice.toFixed(2)} RSD | <b>Selling Price:</b> {meal.sellingPrice.toFixed(2)} RSD
-                                                </p>
+                                                <p className='text-sm text-gray-600'><b>Purchase Price:</b> {meal.purchasePrice.toFixed(2)} RSD</p>
+                                                <p className='text-sm text-gray-600'><b>Selling Price:</b> {meal.sellingPrice.toFixed(2)} RSD</p>
                                             </div>
                                         </div>
                                     ))}
