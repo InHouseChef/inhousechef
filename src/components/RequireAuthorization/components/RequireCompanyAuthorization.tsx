@@ -23,7 +23,7 @@ export const RequireCompanyAuthorization: RequireCompanyRoleComponent<CompanyUse
     loader
 }) => {
     const { roles, AuthorizationReady } = useRoles()
-
+    
     const allowed = isAllowed(roles, role)
 
     return <>{AuthorizationReady ? (allowed ? children : fallback) : loader || null}</>

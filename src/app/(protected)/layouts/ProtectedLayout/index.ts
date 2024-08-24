@@ -1,1 +1,2 @@
-export { ProtectedLayout } from './ProtectedLayout'
+export { AdminProtectedLayout } from './AdminProtectedLayout'
+export { ClientProtectedLayout } from './ClientProtectedLayout'

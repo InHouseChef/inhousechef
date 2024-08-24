@@ -1,15 +1,18 @@
 'use client'
 import { ReadMealResponse } from '@/api/meals'
 import { useReadMeals } from '@/api/meals/repository/hooks/readMeals'
-import { DataTable } from '@/components'
+import { DataTable, Header } from '@/components'
+import { Button } from '@/components/ui/button'
 import { useDefaultQuery } from '@/hooks'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useMemo } from 'react'
 
 export const MealList = () => {
     const { query, setFilter, setPagination, setSorting } = useDefaultQuery({}, true)
     const { data: meals, isLoading, isFetching } = useReadMeals()
+    const router = useRouter()
 
     const column = createColumnHelper<ReadMealResponse>()
     const columns = useMemo(
@@ -55,6 +58,11 @@ export const MealList = () => {
 
     return (
         <div>
+            <Header heading='Meals'>
+                <Button type='button' onClick={() => router.push('/meals/create')}>
+                    Create Meal
+                </Button>
+            </Header>
             <div className='mt-4'></div>
             <DataTable columns={columns as ColumnDef<ReadMealResponse, unknown>[]} data={meals?.results || []} />
         </div>

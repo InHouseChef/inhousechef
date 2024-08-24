@@ -3,23 +3,23 @@ import { MainNavLink } from '../types'
 export const LINKS: MainNavLink[] = [
     {
         label: 'Dashboard',
-        path: 'dashboard'
+        path: 'admin/dashboard'
     },
     {
         label: 'Companies',
-        path: 'companies'
+        path: 'admin/companies'
     },
     {
         label: 'Daily Menus',
-        path: 'daily-menus'
+        path: 'admin/daily-menus'
     },
     {
         label: 'A La Card Menus',
-        path: 'alacard-menus'
+        path: 'admin/alacard-menus'
     },
     {
         label: 'Meals',
-        path: 'meals'
+        path: 'admin/meals'
     }
 ]
 

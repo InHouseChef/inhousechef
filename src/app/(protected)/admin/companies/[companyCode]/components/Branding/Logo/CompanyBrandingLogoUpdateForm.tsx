@@ -1,7 +1,6 @@
 'use client'
 
 import { useReadCompany, updateCompanyBrandingLogo } from "@/api/companies";
-import { updateCompanyBrandingLogoSchema } from "@/app/(protected)/companies/schemas";
 import { Header } from "@/components";
 import { FileUploader } from "@/components/FileUploader";
 import { FileUploaderContent, FileInput, FileUploaderItem, FileSvgDraw } from "@/components/FileUploader/FileUploader";
@@ -21,6 +20,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
+import { updateCompanyBrandingLogoSchema } from "@/app/(protected)/admin/schemas";
 
 interface CompanyUpdateFormProps {
     companyCode: string

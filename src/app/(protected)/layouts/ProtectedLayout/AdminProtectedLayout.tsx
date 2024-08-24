@@ -1,14 +1,15 @@
 'use client'
-import { Loader, Main, TopNav } from '@/components'
+import { Loader, Main, RequireCompanyAuthorization, TopNav } from '@/components'
 import { useBaseUrl, useSafeReplace } from '@/hooks'
 import { useReadIdentity } from '@/hooks/useIdentity'
+import { RoleProvider } from '@/providers/RoleProvider/RoleProvider'
 import { ReactNode, useEffect } from 'react'
 
-interface ProtectedLayoutProps {
+interface AdminProtectedLayoutProps {
     children?: ReactNode
 }
 
-export const ProtectedLayout = ({ children }: ProtectedLayoutProps) => {
+export const AdminProtectedLayout = ({ children }: AdminProtectedLayoutProps) => {
     const { baseUrl } = useBaseUrl()
 
     const { data: identity, isFetching: isFetchingIdentity } = useReadIdentity()
@@ -22,11 +23,12 @@ export const ProtectedLayout = ({ children }: ProtectedLayoutProps) => {
     if (isFetchingIdentity || !identity) return <Loader />
 
     return (
-        <>
-            <div className='flex w-full flex-grow flex-col'>
-                <TopNav />
-                <Main>{children}</Main>
-            </div>
-        </>
+        <RoleProvider>
+            <RequireCompanyAuthorization role='Admin'>
+                <div className='flex w-full flex-grow flex-col'>
+                    <Main>{children}</Main>
+                </div>
+            </RequireCompanyAuthorization>
+        </RoleProvider>
     )
 }

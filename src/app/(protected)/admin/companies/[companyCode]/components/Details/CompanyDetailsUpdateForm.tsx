@@ -6,11 +6,11 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { updateCompanyDetailsSchema } from '@/app/(protected)/companies/schemas'
 import { Input } from '@/components/ui/input'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { updateCompanyDetailsSchema } from '../../../schemas'
 
 interface CompanyDetailsUpdateFormProps {
     companyCode: string

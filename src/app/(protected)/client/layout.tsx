@@ -1,4 +1,5 @@
-import { ReactNode } from 'react'
+import { ClientProtectedLayout } from "../layouts/ProtectedLayout"
+import { ReactNode } from "react"
 
 interface ProtectedLayoutProps {
     children?: ReactNode
@@ -6,8 +7,8 @@ interface ProtectedLayoutProps {
 
 export default function Layout({ children }: ProtectedLayoutProps) {
     return (
-        <>
+        <ClientProtectedLayout>
             {children}
-        </>
+        </ClientProtectedLayout>
     )
 }

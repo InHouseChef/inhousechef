@@ -1,7 +1,7 @@
 'use client'
 
 import { updateCompanyBrandingColors, useReadCompany } from '@/api/companies'
-import { updateCompanyBrandingColorsSchema } from '@/app/(protected)/companies/schemas'
+import { updateCompanyBrandingColorsSchema } from '@/app/(protected)/admin/companies/schemas'
 import { Header } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
