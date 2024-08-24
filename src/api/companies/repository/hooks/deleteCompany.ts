@@ -9,7 +9,7 @@ interface DeleteCompanyPath {
 }
 interface DeleteCompanyParams extends MutationParams<DeleteCompanyPath> {}
 
-const deleteCompany = ({ path: { companyCode } }: DeleteCompanyParams) => axiosPrivate.delete(`/companies/${companyCode}`)
+export const deleteCompany = ({ path: { companyCode } }: DeleteCompanyParams) => axiosPrivate.delete(`/companies/${companyCode}`)
 
 export const useDeleteCompany = () =>
     useMutation({

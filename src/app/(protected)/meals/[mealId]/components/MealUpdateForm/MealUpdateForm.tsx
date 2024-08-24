@@ -1,6 +1,6 @@
 'use client'
 
-import { updateMealDetails, useDeleteMeal, useReadMeal, updateMealImage, MealType } from '@/api/meals'
+import { updateMealImage, MealType, ReadMealResponse, updateMealDetails } from '@/api/meals'
 import { Header, Loader } from '@/components'
 import { FileUploader } from '@/components/FileUploader'
 import { FileUploaderContent, FileInput, FileUploaderItem, FileSvgDraw } from '@/components/FileUploader/FileUploader'
@@ -24,14 +24,16 @@ import { AlertDialogFooter,
     AlertDialogTitle,
     AlertDialogTrigger, } from '@/components/ui/alert-dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { readMeal } from '@/api/meals/repository/hooks/readMeal'
+import { deleteMeal } from '@/api/meals/repository/hooks/deleteMeal'
 
 interface MealUpdateFormProps {
     mealId: string
 }
 
 export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
-    const { data: meal, isLoading } = useReadMeal({ path: { mealId } })
-    const { mutate: deleteMeal } = useDeleteMeal()
+    const [meal, setMeal] = useState<ReadMealResponse | null>(null)
+    const [isLoading, setIsLoading] = useState(true)
     const router = useRouter()
 
     const [files, setFiles] = useState<File[] | null>(null)
@@ -51,6 +53,15 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
     })
 
     const { control, reset, handleSubmit, formState: { errors } } = form
+
+    useEffect(() => {
+        setIsLoading(true)
+        readMeal({ path: { mealId }, query: {} })
+        .then((res) => {
+            setMeal(res)
+            setIsLoading(false)
+        })
+    }, [])
 
     useEffect(() => {
         if (meal) {
@@ -85,22 +96,25 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
         if (files && files.length > 0) {
             const formData = new FormData()
             formData.append('image', files[0])
-            const uploadedImageUrl = await updateMealImage({ path: { mealId }, body: formData })
-            setImageURL(uploadedImageUrl.imageUrl) // Update the main image URL
+            const updateResult = await updateMealImage({ path: { mealId }, body: formData })
+            setMeal(updateResult)
+            setImageURL(updateResult.imageUrl) // Update the main image URL
             setFiles(null) // Clear files after upload
             setPreviewImageURL(null) // Clear the preview after upload
             setIsModalOpen(false) // Close the modal
-            return uploadedImageUrl
+            return updateResult
         }
         return null
     }
 
-    const onSubmit = async (formData: z.infer<typeof updateMealDetailsSchema>) => {
-        const updateResult = await updateMealDetails({ path: { mealId }, body: formData })
-        reset(updateResult)
+    const onSubmit = (formData: z.infer<typeof updateMealDetailsSchema>) => {
+        updateMealDetails({ path: { mealId }, body: formData })
     }
 
-    const handleDeleteMeal = () => deleteMeal({ path: { mealId } }, { onSuccess: () => router.push('/meals') })
+    const handleDeleteMeal = () => {
+        deleteMeal({ path: { mealId } })
+        .then(() => router.push('/meals'))
+    }
 
     return (
         <Form {...form}>
@@ -112,7 +126,7 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                         {imageURL ? (
                             <img src={imageURL} alt='Meal image' className='object-cover w-full h-full rounded-lg' />
                         ) : (
-                            <span className='text-gray-500'>No image available</span>
+                            <span className='text-gray-500 text-center'>No image</span>
                         )}
                     </div>
                     <div className='mt-4'>

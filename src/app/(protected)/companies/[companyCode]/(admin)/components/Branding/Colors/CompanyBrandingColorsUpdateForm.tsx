@@ -1,6 +1,6 @@
 'use client'
 
-import { updateCompanyBrandingColors, useReadCompany } from '@/api/companies'
+import { updateCompanyBrandingColors, readCompany } from '@/api/companies'
 import { updateCompanyBrandingColorsSchema } from '@/app/(protected)/companies/schemas'
 import { Header } from '@/components'
 import { Button } from '@/components/ui/button'
@@ -21,7 +21,8 @@ type CompanyBrandingColorsUpdateFormData = z.infer<typeof updateCompanyBrandingC
 const defaultColor = '#ffffffff'
 
 export const CompanyBrandingColorsUpdateForm = ({ companyCode }: CompanyUpdateFormProps) => {
-    const { data: company, isLoading } = useReadCompany({ path: { companyCode } })
+    const [company, setCompany] = useState<any>(null) // State to store company data
+    const [isLoading, setIsLoading] = useState(true)
     const [initialPrimaryColor, setInitialPrimaryColor] = useState(defaultColor)
     const [initialSecondaryColor, setInitialSecondaryColor] = useState(defaultColor)
     const [primaryColor, setPrimaryColor] = useState(defaultColor)
@@ -39,21 +40,33 @@ export const CompanyBrandingColorsUpdateForm = ({ companyCode }: CompanyUpdateFo
     const { reset, handleSubmit } = form
 
     useEffect(() => {
-        if (company) {
-            const initialPrimary = company.branding?.primaryColor || defaultColor
-            const initialSecondary = company.branding?.secondaryColor || defaultColor
+        const fetchCompanyData = async () => {
+            setIsLoading(true)
+            try {
+                const result = await readCompany({ path: { companyCode }, query: {} })
+                setCompany(result)
 
-            setInitialPrimaryColor(initialPrimary)
-            setInitialSecondaryColor(initialSecondary)
-            setPrimaryColor(initialPrimary)
-            setSecondaryColor(initialSecondary)
+                const initialPrimary = result.branding?.primaryColor || defaultColor
+                const initialSecondary = result.branding?.secondaryColor || defaultColor
 
-            reset({
-                primaryColor: initialPrimary,
-                secondaryColor: initialSecondary
-            })
+                setInitialPrimaryColor(initialPrimary)
+                setInitialSecondaryColor(initialSecondary)
+                setPrimaryColor(initialPrimary)
+                setSecondaryColor(initialSecondary)
+
+                reset({
+                    primaryColor: initialPrimary,
+                    secondaryColor: initialSecondary
+                })
+            } catch (error) {
+                console.error('Failed to fetch company data:', error)
+            } finally {
+                setIsLoading(false)
+            }
         }
-    }, [company, reset])
+
+        fetchCompanyData()
+    }, [companyCode, reset])
 
     useEffect(() => {
         // Check if the colors have changed from the initial values
@@ -85,25 +98,29 @@ export const CompanyBrandingColorsUpdateForm = ({ companyCode }: CompanyUpdateFo
             secondaryColor
         }
 
-        const updateResult = await updateCompanyBrandingColors({
-            path: { companyCode },
-            body: data
-        })
+        try {
+            const updateResult = await updateCompanyBrandingColors({
+                path: { companyCode },
+                body: data
+            })
 
-        const updatedPrimary = updateResult.branding?.primaryColor || defaultColor
-        const updatedSecondary = updateResult.branding?.secondaryColor || defaultColor
+            const updatedPrimary = updateResult.branding?.primaryColor || defaultColor
+            const updatedSecondary = updateResult.branding?.secondaryColor || defaultColor
 
-        setInitialPrimaryColor(updatedPrimary)
-        setInitialSecondaryColor(updatedSecondary)
-        setPrimaryColor(updatedPrimary)
-        setSecondaryColor(updatedSecondary)
+            setInitialPrimaryColor(updatedPrimary)
+            setInitialSecondaryColor(updatedSecondary)
+            setPrimaryColor(updatedPrimary)
+            setSecondaryColor(updatedSecondary)
 
-        reset({
-            primaryColor: updatedPrimary,
-            secondaryColor: updatedSecondary
-        })
+            reset({
+                primaryColor: updatedPrimary,
+                secondaryColor: updatedSecondary
+            })
 
-        setHasChanges(false) // Reset the change state after saving
+            setHasChanges(false) // Reset the change state after saving
+        } catch (error) {
+            console.error('Failed to update branding colors:', error)
+        }
     }
 
     const handleReset = () => {
