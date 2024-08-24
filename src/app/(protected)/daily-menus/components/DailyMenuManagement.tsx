@@ -200,7 +200,7 @@ export const DailyMenuManagement = () => {
                                     {selectedMeals.map(meal => (
                                         <div key={meal.id} className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center justify-between">
                                             <div className="flex items-center">
-                                                <div className="w-20 h-20 bg-gray-200 rounded-lg mr-4">
+                                                <div className="w-20 h-20 flex-shrink-0 bg-gray-200 rounded-lg mr-4">
                                                     {meal.imageUrl ? (
                                                         <img
                                                             src={meal.imageUrl}
@@ -211,7 +211,7 @@ export const DailyMenuManagement = () => {
                                                         <div className="w-20 h-20 bg-gray-200 rounded-lg"></div>
                                                     )}
                                                 </div>
-                                                <div>
+                                                <div className="flex-grow">
                                                     <h4 className="text-md font-semibold">{meal.name}</h4>
                                                     <p className="text-sm text-gray-600"><b>Description:</b> {meal.description}</p>
                                                     <p className='text-sm text-gray-600'><b>Type:</b> {meal.type}</p>
@@ -219,12 +219,14 @@ export const DailyMenuManagement = () => {
                                                     <p className='text-sm text-gray-600'><b>Selling Price:</b> {meal.sellingPrice.toFixed(2)} RSD</p>
                                                 </div>
                                             </div>
-                                            <Button 
-                                                variant="destructive" 
-                                                size="sm" 
-                                                onClick={(event) => handleDeleteMeal(event, meal.id)}>
-                                                Delete
-                                            </Button>
+                                            <div className="ml-4 flex-shrink-0">
+                                                <Button 
+                                                    variant="destructive" 
+                                                    size="sm" 
+                                                    onClick={(event) => handleDeleteMeal(event, meal.id)}>
+                                                    Delete
+                                                </Button>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
@@ -243,18 +245,18 @@ export const DailyMenuManagement = () => {
                                 <div className="grid gap-4">
                                     {meals.map(meal => (
                                         <div
-                                            key={meal.id}
-                                            className={`p-4 rounded-lg shadow-md flex items-center cursor-pointer ${value.includes(meal.id) ? 'bg-primary/10' : 'bg-gray-100'}`}
-                                            onClick={() => handleMealSelection(value.includes(meal.id) ? value.filter(id => id !== meal.id) : [...value, meal.id])}
+                                        key={meal.id}
+                                        className={`p-4 rounded-lg shadow-md flex items-center cursor-pointer ${value.includes(meal.id) ? 'bg-primary/10' : 'bg-gray-100'}`}
+                                        onClick={() => handleMealSelection(value.includes(meal.id) ? value.filter(id => id !== meal.id) : [...value, meal.id])}
                                         >
-                                            <div className="w-16 h-16 bg-gray-200 rounded-lg mr-4">
+                                            <div className="w-16 h-16 flex-shrink-0 bg-gray-200 rounded-lg mr-4">
                                                 {meal.imageUrl ? (
                                                     <img src={meal.imageUrl} alt={meal.name} className="w-full h-full object-cover rounded-lg" />
                                                 ) : (
                                                     <div className="w-full h-full bg-gray-200 rounded-lg"></div>
                                                 )}
                                             </div>
-                                            <div>
+                                            <div className="flex-grow">
                                                 <h4 className="text-md font-semibold">{meal.name}</h4>
                                                 <p className="text-sm text-gray-600"><b>Description:</b> {meal.description}</p>
                                                 <p className='text-sm text-gray-600'><b>Type:</b> {meal.type}</p>
