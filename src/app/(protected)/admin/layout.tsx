@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { AdminProtectedLayout } from '../layouts/ProtectedLayout'
-import { MainNavDesktop } from '@/components'
+import { MainNavDesktop, TopNav } from '@/components'
 
 interface ProtectedLayoutProps {
     children?: ReactNode
@@ -9,9 +9,14 @@ interface ProtectedLayoutProps {
 export default function Layout({ children }: ProtectedLayoutProps) {
     return (
         <AdminProtectedLayout>
-            <MainNavDesktop />
-            <div className='w-full px-4 overflow-y-auto overflow-x-hidden'>
-                {children}
+            <div className='flex flex-col flex-grow'>
+                <TopNav />
+                <div className='flex flex-row w-full'>
+                    <MainNavDesktop />
+                    <div className='w-full px-4'>
+                        {children}
+                    </div>
+                </div>
             </div>
         </AdminProtectedLayout>
     )

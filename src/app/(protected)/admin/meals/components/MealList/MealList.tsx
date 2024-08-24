@@ -55,7 +55,7 @@ export const MealList = () => {
             column.accessor('name', {
                 header: 'Meal Name',
                 enableSorting: false,
-                cell: props => <Link href={`/meals/${props.row.original.id}`}>{props.getValue()}</Link>
+                cell: props => <Link href={`/admin/meals/${props.row.original.id}`}>{props.getValue()}</Link>
             }),
             column.accessor('description', {
                 header: 'Description',
