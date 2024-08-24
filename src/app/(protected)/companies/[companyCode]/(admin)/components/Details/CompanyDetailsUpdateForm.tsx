@@ -89,7 +89,7 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
                                     name="name"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Name</FormLabel>
+                                            <FormLabel>Name<span className="text-red-500">*</span></FormLabel>
                                             <FormControl>
                                                 <Input {...field} placeholder='Kristal Ketering' required />
                                             </FormControl>
@@ -104,7 +104,7 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
                                     name='code'
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Code</FormLabel>
+                                            <FormLabel>Code<span className="text-red-500">*</span></FormLabel>
                                             <FormControl>
                                                 <Input {...field} placeholder='KK' required />
                                             </FormControl>
@@ -121,7 +121,7 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
                                         <FormItem>
                                             <FormLabel>Street</FormLabel>
                                             <FormControl>
-                                                <Input {...field} placeholder='Save Kovačevića 1' required />
+                                                <Input {...field} placeholder='Save Kovačevića 1' />
                                             </FormControl>
                                             <FormMessage>{errors.address?.street?.message}</FormMessage>
                                         </FormItem>
@@ -136,7 +136,7 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
                                         <FormItem>
                                             <FormLabel>City</FormLabel>
                                             <FormControl>
-                                                <Input {...field} placeholder='Novi Sad' required />
+                                                <Input {...field} placeholder='Novi Sad' />
                                             </FormControl>
                                             <FormMessage>{errors.address?.city?.message}</FormMessage>
                                         </FormItem>

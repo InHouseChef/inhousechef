@@ -187,7 +187,7 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                             name='name'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Name</FormLabel>
+                                    <FormLabel>Name<span className="text-red-500">*</span></FormLabel>
                                     <FormControl>
                                         <Input {...field} placeholder='Cezar salata' required />
                                     </FormControl>
@@ -200,9 +200,9 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                             name='purchasePrice'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Purchase Price</FormLabel>
+                                    <FormLabel>Purchase Price<span className="text-red-500">*</span></FormLabel>
                                     <FormControl>
-                                        <Input {...field} placeholder='30 rsd' required />
+                                        <Input {...field} placeholder='30 rsd' required type='number'/>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -213,9 +213,9 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                             name='sellingPrice'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Selling Price</FormLabel>
+                                    <FormLabel>Selling Price<span className="text-red-500">*</span></FormLabel>
                                     <FormControl>
-                                        <Input {...field} placeholder='50 rsd' required />
+                                        <Input {...field} placeholder='50 rsd' required type='number'/>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -226,7 +226,7 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                             name='type'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Type</FormLabel>
+                                    <FormLabel>Type<span className="text-red-500">*</span></FormLabel>
                                     <FormControl>
                                         <Select onValueChange={field.onChange} defaultValue={meal?.type} required>
                                             <SelectTrigger>
@@ -247,7 +247,7 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                             name='description'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Description</FormLabel>
+                                    <FormLabel>Description<span className="text-red-500">*</span></FormLabel>
                                     <FormControl>
                                         <Textarea
                                             placeholder='Describe the meal, ingredients, and flavors.'
