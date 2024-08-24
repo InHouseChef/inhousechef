@@ -1,5 +1,7 @@
 'use client'
+import { useReadUserCompany } from '@/api/companies'
 import { useCreateLogin } from '@/api/logins'
+import { useCompanyStore } from '@/app/state'
 import { Error } from '@/components'
 import CardWrapper from '@/components/auth/card-wrapper'
 import { Button } from '@/components/ui/button'
@@ -14,6 +16,7 @@ import { createClientCredentialsSchema } from './schemas'
 
 export const LoginForm = () => {
     const { setIdentity } = useIdentity()
+    const setCompany = useCompanyStore(state => state.setCompany)
 
     const { safeReplace } = useSafeReplace()
 
@@ -28,6 +31,8 @@ export const LoginForm = () => {
     const { control, handleSubmit } = form
 
     const { mutate, isPending, isError, error } = useCreateLogin()
+    const { refetch: refetchUserCompany } = useReadUserCompany()
+    const { jwt } = useIdentity()
 
     const onSubmit = (formData: z.infer<typeof createClientCredentialsSchema>) => {
         mutate(
@@ -39,8 +44,15 @@ export const LoginForm = () => {
                 }
             },
             {
-                onSuccess: data => {
+                onSuccess: async data => {
                     setIdentity(data)
+                    if (jwt?.['cognito:groups'].includes('Admin')) return
+
+                    const userCompany = await refetchUserCompany()
+                    if (userCompany.data) {
+                        setCompany(userCompany.data.companyCode, userCompany.data.companyId)
+                        safeReplace(`/companies/${userCompany.data.companyCode}`)
+                    }
                 }
             }
         )

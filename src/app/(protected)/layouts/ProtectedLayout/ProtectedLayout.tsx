@@ -1,5 +1,5 @@
 'use client'
-import { Loader, Main, MainNavDesktop, TopNav } from '@/components'
+import { Loader, Main, TopNav } from '@/components'
 import { useBaseUrl, useSafeReplace } from '@/hooks'
 import { useReadIdentity } from '@/hooks/useIdentity'
 import { ReactNode, useEffect } from 'react'
@@ -23,7 +23,6 @@ export const ProtectedLayout = ({ children }: ProtectedLayoutProps) => {
 
     return (
         <>
-            <MainNavDesktop />
             <div className='flex w-full flex-grow flex-col'>
                 <TopNav />
                 <Main>{children}</Main>

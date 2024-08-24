@@ -8,7 +8,7 @@ export const MainNavLogo = () => {
     return (
         <Link href={`${baseUrl}/dashboard`}>
             <span className='relative block h-[70px]'>
-                <Logo width={70} height={70} />
+                <Logo width={70} height={70} className='text-white' />
             </span>
         </Link>
     )

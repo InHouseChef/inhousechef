@@ -1,15 +1,15 @@
 'use client'
 
-import { MainTopNav } from '@/components/MainNav'
+import { MainNavDesktop, MainTopNav } from '@/components/MainNav'
 import { usePathParams } from '@/hooks'
 import { ReactNode } from 'react'
 import { COMPANY_LINKS } from '../constants'
 
-interface CompanyLayoutProps {
+interface AdminCompanyLayoutProps {
     children?: ReactNode
 }
 
-export default function CompanyLayout({ children }: CompanyLayoutProps) {
+export default function AdminCompanyLayout({ children }: AdminCompanyLayoutProps) {
     const { companyCode } = usePathParams<{ companyCode: string }>()
 
     const links = COMPANY_LINKS.map(({ path, label }) => ({ path: `/companies/${companyCode}${path}`, label }))
@@ -17,6 +17,8 @@ export default function CompanyLayout({ children }: CompanyLayoutProps) {
     return (
         <>
             <MainTopNav links={links} />
+            <MainNavDesktop />
+
             {children}
         </>
     )

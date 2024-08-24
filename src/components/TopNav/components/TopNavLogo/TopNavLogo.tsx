@@ -8,7 +8,7 @@ export const TopNavLogo = () => {
     return (
         <Link className='lg:hidden' href={`${baseUrl}/dashboard`}>
             <div className='relative h-[50px] w-52'>
-                <Logo width={50} height={50} />
+                <Logo width={50} height={50} className='text-[#3B1A44]' />
             </div>
         </Link>
     )

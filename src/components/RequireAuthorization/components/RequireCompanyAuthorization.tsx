@@ -1,22 +1,30 @@
-import { useCompanyAuthorization } from '@/hooks'
-import { CompanyUserRole } from '@/types'
-import { RequireCompanyRoleComponent } from '../types'
-import { isAllowed } from '../utils'
+// src/components/RequireAuthorization/RequireAuthorization.tsx
+import { useRoles } from '@/providers/RoleProvider/RoleProvider'
+import { CompanyUserRoles } from '@/types'
+import { FC, PropsWithChildren, ReactNode } from 'react'
 
-export const RequireCompanyAuthorization: RequireCompanyRoleComponent<CompanyUserRole> = ({
+interface RPProps<T> {
+    role: keyof T
+    fallback?: ReactNode
+    loader?: ReactNode
+    some?: boolean
+}
+
+type RequireCompanyRoleComponent<T> = FC<PropsWithChildren<RPProps<T>>>
+
+const isAllowed = (roles: CompanyUserRoles, role: keyof CompanyUserRoles): boolean => {
+    return roles[role]
+}
+
+export const RequireCompanyAuthorization: RequireCompanyRoleComponent<CompanyUserRoles> = ({
     role,
     fallback,
     children,
-    loader,
-    some
+    loader
 }) => {
-    const {
-        result: { AuthorizationReady },
-        roles
-    } = useCompanyAuthorization()
+    const { roles, AuthorizationReady } = useRoles()
 
-    const allowed = isAllowed(roles, role, some)
+    const allowed = isAllowed(roles, role)
 
-    return <>{AuthorizationReady ? (role && allowed ? children : fallback) : loader || undefined}</>
+    return <>{AuthorizationReady ? (allowed ? children : fallback) : loader || null}</>
 }
-export default RequireCompanyAuthorization

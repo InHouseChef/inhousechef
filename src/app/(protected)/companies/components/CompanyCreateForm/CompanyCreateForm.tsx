@@ -1,7 +1,7 @@
 'use client'
 
 import { useCreateCompany } from '@/api/companies'
-import { Header, Logo } from '@/components'
+import { Header, Logo, RequireCompanyAuthorization } from '@/components'
 
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -35,7 +35,9 @@ export const CompanyCreateForm = () => {
     return (
         <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)} className='space-y-8'>
-                <Header heading='Create Company' />
+                <RequireCompanyAuthorization role={'Admin'}>
+                    <Header heading='Create Company' />
+                </RequireCompanyAuthorization>
                 <div className='grid grid-cols-12 gap-6'>
                     <div className='col-span-6 space-y-4'>
                         <div className='w-1/2 space-y-4'>
