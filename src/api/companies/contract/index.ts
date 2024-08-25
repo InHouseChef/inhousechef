@@ -23,8 +23,8 @@ export interface CreateCompanyResponse extends Company {
 }
 
 export interface UpdateCompanyDetailsRequest {
-    name: string,
-    code: string,
+    name: string
+    code: string
     address?: {
         street?: string
         city?: string
@@ -43,4 +43,9 @@ export interface UpdateCompanyBrandingLogoRequest {
 
 export interface UpdateCompanyResponse extends Company {
     id: string
+}
+
+export interface ReadUserCompanyResponse {
+    companyId: string
+    companyCode: string
 }
