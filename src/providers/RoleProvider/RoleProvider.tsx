@@ -8,6 +8,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 interface RoleContextValue {
     roles: CompanyUserRoles
     AuthorizationReady: boolean
+    clearRoles: () => void
 }
 
 const defaultRoles: CompanyUserRoles = {
@@ -19,7 +20,8 @@ const defaultRoles: CompanyUserRoles = {
 
 const RoleContext = createContext<RoleContextValue>({
     roles: defaultRoles,
-    AuthorizationReady: false
+    AuthorizationReady: false,
+    clearRoles: () => null
 })
 
 export const useRoles = () => useContext(RoleContext)
@@ -29,7 +31,6 @@ export const RoleProvider = ({ children }: { children: React.ReactNode }) => {
     const [roles, setRoles] = useState<CompanyUserRoles>(defaultRoles)
     const [AuthorizationReady, setAuthorizationReady] = useState(false)
 
-    console.log(jwt)
     useEffect(() => {
         if (!jwt?.['cognito:groups']) return
 
@@ -50,5 +51,7 @@ export const RoleProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }, [jwt, roles, AuthorizationReady])
 
-    return <RoleContext.Provider value={{ roles, AuthorizationReady }}>{children}</RoleContext.Provider>
+    const clearRoles = () => setRoles(defaultRoles)
+
+    return <RoleContext.Provider value={{ roles, AuthorizationReady, clearRoles }}>{children}</RoleContext.Provider>
 }

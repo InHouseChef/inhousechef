@@ -12,21 +12,20 @@ export const MealCard = ({ name, description, price, imageUrl, isOrdered, onOrde
     return (
         <div className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center justify-between">
             <div className="flex items-center">
-                <div className="w-14 h-14 flex-shrink-0 bg-gray-200 rounded-lg mr-4">
+                <div className="w-24 h-20 flex-shrink-0 bg-gray-200 rounded-lg mr-4">
                     {imageUrl ? (
                         <img
                             src={imageUrl}
                             alt={name}
-                            className="w-14 h-14 object-cover rounded-lg"
+                            className="w-24 h-20 object-cover rounded-lg"
                         />
                     ) : (
-                        <div className="w-14 h-14 bg-gray-200 rounded-lg"></div>
+                        <div className="w-24 h-20 bg-gray-200 rounded-lg"></div>
                     )}
                 </div>
                 <div className="flex-grow">
                     <h4 className="text-sm font-semibold">{name}</h4>
-                    <p className="text-xs text-gray-600"><b>Description:</b> {description}</p>
-                    &nbsp;
+                    {/* <p className="text-xs text-gray-600 text-ellipsis"><b>Description:</b> {description}</p> */}
                     <p className="text-xs text-gray-600"><b>Price:</b> {price.toFixed(2)} RSD</p>
                 </div>
             </div>
