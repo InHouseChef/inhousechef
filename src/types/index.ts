@@ -54,4 +54,4 @@ export type CompanyUserRoles = Record<CompanyUserRole, boolean>
 
 export type OrderState = 'Draft' | 'Placed' | 'Confirmed' | 'Cancelled'
 
-export type OrderType = 'Scheduled' | 'ALaCard'
+export type OrderType = 'Scheduled' | 'Immediate'

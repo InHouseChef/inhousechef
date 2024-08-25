@@ -15,21 +15,18 @@ interface OrderDetails {
     customerId: string
     state: OrderState
     type: OrderType
-    scheduledFor: {
-        date: DateIso
-        shiftId: string
-    }
-    meals: {
+    orderItems: {
         skuId: string
         name: string
         price: number
         productionPrice: number
         quantity: number
     }[]
+    placedAt?: DateTimeIsoUtc
     confirmedAt?: DateTimeIsoUtc
 }
 
-export interface IncrementOrderItemResponse extends OrderDetails {}
+export interface IncrementOrderItemQuantityResponse extends OrderDetails {}
 
 export interface DecreaseOrderItemQuantityResponse extends OrderDetails {}
 
@@ -37,8 +34,18 @@ export interface ReadOrderResponse extends Order {
     id: string
 }
 
-export interface CreateOrderRequest extends Order {}
-export interface CreateOrderResponse extends OrderDetails {}
+export interface CreateScheduledOrderRequest extends Order {}
+export interface CreateScheduledOrderResponse extends OrderDetails {}
+
+export interface CreateImmediateOrderRequest extends Order {
+    meals: {
+        id: string
+        quantity: number
+    }[]
+}
+export interface CreateImmediateOrderResponse extends OrderDetails {
+    scheduledFor: DateIso
+}
 
 export interface PlaceOrderResponse extends OrderDetails {}
 
