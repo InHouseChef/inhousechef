@@ -7,18 +7,17 @@ import { useCartStore } from '../../../../state'
 interface MealDrawerProps {
     meal: DailyMenuMeal
     isOpen: boolean
-    selectedDate: string
-    selectedShiftId: string
+
     onClose: () => void
 }
 
-export const MealDrawer = ({ meal, isOpen, onClose, selectedDate, selectedShiftId }: MealDrawerProps) => {
+export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
     const { id, name, description, price, imageUrl } = meal
-    const { addToCart } = useCartStore()
+    const { addToCart, selectedDate, selectedShiftId } = useCartStore()
     const [quantity, setQuantity] = useState(1)
 
     const handleAddToCart = () => {
-        addToCart(selectedShiftId, selectedDate, {
+        addToCart({
             id,
             name,
             price,

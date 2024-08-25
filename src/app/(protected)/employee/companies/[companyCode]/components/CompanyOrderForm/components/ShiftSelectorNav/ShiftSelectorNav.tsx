@@ -2,13 +2,10 @@ import { useReadShifts } from '@/api/shifts'
 import { Loader } from '@/components'
 import { toTimeFromString } from '@/utils/date'
 import clsx from 'clsx'
+import { useCartStore } from '../../../../state'
 
-interface ShiftSelectorNavProps {
-    activeShiftId: string
-    onShiftSelect: (shift: string) => void
-}
-
-export const ShiftSelectorNav = ({ activeShiftId, onShiftSelect }: ShiftSelectorNavProps) => {
+export const ShiftSelectorNav = () => {
+    const { selectedShiftId, setSelectedShift } = useCartStore()
     const { data: shifts, isLoading } = useReadShifts()
 
     if (isLoading) return <Loader />
@@ -23,10 +20,10 @@ export const ShiftSelectorNav = ({ activeShiftId, onShiftSelect }: ShiftSelector
                 {sortedShiftsByStartAt?.map(({ id, name }) => (
                     <li className={clsx('relative flex-1 text-center')} key={id}>
                         <div
-                            onClick={() => onShiftSelect(id)}
+                            onClick={() => setSelectedShift(id)}
                             className={clsx(
                                 'relative block border px-2 py-1 text-sm font-medium leading-6 text-gray-600 no-underline hover:text-primary',
-                                { 'bg-primary text-white hover:text-secondary': activeShiftId === id }
+                                { 'bg-primary text-white hover:text-secondary': selectedShiftId === id }
                             )}>
                             {name}
                         </div>
