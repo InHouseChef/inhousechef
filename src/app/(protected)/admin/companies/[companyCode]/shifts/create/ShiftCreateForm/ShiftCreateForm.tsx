@@ -11,11 +11,17 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { createShiftSchema } from '../../schemas'
 import { TimePicker } from '@/components/ui/time-picker'
-import { add, toDate } from 'date-fns'
 import { useState } from 'react'
-import { toDateIso } from '@/utils/date'
 
 type ShiftCreateFormData = z.infer<typeof createShiftSchema>
+
+const getFormattedTime = (date: Date) => {
+    return date.toLocaleTimeString('en-GB', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    });
+}
 
 export const ShiftCreateForm = ({ params }: { params: { companyCode: string } }) => {
     const { companyCode } = params
@@ -37,32 +43,16 @@ export const ShiftCreateForm = ({ params }: { params: { companyCode: string } })
     const { control, handleSubmit } = form
 
     const onSubmit = async (formData: ShiftCreateFormData) => {
-        console.log('formData', formData)
-        const formattedStartDate = startDate.toLocaleTimeString('en-GB', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-        });
-
-        const formattedEndDate = endDate.toLocaleTimeString('en-GB', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-        });
-        
-
-        const shiftStartAtWithSeconds = formattedStartDate
-        const shiftEndAtWithSeconds = formattedEndDate
+        const formattedStartDate = getFormattedTime(startDate)
+        const formattedEndDate = getFormattedTime(endDate)
 
         await createShift(
             {
                 path: { companyCode },
                 body: {
                     ...formData,
-                    shiftStartAt: shiftStartAtWithSeconds,
-                    shiftEndAt: shiftEndAtWithSeconds,
+                    shiftStartAt: formattedStartDate,
+                    shiftEndAt: formattedEndDate,
                 }
             },
             {
@@ -133,7 +123,7 @@ export const ShiftCreateForm = ({ params }: { params: { companyCode: string } })
                                 <FormItem>
                                     <FormLabel>Ordering Deadline Before Shift Start (in hours)</FormLabel>
                                     <FormControl>
-                                        <Input {...field} type='number' value={field.value || undefined} required />
+                                        <Input {...field} type='number' value={field.value || 0} required />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

@@ -46,14 +46,14 @@ export const ShiftList = ({ params }: { params: { companyCode: string } }) => {
                 cell: props => <p>{props.getValue()}</p>
             }),
 
-            column.display({
-                id: 'actions',
-                header: '',
-                cell: props => {
-                    const { id } = props.row.original
-                    return <div className='flex items-center justify-end gap-4'>{/* TODO: add actions */}</div>
-                }
-            })
+            // column.display({
+            //     id: 'actions',
+            //     header: '',
+            //     cell: props => {
+            //         const { id } = props.row.original
+            //         return <div className='flex items-center justify-end gap-4'>{/* TODO: add actions */}</div>
+            //     }
+            // })
         ],
         [companyCode]
     )
