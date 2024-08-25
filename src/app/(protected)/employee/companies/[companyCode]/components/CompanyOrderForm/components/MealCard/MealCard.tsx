@@ -4,21 +4,10 @@ import { useCartStore } from '../../../../state'
 
 interface MealCardProps extends DailyMenuMeal {
     onClick: () => void
-    selectedDate: string
-    selectedShiftId: string
 }
 
-export const MealCard = ({
-    name,
-    description,
-    price,
-    imageUrl,
-    onClick,
-    selectedDate,
-    selectedShiftId,
-    id
-}: MealCardProps) => {
-    const { carts } = useCartStore()
+export const MealCard = ({ name, description, price, imageUrl, onClick, id }: MealCardProps) => {
+    const { carts, selectedShiftId, selectedDate } = useCartStore()
 
     const isInCart = !!carts[selectedShiftId]?.[selectedDate]?.find(item => item.id === id)
 

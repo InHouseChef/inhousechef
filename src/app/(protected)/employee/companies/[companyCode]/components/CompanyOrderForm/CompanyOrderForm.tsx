@@ -4,12 +4,13 @@ import { useReadShifts } from '@/api/shifts'
 import { Loader } from '@/components'
 import { DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST } from '@/constants'
 import { useAppDate } from '@/hooks'
-import { DateIso } from '@/types'
 import { toDateIso } from '@/utils/date'
 import { useEffect, useState } from 'react'
+import { useCartStore } from '../../state'
 import DaySelectorNav from './components/DaySelectorNav/DaySelectorNav'
 import { MealCard } from './components/MealCard/MealCard'
 import { MealDrawer } from './components/MealDrawer/MealDrawer'
+import { OrderDialogButton } from './components/OrderDialogButton/OrderDialogButton'
 import { ShiftSelectorNav } from './components/ShiftSelectorNav/ShiftSelectorNav'
 
 const getFirstAndLastDayOfMonth = (date: Date) => {
@@ -19,14 +20,13 @@ const getFirstAndLastDayOfMonth = (date: Date) => {
 }
 
 export const CompanyOrderForm = () => {
+    const { selectedDate, setSelectedDate, selectedShiftId, setSelectedShift } = useCartStore()
     const { getAppDate } = useAppDate()
     const today = getAppDate()
     const [dailyMenus, setDailyMenus] = useState<ReadDailyMenuResponse[]>([])
     const [currentMonth, setCurrentMonth] = useState<Date>(new Date())
     const { data: shifts } = useReadShifts()
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [selectedDate, setSelectedDate] = useState<DateIso>(today)
-    const [activeShiftId, setActiveShiftId] = useState<string>(shifts?.[0]?.id || '')
     const [meals, setMeals] = useState<DailyMenuMeal[]>([])
 
     const [selectedMeal, setSelectedMeal] = useState<DailyMenuMeal | null>(null)
@@ -45,6 +45,16 @@ export const CompanyOrderForm = () => {
     }
 
     useEffect(() => {
+        if (!selectedDate) return setSelectedDate(today)
+        setSelectedDate(selectedDate)
+    }, [selectedDate])
+
+    useEffect(() => {
+        if (!selectedShiftId && shifts) return setSelectedShift(shifts[0]?.id)
+        setSelectedShift(selectedShiftId)
+    }, [selectedShiftId, shifts])
+
+    useEffect(() => {
         if (selectedDate) {
             const meals = dailyMenus?.find(({ date }) => date === selectedDate)?.meals || []
             setMeals(meals)
@@ -55,11 +65,6 @@ export const CompanyOrderForm = () => {
         setIsLoading(true)
         initialFetch().finally(() => setIsLoading(false))
     }, [currentMonth])
-
-    useEffect(() => {
-        if (!shifts?.length) return
-        setActiveShiftId(shifts[0].id)
-    }, [shifts])
 
     const handleMealClick = (meal: DailyMenuMeal) => {
         setSelectedMeal(meal)
@@ -75,29 +80,18 @@ export const CompanyOrderForm = () => {
     return (
         <>
             <div className='mt-4'></div>
-            <DaySelectorNav selectedDate={selectedDate} onSelectDate={setSelectedDate} />
+            <DaySelectorNav />
             <div className='mt-4'></div>
-            <ShiftSelectorNav activeShiftId={activeShiftId} onShiftSelect={setActiveShiftId} />
-            <div className='mx-4 mt-4 grid gap-5'>
-                {meals.map(meal => (
-                    <MealCard
-                        key={meal.id}
-                        {...meal}
-                        selectedDate={selectedDate}
-                        selectedShiftId={activeShiftId}
-                        onClick={() => handleMealClick(meal)}
-                    />
-                ))}
+            <ShiftSelectorNav />
+            <div className='relative'>
+                <div className='mx-4 mt-4 grid grid-cols-1 gap-5'>
+                    {meals.map(meal => (
+                        <MealCard key={meal.id} {...meal} onClick={() => handleMealClick(meal)} />
+                    ))}
+                </div>
+                <OrderDialogButton />
             </div>
-            {selectedMeal ? (
-                <MealDrawer
-                    selectedDate={selectedDate}
-                    selectedShiftId={activeShiftId}
-                    meal={selectedMeal}
-                    isOpen={isDrawerOpen}
-                    onClose={handleCloseDrawer}
-                />
-            ) : undefined}
+            {selectedMeal ? <MealDrawer meal={selectedMeal} isOpen={isDrawerOpen} onClose={handleCloseDrawer} /> : undefined}
         </>
     )
 }
