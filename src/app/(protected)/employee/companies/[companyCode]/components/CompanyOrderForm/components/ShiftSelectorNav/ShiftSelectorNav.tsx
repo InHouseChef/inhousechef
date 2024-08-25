@@ -26,7 +26,7 @@ export const ShiftSelectorNav = ({ activeShiftId, onShiftSelect }: ShiftSelector
                             onClick={() => onShiftSelect(id)}
                             className={clsx(
                                 'relative block border px-2 py-1 text-sm font-medium leading-6 text-gray-600 no-underline hover:text-primary',
-                                { 'bg-green-500 text-white hover:text-secondary': activeShiftId === id }
+                                { 'bg-primary text-white hover:text-secondary': activeShiftId === id }
                             )}>
                             {name}
                         </div>

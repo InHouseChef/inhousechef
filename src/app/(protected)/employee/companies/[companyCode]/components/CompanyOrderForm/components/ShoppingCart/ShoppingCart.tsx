@@ -3,7 +3,6 @@ import { Input } from '@/components/ui/input'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { useAppDate } from '@/hooks'
 import { Minus, Plus, ShoppingCartIcon, Trash } from 'lucide-react'
-import Image from 'next/image' // Assuming you're using Next.js for image optimization
 import { useCartStore } from '../../../../state'
 
 interface ShoppingCartProps {

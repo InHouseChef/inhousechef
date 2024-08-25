@@ -1,20 +1,17 @@
 import { DailyMenuMeal, ReadDailyMenuResponse } from '@/api/daily-menus'
-import { readDailyMenus, useReadDailyMenus } from '@/api/daily-menus/repository/hooks/readDailyMenus'
+import { readDailyMenus } from '@/api/daily-menus/repository/hooks/readDailyMenus'
 import { useReadShifts } from '@/api/shifts'
 import { Loader } from '@/components'
+import { DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST } from '@/constants'
 import { useAppDate } from '@/hooks'
 import { DateIso } from '@/types'
-import { useEffect, useState } from 'react'
-import { useCartStore } from '../../state'
-import { calculateDateRange, generateUpcomingDates, UpcomingDailyMenuDate } from '../../utils'
-import DaySelectorNav from './components/DaySelectorNav/DaySelectorNav'
-import MealCard from './components/MealCard/MealCard'
-import { ShiftSelectorNav } from './components/ShiftSelectorNav/ShiftSelectorNav'
-import ShoppingCart from './components/ShoppingCart/ShoppingCart'
-import { DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST } from '@/constants'
 import { toDateIso } from '@/utils/date'
+import { useEffect, useState } from 'react'
+import DaySelectorNav from './components/DaySelectorNav/DaySelectorNav'
+import { MealCard } from './components/MealCard/MealCard'
+import { MealDrawer } from './components/MealDrawer/MealDrawer'
+import { ShiftSelectorNav } from './components/ShiftSelectorNav/ShiftSelectorNav'
 
-// Calculate the first and last day of the month based on the selected month
 const getFirstAndLastDayOfMonth = (date: Date) => {
     const firstDay = toDateIso(new Date(date.getFullYear(), date.getMonth(), 1))
     const lastDay = toDateIso(new Date(date.getFullYear(), date.getMonth() + 1, 0))
@@ -24,77 +21,83 @@ const getFirstAndLastDayOfMonth = (date: Date) => {
 export const CompanyOrderForm = () => {
     const { getAppDate } = useAppDate()
     const today = getAppDate()
-    const { from, to } = calculateDateRange(today)
-    const { addToCart } = useCartStore()
     const [dailyMenus, setDailyMenus] = useState<ReadDailyMenuResponse[]>([])
     const [currentMonth, setCurrentMonth] = useState<Date>(new Date())
     const { data: shifts } = useReadShifts()
-    const [dates, setDates] = useState<UpcomingDailyMenuDate[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [selectedDate, setSelectedDate] = useState<DateIso>('')
-    const [activeShiftId, setActiveShiftId] = useState<string>('')
-    const [selectedMeals, setSelectedMeals] = useState<DailyMenuMeal[]>([])
-    const [orderedMeals, setOrderedMeals] = useState<DailyMenuMeal[]>([])
+    const [selectedDate, setSelectedDate] = useState<DateIso>(today)
+    const [activeShiftId, setActiveShiftId] = useState<string>(shifts?.[0]?.id || '')
+    const [meals, setMeals] = useState<DailyMenuMeal[]>([])
+
+    const [selectedMeal, setSelectedMeal] = useState<DailyMenuMeal | null>(null)
+    const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)
 
     const initialFetch = async () => {
         const { firstDay, lastDay } = getFirstAndLastDayOfMonth(currentMonth)
-        const dailyMenusResult = await readDailyMenus({ path: '', query: { pagination: {...DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST}, filter: {from: firstDay, to: lastDay}}})
+        const dailyMenusResult = await readDailyMenus({
+            path: '',
+            query: {
+                pagination: { ...DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST },
+                filter: { from: firstDay, to: lastDay }
+            }
+        })
         setDailyMenus(dailyMenusResult)
     }
 
     useEffect(() => {
-        setIsLoading(true)
-        initialFetch()
-        .finally(() => setIsLoading(false))
-    }, [currentMonth])
-
-    useEffect(() => {
-        const upcomingDates = generateUpcomingDates(today, dailyMenus)
-        setDates(upcomingDates)
-        if (upcomingDates.length > 0) {
-            setSelectedDate(upcomingDates[0].date)
-        }
-    }, [dailyMenus, today])
-
-    useEffect(() => {
         if (selectedDate) {
-            const selectedMeals = dailyMenus?.find(({ date }) => date === selectedDate)?.meals || []
-            setSelectedMeals(selectedMeals)
+            const meals = dailyMenus?.find(({ date }) => date === selectedDate)?.meals || []
+            setMeals(meals)
         }
     }, [selectedDate, dailyMenus])
 
     useEffect(() => {
-        if (!shifts?.length) return
+        setIsLoading(true)
+        initialFetch().finally(() => setIsLoading(false))
+    }, [currentMonth])
 
+    useEffect(() => {
+        if (!shifts?.length) return
         setActiveShiftId(shifts[0].id)
     }, [shifts])
 
-    const handleOrderMeal = (meal: DailyMenuMeal) => {
-        addToCart(activeShiftId, selectedDate, { ...meal, quantity: 1 })
-        setOrderedMeals(prev => [...prev, meal]) // Update ordered meals state
+    const handleMealClick = (meal: DailyMenuMeal) => {
+        setSelectedMeal(meal)
+        setIsDrawerOpen(true)
+    }
+
+    const handleCloseDrawer = () => {
+        setIsDrawerOpen(false)
     }
 
     if (isLoading) return <Loader />
 
     return (
         <>
+            <div className='mt-4'></div>
+            <DaySelectorNav selectedDate={selectedDate} onSelectDate={setSelectedDate} />
+            <div className='mt-4'></div>
             <ShiftSelectorNav activeShiftId={activeShiftId} onShiftSelect={setActiveShiftId} />
-            <div className='mt-4 flex h-full justify-between'>
-                <div className='flex flex-col'>
-                    <ShoppingCart selectedDate={selectedDate} shiftId={activeShiftId} />
-                    <DaySelectorNav dates={dates} selectedDate={selectedDate} onSelectDate={setSelectedDate} />
-                </div>
-                <div className='mt-4 flex flex-col items-center gap-2'>
-                    {selectedMeals.map(meal => (
-                        <MealCard
-                            key={meal.name}
-                            {...meal}
-                            isOrdered={orderedMeals.includes(meal)} // Pass ordered state to MealCard
-                            onOrder={() => handleOrderMeal(meal)}
-                        />
-                    ))}
-                </div>
+            <div className='mx-4 mt-4 grid gap-5'>
+                {meals.map(meal => (
+                    <MealCard
+                        key={meal.id}
+                        {...meal}
+                        selectedDate={selectedDate}
+                        selectedShiftId={activeShiftId}
+                        onClick={() => handleMealClick(meal)}
+                    />
+                ))}
             </div>
+            {selectedMeal ? (
+                <MealDrawer
+                    selectedDate={selectedDate}
+                    selectedShiftId={activeShiftId}
+                    meal={selectedMeal}
+                    isOpen={isDrawerOpen}
+                    onClose={handleCloseDrawer}
+                />
+            ) : undefined}
         </>
     )
 }
