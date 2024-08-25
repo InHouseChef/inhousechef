@@ -1,6 +1,9 @@
 import { DailyMenuMeal } from '@/api/daily-menus'
+import { useCreateScheduledOrder } from '@/api/order'
 import { Button } from '@/components/ui/button'
 import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
+import { usePathParams } from '@/hooks'
+import { CompanyPath } from '@/types'
 import { useState } from 'react'
 import { useCartStore } from '../../../../state'
 
@@ -12,9 +15,13 @@ interface MealDrawerProps {
 }
 
 export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
-    const { id, name, description, price, imageUrl } = meal
-    const { addToCart, selectedDate, selectedShiftId } = useCartStore()
+    const path = usePathParams<CompanyPath>()
+    const { addToCart, selectedDate, selectedShiftId, setActiveOrderId } = useCartStore()
     const [quantity, setQuantity] = useState(1)
+
+    const { id, name, description, price, imageUrl } = meal
+
+    const { mutate: createScheduledOrder } = useCreateScheduledOrder()
 
     const handleAddToCart = () => {
         addToCart({
@@ -24,6 +31,26 @@ export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
             quantity,
             imageUrl
         })
+        createScheduledOrder(
+            {
+                path,
+                body: {
+                    shiftId: selectedShiftId,
+                    orderDate: selectedDate,
+                    meals: [
+                        {
+                            id,
+                            quantity
+                        }
+                    ]
+                }
+            },
+            {
+                onSuccess: data => {
+                    setActiveOrderId(data.id)
+                }
+            }
+        )
         onClose()
     }
 
