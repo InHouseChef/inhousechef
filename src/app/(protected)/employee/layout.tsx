@@ -1,3 +1,6 @@
+'use client'
+
+import { TopNav } from "@/components"
 import { ClientProtectedLayout } from "../layouts/ProtectedLayout"
 import { ReactNode } from "react"
 
@@ -8,7 +11,10 @@ interface ProtectedLayoutProps {
 export default function Layout({ children }: ProtectedLayoutProps) {
     return (
         <ClientProtectedLayout>
-            {children}
+            <div className='flex flex-col flex-grow overflow-x-clip'>
+                <TopNav />
+                {children}
+            </div>
         </ClientProtectedLayout>
     )
 }

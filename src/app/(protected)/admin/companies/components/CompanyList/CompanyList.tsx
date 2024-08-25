@@ -90,7 +90,7 @@ export const CompanyList = () => {
     return (
         <div>
             <Header heading='Companies'>
-                <Button type='button' onClick={() => router.push('admin/companies/create')}>
+                <Button type='button' onClick={() => router.push('/admin/companies/create')}>
                     Create Company
                 </Button>
             </Header>

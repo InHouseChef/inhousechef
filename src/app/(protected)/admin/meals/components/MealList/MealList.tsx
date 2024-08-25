@@ -13,7 +13,6 @@ import { useRouter } from 'next/navigation'
 export const MealList = () => {
     const [selectedType, setSelectedType] = useState<string>('All')
     const [mealsData, setMealsData] = useState<ReadMealResponse[]>([])
-    const [isLoading, setIsLoading] = useState<boolean>(true)
     const [totalCount, setTotalCount] = useState<number>(0)
     const [pageSize, setPageSize] = useState<number>(10)
     const [currentPage, setCurrentPage] = useState<number>(0)
@@ -22,14 +21,12 @@ export const MealList = () => {
 
     // Fetch meals based on selected filters, pagination size, and page
     const fetchMeals = () => {
-        setIsLoading(true)
         const typeFilter = selectedType !== 'All' ? selectedType : undefined
 
         readMeals({ query: { filter: { type: typeFilter }, pagination: { page: currentPage, size: pageSize } }}).then(res => {
             setMealsData(res.results || [])
             setTotalCount(res.totalCount || 0)
-            setIsLoading(false)
-        }).catch(() => setIsLoading(false))
+        })
     }
 
     // Trigger fetch when filters, pagination size, or page change
@@ -105,10 +102,6 @@ export const MealList = () => {
         ],
         [mealsData]
     )
-
-    if (isLoading) {
-        return <Loader />
-    }
 
     return (
         <div>

@@ -46,13 +46,14 @@ export const LoginForm = () => {
             {
                 onSuccess: async data => {
                     setIdentity(data)
-                    if (jwt?.['cognito:groups'].includes('Admin'))
+                    if (!jwt){
                         safeReplace(`/admin/companies`)
+                    }
 
                     const userCompany = await refetchUserCompany()
                     if (userCompany.data) {
                         setCompany(userCompany.data.companyCode, userCompany.data.companyId)
-                        safeReplace(`/companies/${userCompany.data.companyCode}`)
+                        safeReplace(`/employee/companies/${userCompany.data.companyCode}`)
                     }
                 }
             }

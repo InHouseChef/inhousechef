@@ -46,7 +46,7 @@ const ShoppingCart = ({ shiftId, selectedDate }: ShoppingCartProps) => {
                             {cart.map((item, index) => (
                                 <li key={index} className='flex items-center rounded-lg bg-white p-4 shadow-sm'>
                                     <div className='flex-shrink-0'>
-                                        <Image
+                                        <img
                                             src={item.imageUrl}
                                             alt={item.name}
                                             className='rounded-lg object-cover'
