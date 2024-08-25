@@ -10,13 +10,25 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { createShiftSchema } from '../../schemas'
+import { TimePicker } from '@/components/ui/time-picker'
+import { useState } from 'react'
 
 type ShiftCreateFormData = z.infer<typeof createShiftSchema>
+
+const getFormattedTime = (date: Date) => {
+    return date.toLocaleTimeString('en-GB', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    });
+}
 
 export const ShiftCreateForm = ({ params }: { params: { companyCode: string } }) => {
     const { companyCode } = params
     const router = useRouter()
     const { mutate: createShift } = useCreateShift()
+    const [startDate, setStartDate] = useState<Date>();
+    const [endDate, setEndDate] = useState<Date>();
 
     const form = useForm<ShiftCreateFormData>({
         resolver: zodResolver(createShiftSchema),
@@ -31,17 +43,16 @@ export const ShiftCreateForm = ({ params }: { params: { companyCode: string } })
     const { control, handleSubmit } = form
 
     const onSubmit = async (formData: ShiftCreateFormData) => {
-        // Add seconds to the time values (HH:mm -> HH:mm:00)
-        const shiftStartAtWithSeconds = `${formData.shiftStartAt}:00`
-        const shiftEndAtWithSeconds = `${formData.shiftEndAt}:00`
+        const formattedStartDate = getFormattedTime(startDate)
+        const formattedEndDate = getFormattedTime(endDate)
 
         await createShift(
             {
                 path: { companyCode },
                 body: {
                     ...formData,
-                    shiftStartAt: shiftStartAtWithSeconds,
-                    shiftEndAt: shiftEndAtWithSeconds,
+                    shiftStartAt: formattedStartDate,
+                    shiftEndAt: formattedEndDate,
                 }
             },
             {
@@ -51,7 +62,7 @@ export const ShiftCreateForm = ({ params }: { params: { companyCode: string } })
             }
         )
     }
-
+    
     return (
         <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)} className='space-y-8'>
@@ -60,27 +71,13 @@ export const ShiftCreateForm = ({ params }: { params: { companyCode: string } })
                     <div className='col-span-6'>
                         <FormField
                             control={control}
-                            name='name'
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Shift Name</FormLabel>
-                                    <FormControl>
-                                        <Input {...field} value={field.value || ''} required />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                    <div className='col-span-6'>
-                        <FormField
-                            control={control}
                             name='shiftStartAt'
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Shift Start Time (HH:mm)</FormLabel>
                                     <FormControl>
-                                        <Input {...field} type='time' value={field.value || ''} required />
+                                        <TimePicker setDate={setStartDate} date={startDate} />
+                                        {/* <Input {...field} type='time' value={field.value || ''} required /> */}
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -95,7 +92,23 @@ export const ShiftCreateForm = ({ params }: { params: { companyCode: string } })
                                 <FormItem>
                                     <FormLabel>Shift End Time (HH:mm)</FormLabel>
                                     <FormControl>
-                                        <Input {...field} type='time' value={field.value || ''} required />
+                                        <TimePicker setDate={setEndDate} date={endDate} />
+                                        {/* <Input {...field} type='time' value={field.value || ''} required /> */}
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div className='col-span-6'>
+                        <FormField
+                            control={control}
+                            name='name'
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Shift Name</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} value={field.value || ''} required />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
