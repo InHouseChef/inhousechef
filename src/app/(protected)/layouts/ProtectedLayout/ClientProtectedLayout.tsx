@@ -9,7 +9,7 @@ interface ClientProtectedLayoutProps {
 export const ClientProtectedLayout = ({ children }: ClientProtectedLayoutProps) => {
     return (
         <RequireCompanyAuthorization role='Employee'>
-            <div className='flex w-full flex-grow flex-col'>
+            <div className='flex w-full h-full flex-grow flex-col'>
                 <Main>{children}</Main>
             </div>
         </RequireCompanyAuthorization>

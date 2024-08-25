@@ -9,7 +9,7 @@ interface PublicLayoutProps {
 export const PublicLayout = ({ children }: PublicLayoutProps) => {
     return (
         <section className='w-full'>
-            <div className='flex h-screen items-center justify-center'>{children}</div>
+            <div className='flex h-full items-center justify-center'>{children}</div>
         </section>
     )
 }

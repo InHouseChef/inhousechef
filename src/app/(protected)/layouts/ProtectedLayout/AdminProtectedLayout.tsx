@@ -10,7 +10,7 @@ export const AdminProtectedLayout = ({ children }: AdminProtectedLayoutProps) =>
     return (
         
             <RequireCompanyAuthorization role='Admin'>
-                <div className='flex w-full flex-grow flex-col'>
+                <div className='flex w-full h-full flex-grow flex-col'>
                     <Main>{children}</Main>
                 </div>
             </RequireCompanyAuthorization>
