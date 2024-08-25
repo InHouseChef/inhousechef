@@ -9,11 +9,17 @@ interface ProtectedLayoutProps {
 export default function Layout({ children }: ProtectedLayoutProps) {
     return (
         <AdminProtectedLayout>
-            <div className='flex flex-col flex-grow overflow-x-clip'>
-                <TopNav />
-                <div className='flex flex-row w-full'>
-                    <MainNavDesktop />
-                    <div className='w-full px-4'>
+            <div className='flex h-full w-full'>
+                {/* Left-side navigation, full height */}
+                <MainNavDesktop />
+
+                {/* Right-side content area */}
+                <div className='flex flex-col flex-grow w-full'>
+                    {/* Top navigation */}
+                    <TopNav />
+
+                    {/* Main content */}
+                    <div className='flex-grow overflow-y-auto px-6 pb-4'>
                         {children}
                     </div>
                 </div>

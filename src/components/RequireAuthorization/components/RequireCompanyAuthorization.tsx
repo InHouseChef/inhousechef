@@ -1,4 +1,5 @@
 // src/components/RequireAuthorization/RequireAuthorization.tsx
+import NotFound from '@/app/not-found'
 import { useRoles } from '@/providers/RoleProvider/RoleProvider'
 import { CompanyUserRoles } from '@/types'
 import { FC, PropsWithChildren, ReactNode } from 'react'
@@ -26,5 +27,5 @@ export const RequireCompanyAuthorization: RequireCompanyRoleComponent<CompanyUse
     
     const allowed = isAllowed(roles, role)
 
-    return <>{AuthorizationReady ? (allowed ? children : fallback) : loader || null}</>
+    return <>{AuthorizationReady ? (allowed ? children : <NotFound />) : loader || null}</>
 }
