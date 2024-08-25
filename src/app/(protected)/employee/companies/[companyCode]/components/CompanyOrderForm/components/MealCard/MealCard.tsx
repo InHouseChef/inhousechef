@@ -1,48 +1,49 @@
 import { DailyMenuMeal } from '@/api/daily-menus'
-import { Button } from '@/components/ui/button'
 import clsx from 'clsx'
-import Image from 'next/image'
+import { useCartStore } from '../../../../state'
 
 interface MealCardProps extends DailyMenuMeal {
-    isOrdered: boolean
-    onOrder: () => void
+    onClick: () => void
+    selectedDate: string
+    selectedShiftId: string
 }
 
-export const MealCard = ({ name, description, price, imageUrl, isOrdered, onOrder }: MealCardProps) => {
+export const MealCard = ({
+    name,
+    description,
+    price,
+    imageUrl,
+    onClick,
+    selectedDate,
+    selectedShiftId,
+    id
+}: MealCardProps) => {
+    const { carts } = useCartStore()
+
+    const isInCart = !!carts[selectedShiftId]?.[selectedDate]?.find(item => item.id === id)
+
     return (
-        <div className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center justify-between">
-            <div className="flex items-center">
-                <div className="w-14 h-14 flex-shrink-0 bg-gray-200 rounded-lg mr-4">
+        <div
+            onClick={onClick}
+            className={`col-span-full cursor-pointer rounded-xl bg-white px-4 py-6 shadow-md ${clsx(isInCart && 'bg-primary')}`}>
+            <div className='flex items-center'>
+                <div className='mr-4 h-32 w-32 flex-shrink-0 rounded-lg bg-gray-200'>
                     {imageUrl ? (
-                        <img
-                            src={imageUrl}
-                            alt={name}
-                            className="w-14 h-14 object-cover rounded-lg"
-                        />
+                        <img src={imageUrl} alt={name} className='h-32 w-32 rounded-lg object-cover' />
                     ) : (
-                        <div className="w-14 h-14 bg-gray-200 rounded-lg"></div>
+                        <div className='flex h-32 w-32 flex-col items-center justify-center rounded-lg text-gray-600'>
+                            No Image
+                        </div>
                     )}
                 </div>
-                <div className="flex-grow">
-                    <h4 className="text-sm font-semibold">{name}</h4>
-                    <p className="text-xs text-gray-600"><b>Description:</b> {description}</p>
-                    &nbsp;
-                    <p className="text-xs text-gray-600"><b>Price:</b> {price.toFixed(2)} RSD</p>
+                <div className='flex flex-col gap-0'>
+                    <h4 className={`text-lg font-semibold ${clsx(isInCart && 'text-white')}`}>{name}</h4>
+                    <div className='flex flex-col gap-5'>
+                        <p className={`text-sm text-gray-600 ${clsx(isInCart && 'text-white')}`}>{description}</p>
+                        <p className={`text-blue-500 ${clsx(isInCart && 'text-white')}`}>RSD {price.toFixed(2)}</p>
+                    </div>
                 </div>
-            </div>
-            <div className="ml-4 flex-shrink-0">
-                <Button 
-                    className={clsx('rounded-full', {
-                        'bg-emerald-600 text-white': isOrdered,
-                        'bg-primary text-white': !isOrdered
-                    })}
-                    onClick={onOrder}
-                >
-                    {isOrdered ? 'Poručeno' : 'Poruči'}
-                </Button>
             </div>
         </div>
     )
 }
-
-export default MealCard

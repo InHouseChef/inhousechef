@@ -1,6 +1,6 @@
 'use client'
+import { useReadUserCompany } from '@/api/companies/repository/hooks/readUserCompany'
 import { useCreateLogin } from '@/api/logins'
-import { useCompanyStore } from '@/state'
 import { Error } from '@/components'
 import CardWrapper from '@/components/auth/card-wrapper'
 import { Button } from '@/components/ui/button'
@@ -8,11 +8,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { useSafeReplace } from '@/hooks'
 import { useIdentity } from '@/hooks/useIdentity'
+import { useCompanyStore } from '@/state'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { createClientCredentialsSchema } from './schemas'
-import { useReadUserCompany } from '@/api/companies/repository/hooks/readUserCompany'
 
 export const LoginForm = () => {
     const { setIdentity } = useIdentity()
@@ -46,8 +46,8 @@ export const LoginForm = () => {
             {
                 onSuccess: async data => {
                     setIdentity(data)
-                    if (!jwt){
-                        safeReplace(`/admin/companies`)
+                    if (!jwt) {
+                        safeReplace('/admin/companies')
                     }
 
                     const userCompany = await refetchUserCompany()

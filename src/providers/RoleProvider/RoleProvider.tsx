@@ -29,7 +29,6 @@ export const RoleProvider = ({ children }: { children: React.ReactNode }) => {
     const [roles, setRoles] = useState<CompanyUserRoles>(defaultRoles)
     const [AuthorizationReady, setAuthorizationReady] = useState(false)
 
-    console.log(jwt)
     useEffect(() => {
         if (!jwt?.['cognito:groups']) return
 
