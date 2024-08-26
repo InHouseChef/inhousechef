@@ -26,11 +26,14 @@ export const DangerZone = ({ companyCode }: DangerZoneProps) => {
     const router = useRouter()
 
     const handleDeleteCompany = () => {
-        deleteCompany({ path: { companyCode } }, {
-            onSuccess: () => {
-                router.push('/admin/companies') // Redirect after deletion
+        deleteCompany(
+            { path: { companyCode } },
+            {
+                onSuccess: () => {
+                    router.push('/admin/companies') // Redirect after deletion
+                }
             }
-        })
+        )
     }
 
     if (isLoading) {
@@ -38,16 +41,16 @@ export const DangerZone = ({ companyCode }: DangerZoneProps) => {
     }
 
     return (
-        <div className="bg-red-100 border text-red-700 px-4 py-3">
-            <Header heading="Danger Zone"/>
-            <p className="mt-2">
-                Deleting a company is a permanent action and cannot be undone. This will permanently delete the company 
-                and all related data. Please be certain before proceeding.
+        <div className='border bg-red-100 px-4 py-3 text-red-700'>
+            <Header heading='Danger Zone' />
+            <p className='mt-2'>
+                Deleting a company is a permanent action and cannot be undone. This will permanently delete the company and
+                all related data. Please be certain before proceeding.
             </p>
-            <div className="mt-4">
+            <div className='mt-4'>
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
-                        <Button type="button" variant="destructive">
+                        <Button type='button' variant='destructive'>
                             Delete Company
                         </Button>
                     </AlertDialogTrigger>

@@ -20,15 +20,15 @@ const getFormattedTime = (date: Date) => {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false
-    });
+    })
 }
 
 export const ShiftCreateForm = ({ params }: { params: { companyCode: string } }) => {
     const { companyCode } = params
     const router = useRouter()
     const { mutate: createShift } = useCreateShift()
-    const [startDate, setStartDate] = useState<Date>();
-    const [endDate, setEndDate] = useState<Date>();
+    const [startDate, setStartDate] = useState<Date>()
+    const [endDate, setEndDate] = useState<Date>()
 
     const form = useForm<ShiftCreateFormData>({
         resolver: zodResolver(createShiftSchema),
@@ -52,7 +52,7 @@ export const ShiftCreateForm = ({ params }: { params: { companyCode: string } })
                 body: {
                     ...formData,
                     shiftStartAt: formattedStartDate,
-                    shiftEndAt: formattedEndDate,
+                    shiftEndAt: formattedEndDate
                 }
             },
             {
@@ -62,7 +62,7 @@ export const ShiftCreateForm = ({ params }: { params: { companyCode: string } })
             }
         )
     }
-    
+
     return (
         <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)} className='space-y-8'>

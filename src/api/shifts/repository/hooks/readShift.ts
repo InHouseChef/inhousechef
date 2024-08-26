@@ -25,7 +25,8 @@ interface UseReadShiftParams<T> extends DefaultQueryParams<ReadShiftPath>, Query
 
 export const useReadShift = <T = ReadShiftResponse>(params?: UseReadShiftParams<T>) => {
     const defaultParams = useDefaultQueryParams(params)
-    return useQuery({ gcTime: 0,
+    return useQuery({
+        gcTime: 0,
         queryKey: SHIFT_KEYS.resource(defaultParams.path.shiftId),
         queryFn: () => readShift(defaultParams),
         select: params?.select,

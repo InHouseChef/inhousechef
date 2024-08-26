@@ -14,14 +14,12 @@ export default function Layout({ children }: ProtectedLayoutProps) {
                 <MainNavDesktop />
 
                 {/* Right-side content area */}
-                <div className='flex flex-col flex-grow w-full'>
+                <div className='flex w-full flex-grow flex-col'>
                     {/* Top navigation */}
                     <TopNav />
 
                     {/* Main content */}
-                    <div className='flex-grow overflow-y-auto px-6 pb-4'>
-                        {children}
-                    </div>
+                    <div className='flex-grow overflow-y-auto px-6 pb-4'>{children}</div>
                 </div>
             </div>
         </AdminProtectedLayout>

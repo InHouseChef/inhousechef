@@ -14,12 +14,14 @@ export const ShiftList = ({ params }: { params: { companyCode: string } }) => {
     const fetchShifts = () => {
         setIsLoading(true)
         readShifts({
-            path: { companyCode, },
+            path: { companyCode },
             query: {}
-        }).then(res => {
-            setShiftsData(res || [])
-            setIsLoading(false)
-        }).catch(() => setIsLoading(false))
+        })
+            .then(res => {
+                setShiftsData(res || [])
+                setIsLoading(false)
+            })
+            .catch(() => setIsLoading(false))
     }
 
     useEffect(() => {
@@ -44,7 +46,7 @@ export const ShiftList = ({ params }: { params: { companyCode: string } }) => {
             column.accessor('orderingDeadlineBeforeShiftStart', {
                 header: 'Order Deadline (Hours)',
                 cell: props => <p>{props.getValue()}</p>
-            }),
+            })
 
             // column.display({
             //     id: 'actions',
@@ -64,7 +66,7 @@ export const ShiftList = ({ params }: { params: { companyCode: string } }) => {
 
     return (
         <div>
-            <div className="mb-4">
+            <div className='mb-4'>
                 <p>Total Shifts: {shiftsData.length}</p>
             </div>
 

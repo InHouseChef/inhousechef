@@ -21,9 +21,9 @@ export const MenuItem: MenuItemComponent = ({ children, onClick, active, ...rest
             type='button'
             onClick={handleClick}
             className={clsx(
-                'flex items-center gap-1 whitespace-nowrap rounded border-none bg-transparent p-1.5 text-sm leading-5 transition-colors disabled:text-grey700',
+                'disabled:text-grey700 flex items-center gap-1 whitespace-nowrap rounded border-none bg-transparent p-1.5 text-sm leading-5 transition-colors',
                 'hover:bg-primary hover:text-white disabled:pointer-events-none',
-                '[&:disabled>svg]:text-grey700 [&:hover>svg]:text-white [&>svg]:h-6 [&>svg]:w-6 [&>svg]:text-grey [&>svg]:transition-colors',
+                '[&:disabled>svg]:text-grey700 [&>svg]:text-grey [&:hover>svg]:text-white [&>svg]:h-6 [&>svg]:w-6 [&>svg]:transition-colors',
                 '[&:hover>a]:text-white',
                 {
                     'text-primary': active,

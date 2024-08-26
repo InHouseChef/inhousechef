@@ -23,10 +23,14 @@ export const useLogout = () => {
     return () => {
         mutate(undefined, {
             onSettled: () => {
-                Promise.all([setIdentity(null), queryClient.removeQueries(), clearRoles(), setCompany(null, null)]).then(goToLogin)
+                Promise.all([setIdentity(null), queryClient.removeQueries(), clearRoles(), setCompany(null, null)]).then(
+                    goToLogin
+                )
             },
             onError: () => {
-                Promise.all([setIdentity(null), queryClient.removeQueries(), clearRoles(), setCompany(null, null)]).then(goToLogin)
+                Promise.all([setIdentity(null), queryClient.removeQueries(), clearRoles(), setCompany(null, null)]).then(
+                    goToLogin
+                )
             }
         })
     }

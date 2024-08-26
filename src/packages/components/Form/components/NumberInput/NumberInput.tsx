@@ -106,7 +106,7 @@ export const NumberInput = forwardRef<NumberInputRef, NumberInputProps>(
                 className={clsx(
                     'relative flex',
                     {
-                        'flex-row items-center gap-2 ': direction === 'row',
+                        'flex-row items-center gap-2': direction === 'row',
                         'flex-col items-start justify-start gap-1': direction === 'column'
                     },
                     className
@@ -148,7 +148,7 @@ export const NumberInput = forwardRef<NumberInputRef, NumberInputProps>(
                                 'pointer-events-none absolute right-3 top-1/2 z-[5] h-6 w-6 -translate-y-1/2 transform',
                                 tooltip && 'pointer-events-auto',
                                 {
-                                    'text-red  group-focus-within:text-red group-hover:text-red': message,
+                                    'text-red group-focus-within:text-red group-hover:text-red': message,
                                     'text-grey group-focus-within:text-primary group-hover:text-primary': !message
                                 }
                             )}>

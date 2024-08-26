@@ -53,7 +53,7 @@ export const Modal = ({
             <Dialog.Portal>
                 <Dialog.Overlay
                     className={clsx(
-                        'fixed bottom-0 right-0 z-50 bg-[#1B1C31]/50 backdrop-blur-[5px] backdrop-filter transition-opacity duration-300 data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn',
+                        'data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn fixed bottom-0 right-0 z-50 bg-[#1B1C31]/50 backdrop-blur-[5px] backdrop-filter transition-opacity duration-300',
                         {
                             'h-[calc(100vh-var(--topnav-height))] w-full lg:w-[calc(100dvw-var(--main-nav-desktop-width))]':
                                 !fullscreen,
@@ -63,7 +63,7 @@ export const Modal = ({
                     <Dialog.Content
                         ref={ref}
                         className={clsx(
-                            `absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white outline-none data-[state=closed]:animate-scaleOut data-[state=open]:animate-scaleIn ${SIZES[size]} z-50 max-h-[calc(100%-32px)] max-w-[calc(100%-32px)] overflow-hidden rounded-[20px]`,
+                            `data-[state=closed]:animate-scaleOut data-[state=open]:animate-scaleIn absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white outline-none ${SIZES[size]} z-50 max-h-[calc(100%-32px)] max-w-[calc(100%-32px)] overflow-hidden rounded-[20px]`,
                             className
                         )}>
                         {image ? (
@@ -71,7 +71,7 @@ export const Modal = ({
                                 <Image className='h-full w-full object-cover' src={image} alt='Upload background image' />
                             </div>
                         ) : undefined}
-                        <div className='relative z-5 h-full w-full  p-6'>
+                        <div className='z-5 relative h-full w-full p-6'>
                             {title ? <h1 className='mb-6'>{title}</h1> : undefined}
                             {children}
                             {onClose ? (

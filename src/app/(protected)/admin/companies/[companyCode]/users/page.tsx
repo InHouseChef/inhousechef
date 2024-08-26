@@ -1,9 +1,9 @@
 'use client'
 
-import { Header } from "@/components"
-import { Button } from "@/components/ui/button"
+import { Header } from '@/components'
+import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
-import { UserList } from "./components/UserList/UserList"
+import { UserList } from './components/UserList/UserList'
 
 export default function Users({ params }: { params: { companyCode: string } }) {
     const { companyCode } = params

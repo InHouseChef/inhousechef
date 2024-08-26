@@ -1,1 +1,1 @@
-export { DynamicTheme } from './DynamicTheme';
+export { DynamicTheme } from './DynamicTheme'

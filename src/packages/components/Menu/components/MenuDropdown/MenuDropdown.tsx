@@ -42,7 +42,7 @@ export const MenuDropdown: MenuDropdownComponent = ({ children, ...rest }) => {
                             {useDefaultStyles ? (
                                 <div
                                     className={clsx(
-                                        'flex flex-col gap-0.5 rounded-lg border border-grey700 bg-white p-2 shadow-[0_8px_16px_rgba(24,_34,_55,_0.1)]',
+                                        'border-grey700 flex flex-col gap-0.5 rounded-lg border bg-white p-2 shadow-[0_8px_16px_rgba(24,_34,_55,_0.1)]',
                                         {
                                             'max-h-[500px] overflow-y-auto': isScrollable,
                                             'rounded-tr-none': placement === 'bottom-end' || placement === 'left-start',

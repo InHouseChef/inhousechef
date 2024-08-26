@@ -25,10 +25,11 @@ interface UseReadALaCardMenusParams<T> extends DefaultQueryParams<ReadALaCardMen
 export const useReadALaCardMenus = <T = ReadALaCardMenuResponse[]>(params?: UseReadALaCardMenusParams<T>) => {
     const defaultParams = useDefaultQueryParams({
         ...params,
-        query: { pagination: { ...DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST }}
+        query: { pagination: { ...DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST } }
     })
 
-    return useQuery({ gcTime: 0,
+    return useQuery({
+        gcTime: 0,
         queryKey: ALACARD_MENU_KEYS.collection(defaultParams),
         queryFn: () => readALaCardMenus(defaultParams),
         select: params?.select,

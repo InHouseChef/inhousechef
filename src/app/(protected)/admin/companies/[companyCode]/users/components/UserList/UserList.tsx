@@ -29,12 +29,17 @@ export const UserList = ({ params }: { params: { companyCode: string } }) => {
 
         readUsers({
             path: { companyCode },
-            query: { filter: { role: roleFilter, aLaCardPermission: permissionFilter }, pagination: { page: currentPage, size: pageSize } }
-        }).then(res => {
-            setUsersData(res.results || [])
-            setTotalCount(res.totalCount || 0)
-            setIsLoading(false)
-        }).catch(() => setIsLoading(false))
+            query: {
+                filter: { role: roleFilter, aLaCardPermission: permissionFilter },
+                pagination: { page: currentPage, size: pageSize }
+            }
+        })
+            .then(res => {
+                setUsersData(res.results || [])
+                setTotalCount(res.totalCount || 0)
+                setIsLoading(false)
+            })
+            .catch(() => setIsLoading(false))
     }
 
     // Trigger fetch when filters, pagination size, or page change
@@ -77,11 +82,11 @@ export const UserList = ({ params }: { params: { companyCode: string } }) => {
                 header: 'A La Card Permission',
                 enableSorting: false,
                 cell: props => (
-                    <div className="flex justify-left items-center">
+                    <div className='justify-left flex items-center'>
                         {props.getValue() ? (
-                            <CheckCircle className="text-green-500" size={24} />
+                            <CheckCircle className='text-green-500' size={24} />
                         ) : (
-                            <XCircle className="text-red-500" size={24} />
+                            <XCircle className='text-red-500' size={24} />
                         )}
                     </div>
                 )
@@ -106,13 +111,13 @@ export const UserList = ({ params }: { params: { companyCode: string } }) => {
 
     return (
         <div>
-            <div className="flex items-center gap-4 mb-4">
+            <div className='mb-4 flex items-center gap-4'>
                 <Select onValueChange={setSelectedRole} value={selectedRole}>
                     <SelectTrigger>
-                        <SelectValue placeholder="Filter by role" />
+                        <SelectValue placeholder='Filter by role' />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="All">All Roles</SelectItem>
+                        <SelectItem value='All'>All Roles</SelectItem>
                         <SelectItem value={RolesEnum.CompanyManager}>Company Manager</SelectItem>
                         <SelectItem value={RolesEnum.Employee}>Employee</SelectItem>
                         <SelectItem value={RolesEnum.RestaurantWorker}>Restaurant Worker</SelectItem>
@@ -121,45 +126,51 @@ export const UserList = ({ params }: { params: { companyCode: string } }) => {
 
                 <Select onValueChange={setSelectedPermission} value={selectedPermission}>
                     <SelectTrigger>
-                        <SelectValue placeholder="Filter by A La Card Permission" />
+                        <SelectValue placeholder='Filter by A La Card Permission' />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="All">All Permissions</SelectItem>
-                        <SelectItem value="true">With Permission</SelectItem>
-                        <SelectItem value="false">Without Permission</SelectItem>
+                        <SelectItem value='All'>All Permissions</SelectItem>
+                        <SelectItem value='true'>With Permission</SelectItem>
+                        <SelectItem value='false'>Without Permission</SelectItem>
                     </SelectContent>
                 </Select>
 
-                <Button variant="outline" onClick={handleResetFilters}>Reset Filters</Button>
+                <Button variant='outline' onClick={handleResetFilters}>
+                    Reset Filters
+                </Button>
             </div>
 
-            <div className="mb-4">
+            <div className='mb-4'>
                 <p>Total Users: {totalCount}</p>
             </div>
 
             <DataTable columns={columns as ColumnDef<ReadUserResponse, unknown>[]} data={usersData} />
 
-            <div className="flex justify-end mt-4 w-32">
-                <Select onValueChange={value => {
-                    setPageSize(Number(value))
-                    setCurrentPage(0) // Reset to first page when page size changes
-                }} value={String(pageSize)}>
+            <div className='mt-4 flex w-32 justify-end'>
+                <Select
+                    onValueChange={value => {
+                        setPageSize(Number(value))
+                        setCurrentPage(0) // Reset to first page when page size changes
+                    }}
+                    value={String(pageSize)}>
                     <SelectTrigger>
-                        <SelectValue placeholder="Users per page" />
+                        <SelectValue placeholder='Users per page' />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="10">10 per page</SelectItem>
-                        <SelectItem value="25">25 per page</SelectItem>
-                        <SelectItem value="50">50 per page</SelectItem>
+                        <SelectItem value='10'>10 per page</SelectItem>
+                        <SelectItem value='25'>25 per page</SelectItem>
+                        <SelectItem value='50'>50 per page</SelectItem>
                     </SelectContent>
                 </Select>
             </div>
 
-            <div className="flex justify-between mt-4">
+            <div className='mt-4 flex justify-between'>
                 <Button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 0}>
                     Previous
                 </Button>
-                <Button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= Math.ceil(totalCount / pageSize) - 1}>
+                <Button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage >= Math.ceil(totalCount / pageSize) - 1}>
                     Next
                 </Button>
             </div>

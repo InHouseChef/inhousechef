@@ -10,30 +10,30 @@ export const TopNavHamburger = ({ isNavOpen, onToggle }: TopNavHamburgerProps) =
         <button
             onClick={onToggle}
             className={clsx(
-                'lg:hidden relative w-8 h-8 transform transition-transform duration-300 cursor-pointer translate-x-0',
+                'relative h-8 w-8 translate-x-0 transform cursor-pointer transition-transform duration-300 lg:hidden',
                 {
                     'translate-x-14': isNavOpen
                 }
             )}>
             <span
                 className={clsx(
-                    'block absolute bg-[#160042] rounded-lg opacity-100 transform transition-all duration-300',
+                    'absolute block transform rounded-lg bg-[#160042] opacity-100 transition-all duration-300',
                     'left-1 h-0.5 w-6',
-                    { 'rotate-45 top-[15px] left-[4px]': isNavOpen, 'top-[7px]': !isNavOpen }
+                    { 'left-[4px] top-[15px] rotate-45': isNavOpen, 'top-[7px]': !isNavOpen }
                 )}
             />
             <span
                 className={clsx(
-                    'block absolute bg-[#160042] rounded-lg transition-all duration-300',
-                    'left-1 h-0.5 w-6 top-[15px]',
+                    'absolute block rounded-lg bg-[#160042] transition-all duration-300',
+                    'left-1 top-[15px] h-0.5 w-6',
                     { 'w-0 opacity-0': isNavOpen }
                 )}
             />
             <span
                 className={clsx(
-                    'block absolute bg-[#160042] rounded-lg opacity-100 transform transition-all duration-300',
+                    'absolute block transform rounded-lg bg-[#160042] opacity-100 transition-all duration-300',
                     'left-1 h-0.5 w-6',
-                    { '-rotate-45 top-[15px] left-[4px]': isNavOpen, 'top-[23px]': !isNavOpen }
+                    { 'left-[4px] top-[15px] -rotate-45': isNavOpen, 'top-[23px]': !isNavOpen }
                 )}
             />
         </button>

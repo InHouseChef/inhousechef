@@ -24,7 +24,8 @@ interface UseReadCompanyParams<T> extends DefaultQueryParams<ReadCompanyPath>, Q
 
 export const useReadCompany = <T = ReadCompanyResponse>(params?: UseReadCompanyParams<T>) => {
     const defaultParams = useDefaultQueryParams(params)
-    return useQuery({ gcTime: 0,
+    return useQuery({
+        gcTime: 0,
         queryKey: COMPANY_KEYS.resource(defaultParams.path.companyCode),
         queryFn: () => readCompany(defaultParams),
         select: params?.select,

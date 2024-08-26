@@ -25,29 +25,29 @@ const getFormattedTime = (date: Date) => {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false
-    });
+    })
 }
 
 const convertTimeToDate = (timeString: Time) => {
     // Get the current date
-    const currentDate = new Date();
+    const currentDate = new Date()
 
     // Split the time string into hours, minutes, and seconds
-    const [hours, minutes, seconds] = timeString.split(':').map(Number);
+    const [hours, minutes, seconds] = timeString.split(':').map(Number)
 
     // Set the hours, minutes, and seconds on the current date
-    currentDate.setHours(hours);
-    currentDate.setMinutes(minutes);
-    currentDate.setSeconds(seconds);
-    currentDate.setMilliseconds(0); // Set milliseconds to 0 for precision
+    currentDate.setHours(hours)
+    currentDate.setMinutes(minutes)
+    currentDate.setSeconds(seconds)
+    currentDate.setMilliseconds(0) // Set milliseconds to 0 for precision
 
-    return currentDate;
+    return currentDate
 }
 
 export const ShiftUpdateForm = ({ companyCode, shiftId }: ShiftUpdateFormProps) => {
     const { data: shift, isLoading } = useReadShift({ path: { companyCode, shiftId } })
-    const [startDate, setStartDate] = useState<Date>();
-    const [endDate, setEndDate] = useState<Date>();
+    const [startDate, setStartDate] = useState<Date>()
+    const [endDate, setEndDate] = useState<Date>()
 
     const form = useForm<ShiftUpdateFormData>({
         resolver: zodResolver(updateShiftSchema),
@@ -67,10 +67,10 @@ export const ShiftUpdateForm = ({ companyCode, shiftId }: ShiftUpdateFormProps) 
                 name: shift.name || '',
                 shiftStartAt: shift.shiftStartAt,
                 shiftEndAt: shift.shiftEndAt,
-                orderingDeadlineBeforeShiftStart: shift.orderingDeadlineBeforeShiftStart || 0,
-            });
-            setStartDate(convertTimeToDate(shift.shiftStartAt));
-            setEndDate(convertTimeToDate(shift.shiftEndAt));
+                orderingDeadlineBeforeShiftStart: shift.orderingDeadlineBeforeShiftStart || 0
+            })
+            setStartDate(convertTimeToDate(shift.shiftStartAt))
+            setEndDate(convertTimeToDate(shift.shiftEndAt))
         }
     }, [shift, reset])
 
@@ -132,7 +132,7 @@ export const ShiftUpdateForm = ({ companyCode, shiftId }: ShiftUpdateFormProps) 
                             <div className='col-span-6'>
                                 <FormField
                                     control={control}
-                                    name="name"
+                                    name='name'
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Name</FormLabel>
@@ -147,12 +147,12 @@ export const ShiftUpdateForm = ({ companyCode, shiftId }: ShiftUpdateFormProps) 
                             <div className='col-span-6'>
                                 <FormField
                                     control={control}
-                                    name="orderingDeadlineBeforeShiftStart"
+                                    name='orderingDeadlineBeforeShiftStart'
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Ordering Deadline Before Shift Start (in hours)</FormLabel>
                                             <FormControl>
-                                                <Input {...field} type="number" value={field.value || 0} required disabled />
+                                                <Input {...field} type='number' value={field.value || 0} required disabled />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>

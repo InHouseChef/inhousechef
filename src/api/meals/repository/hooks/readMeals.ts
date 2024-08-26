@@ -24,10 +24,11 @@ interface UseReadMealsParams extends DefaultQueryParams<ReadMealsPath>, QueryOpt
 export const useReadMeals = (params?: UseReadMealsParams) => {
     const defaultParams = useDefaultQueryParams({
         ...params,
-        query: { pagination: { ...DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST }},
+        query: { pagination: { ...DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST } }
     })
 
-    return useQuery({ gcTime: 0,
+    return useQuery({
+        gcTime: 0,
         queryKey: MEAL_KEYS.collection(defaultParams),
         queryFn: () => readMeals(defaultParams),
         enabled: getDefaultBooleanValue(params?.options?.enabled)

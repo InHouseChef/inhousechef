@@ -23,7 +23,8 @@ interface UseReadOrderSummaryParams<T> extends DefaultQueryParams<ReadOrderSumma
 
 export const useReadOrderSummary = <T = ReadOrderSummaryResponse>(params?: UseReadOrderSummaryParams<T>) => {
     const defaultParams = useDefaultQueryParams(params)
-    return useQuery({ gcTime: 0,
+    return useQuery({
+        gcTime: 0,
         queryKey: ORDER_SUMMARY_KEYS.resource(defaultParams.path.companyCode),
         queryFn: () => readOrderSummary(defaultParams),
         select: params?.select,

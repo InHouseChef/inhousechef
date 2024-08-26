@@ -28,7 +28,8 @@ export const useReadOrders = (params?: UseReadOrdersParams) => {
         query: { pagination: { ...DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST } }
     })
 
-    return useQuery({ gcTime: 0,
+    return useQuery({
+        gcTime: 0,
         queryKey: ORDER_KEYS.collection(defaultParams),
         queryFn: () => readOrders(defaultParams),
         enabled: getDefaultBooleanValue(params?.options?.enabled)

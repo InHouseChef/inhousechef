@@ -15,7 +15,7 @@ export const Pagination = ({ page, onPrev, onNext, disabledPrev, disabledNext, i
     const iconClassNames = 'h-4 w-4 text-grey transition-colors  group-hover:text-primary group-disabled:text-grey/50'
 
     return (
-        <div className='flex items-center text-grey'>
+        <div className='text-grey flex items-center'>
             <button type='button' className={buttonClassNames} onClick={onPrev} disabled={disabledPrev || isFetching}>
                 <ChevronLeft className={iconClassNames} />
             </button>

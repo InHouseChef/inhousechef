@@ -23,7 +23,8 @@ interface UseReadMyUserParams<T> extends DefaultQueryParams<ReadMyUserPath>, Que
 
 export const useReadMyUser = <T = ReadMyUserResponse>(params?: UseReadMyUserParams<T>) => {
     const defaultParams = useDefaultQueryParams(params)
-    return useQuery({ gcTime: 0,
+    return useQuery({
+        gcTime: 0,
         queryKey: MY_USER_KEYS.base,
         queryFn: () => readMyUser(defaultParams),
         select: params?.select,

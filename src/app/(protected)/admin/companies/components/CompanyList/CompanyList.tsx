@@ -20,8 +20,7 @@ export const CompanyList = () => {
 
     // Fetch companies based on pagination size and page
     const fetchCompanies = () => {
-        readCompanies({ query: { pagination: { page: currentPage, size: pageSize } }})
-        .then(res => {
+        readCompanies({ query: { pagination: { page: currentPage, size: pageSize } } }).then(res => {
             setCompaniesData(res.results || [])
             setTotalCount(res.totalCount || 0)
         })
@@ -59,20 +58,19 @@ export const CompanyList = () => {
             column.accessor('branding.logoUrl', {
                 header: '',
                 enableSorting: false,
-                cell: props => (
+                cell: props =>
                     props.getValue() ? (
                         <img
                             src={props.getValue()}
-                            alt="Meal Image"
-                            className="w-12 h-12 object-cover rounded-lg border border-gray-200"
+                            alt='Meal Image'
+                            className='h-12 w-12 rounded-lg border border-gray-200 object-cover'
                         />
                     ) : (
-                        <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
-                            <p className="text-xs text-gray-500 text-center">No Image</p>
+                        <div className='flex h-12 w-12 items-center justify-center rounded-lg bg-gray-200'>
+                            <p className='text-center text-xs text-gray-500'>No Image</p>
                         </div>
                     )
-                )
-            }),
+            })
             // column.display({
             //     id: 'actions',
             //     header: '',
@@ -94,33 +92,37 @@ export const CompanyList = () => {
                     Create Company
                 </Button>
             </Header>
-            <div className="mb-4">
+            <div className='mb-4'>
                 <p>Total Companies: {totalCount}</p>
             </div>
 
             <DataTable columns={columns as ColumnDef<ReadCompanyResponse, unknown>[]} data={companiesData} />
 
-            <div className="flex justify-end mt-4 w-32">
-                <Select onValueChange={value => {
-                    setPageSize(Number(value))
-                    setCurrentPage(0) // Reset to first page when page size changes
-                }} value={String(pageSize)}>
+            <div className='mt-4 flex w-32 justify-end'>
+                <Select
+                    onValueChange={value => {
+                        setPageSize(Number(value))
+                        setCurrentPage(0) // Reset to first page when page size changes
+                    }}
+                    value={String(pageSize)}>
                     <SelectTrigger>
-                        <SelectValue placeholder="Companies per page" />
+                        <SelectValue placeholder='Companies per page' />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="10">10 per page</SelectItem>
-                        <SelectItem value="25">25 per page</SelectItem>
-                        <SelectItem value="50">50 per page</SelectItem>
+                        <SelectItem value='10'>10 per page</SelectItem>
+                        <SelectItem value='25'>25 per page</SelectItem>
+                        <SelectItem value='50'>50 per page</SelectItem>
                     </SelectContent>
                 </Select>
             </div>
 
-            <div className="flex justify-between mt-4">
+            <div className='mt-4 flex justify-between'>
                 <Button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 0}>
                     Previous
                 </Button>
-                <Button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= Math.ceil(totalCount / pageSize) - 1}>
+                <Button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage >= Math.ceil(totalCount / pageSize) - 1}>
                     Next
                 </Button>
             </div>

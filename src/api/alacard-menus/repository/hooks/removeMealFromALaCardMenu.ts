@@ -1,8 +1,8 @@
-import { axiosPrivate } from "@/lib/axios"
-import { queryClient } from "@/lib/react-query"
-import { MutationParams } from "@/types"
-import { useMutation } from "@tanstack/react-query"
-import { ALACARD_MENU_KEYS } from "../keys"
+import { axiosPrivate } from '@/lib/axios'
+import { queryClient } from '@/lib/react-query'
+import { MutationParams } from '@/types'
+import { useMutation } from '@tanstack/react-query'
+import { ALACARD_MENU_KEYS } from '../keys'
 
 interface RemoveMealFromALaCardMenuPath {
     aLaCardMenuId: string

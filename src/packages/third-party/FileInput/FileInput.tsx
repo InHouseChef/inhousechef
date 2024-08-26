@@ -192,7 +192,7 @@ export const FileInput: ForwardRefExoticComponent<FileInputProps & RefAttributes
                             <p>{files[0]?.name}</p>
                             <button
                                 type='button'
-                                className='h-5 w-5 border-0 bg-transparent p-0 text-grey500 transition-colors hover:text-red500'
+                                className='text-grey500 hover:text-red500 h-5 w-5 border-0 bg-transparent p-0 transition-colors'
                                 onClick={handleRemove}>
                                 <FileInputCircleX />
                             </button>
@@ -221,9 +221,9 @@ export const FileInput: ForwardRefExoticComponent<FileInputProps & RefAttributes
                     <Label>Uploaded Files</Label>
                     <div className='flex flex-col gap-3'>
                         {files?.map(({ name, size, type }, index) => (
-                            <div key={index} className='flex items-center justify-between rounded-lg bg-grey100 p-1'>
+                            <div key={index} className='bg-grey100 flex items-center justify-between rounded-lg p-1'>
                                 <div className='flex items-center gap-2'>
-                                    <div className='flex items-center justify-center rounded-lg border border-grey300 bg-white p-1.5'>
+                                    <div className='border-grey300 flex items-center justify-center rounded-lg border bg-white p-1.5'>
                                         {/* {MIME_ICONS[type]}
                                          */}
                                     </div>
@@ -242,7 +242,7 @@ export const FileInput: ForwardRefExoticComponent<FileInputProps & RefAttributes
             </>
         )
         return (
-            <div className={clsx('rounded-2xl border p-6', multiple && 'gap-5 border-grey300 bg-white')}>
+            <div className={clsx('rounded-2xl border p-6', multiple && 'border-grey300 gap-5 bg-white')}>
                 <div
                     className={clsx('flex flex-col', {
                         'gap-4': multiple,

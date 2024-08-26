@@ -6,7 +6,13 @@ interface GeneratePageNumbersProps {
     showBoundaryPages: boolean
 }
 
-export const generatePageNumbers = ({ page, size, totalCount, visiblePages, showBoundaryPages }: GeneratePageNumbersProps) => {
+export const generatePageNumbers = ({
+    page,
+    size,
+    totalCount,
+    visiblePages,
+    showBoundaryPages
+}: GeneratePageNumbersProps) => {
     const totalPages = Math.ceil(totalCount / size)
     const halfVisiblePages = Math.floor(visiblePages / 2)
 

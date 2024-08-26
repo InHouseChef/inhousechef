@@ -6,7 +6,10 @@ import { CreateALaCardShiftRequest, CreateALaCardShiftResponse } from '../../con
 interface CreateShiftPath extends CompanyPath {}
 interface CreateShiftParams extends MutationParams<CreateShiftPath, CreateALaCardShiftRequest> {}
 
-export const createALaCardShift = ({ path: { companyCode }, body }: CreateShiftParams): Promise<CreateALaCardShiftResponse> => 
+export const createALaCardShift = ({
+    path: { companyCode },
+    body
+}: CreateShiftParams): Promise<CreateALaCardShiftResponse> =>
     axiosPrivate.post(`/companies/${companyCode}/a-la-card-shifts`, body)
 
 export const useCreateALaCardShift = () => useMutation({ mutationFn: createALaCardShift })

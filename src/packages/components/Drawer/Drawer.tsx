@@ -59,7 +59,7 @@ export const Drawer = ({
                 <Dialog.Overlay
                     onClick={onClose}
                     className={clsx(
-                        'fixed bottom-0 right-0 top-[var(--topnav-height)] z-45 w-full bg-[#1B1C31]/50 backdrop-blur-[5px] backdrop-filter transition-opacity duration-500 data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn lg:w-[calc(100%-var(--main-nav-desktop-width))]',
+                        'z-45 data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn fixed bottom-0 right-0 top-[var(--topnav-height)] w-full bg-[#1B1C31]/50 backdrop-blur-[5px] backdrop-filter transition-opacity duration-500 lg:w-[calc(100%-var(--main-nav-desktop-width))]',
                         classes?.overlay
                     )}
                 />
@@ -67,13 +67,13 @@ export const Drawer = ({
                     ref={ref}
                     onEscapeKeyDown={onClose}
                     className={clsx(
-                        `fixed bottom-0 right-0 top-[var(--topnav-height)] z-50 data-[state=closed]:animate-slideOutRight data-[state=open]:animate-slideInRight ${SIZES[size]} max-w-full lg:max-w-[calc(100%-var(--main-nav-desktop-width))]`,
+                        `data-[state=closed]:animate-slideOutRight data-[state=open]:animate-slideInRight fixed bottom-0 right-0 top-[var(--topnav-height)] z-50 ${SIZES[size]} max-w-full lg:max-w-[calc(100%-var(--main-nav-desktop-width))]`,
                         classes?.content
                     )}>
                     <div className='relative flex h-full w-full flex-col overflow-y-auto bg-white p-6'>
                         <button
                             onClick={onClose}
-                            className={clsx('flex items-center text-grey md:hidden', classes?.mobileClose)}>
+                            className={clsx('text-grey flex items-center md:hidden', classes?.mobileClose)}>
                             <ArrowLeft /> Back
                         </button>
                         {title ? (

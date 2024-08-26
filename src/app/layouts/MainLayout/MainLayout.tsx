@@ -24,9 +24,9 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
 
     useEffect(() => {
         if (!isFetched) return
-        
-        if (!identity) return safeReplace('/login') 
-            
+
+        if (!identity) return safeReplace('/login')
+
         if (identity && roles.Admin) {
             return safeReplace('/admin/companies')
         }
@@ -36,18 +36,15 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
 
             if (company.companyCode && company.companyId) {
                 return safeReplace(`/employee/companies/${company.companyCode}`)
-            }
-            else {
+            } else {
                 setIsFetchingCompany(true)
-                readUserCompany()
-                .then((company) => {
+                readUserCompany().then(company => {
                     setIsFetchingCompany(false)
                     setCompany(company.companyCode, company.companyId)
                     setUserCompany(company)
                 })
             }
         }
-
     }, [identity, isFetchingIdentity, userCompany])
 
     if (isFetchingIdentity || isFetchingCompany) return <Loader />

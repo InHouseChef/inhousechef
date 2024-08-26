@@ -1,9 +1,9 @@
 'use client'
 
-import { Header } from "@/components"
-import { Button } from "@/components/ui/button"
+import { Header } from '@/components'
+import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
-import { ShiftList } from "./components/ShiftList/ShiftList"
+import { ShiftList } from './components/ShiftList/ShiftList'
 
 export default function Shifts({ params }: { params: { companyCode: string } }) {
     const { companyCode } = params

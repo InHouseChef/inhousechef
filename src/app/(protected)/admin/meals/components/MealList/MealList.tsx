@@ -23,10 +23,12 @@ export const MealList = () => {
     const fetchMeals = () => {
         const typeFilter = selectedType !== 'All' ? selectedType : undefined
 
-        readMeals({ query: { filter: { type: typeFilter }, pagination: { page: currentPage, size: pageSize } }}).then(res => {
-            setMealsData(res.results || [])
-            setTotalCount(res.totalCount || 0)
-        })
+        readMeals({ query: { filter: { type: typeFilter }, pagination: { page: currentPage, size: pageSize } } }).then(
+            res => {
+                setMealsData(res.results || [])
+                setTotalCount(res.totalCount || 0)
+            }
+        )
     }
 
     // Trigger fetch when filters, pagination size, or page change
@@ -77,20 +79,19 @@ export const MealList = () => {
             column.accessor('imageUrl', {
                 header: '',
                 enableSorting: false,
-                cell: props => (
+                cell: props =>
                     props.getValue() ? (
                         <img
                             src={props.getValue()}
-                            alt="Meal Image"
-                            className="w-12 h-12 object-cover rounded-lg border border-gray-200"
+                            alt='Meal Image'
+                            className='h-12 w-12 rounded-lg border border-gray-200 object-cover'
                         />
                     ) : (
-                        <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
-                            <p className="text-xs text-gray-500 text-center">No Image</p>
+                        <div className='flex h-12 w-12 items-center justify-center rounded-lg bg-gray-200'>
+                            <p className='text-center text-xs text-gray-500'>No Image</p>
                         </div>
                     )
-                )
-            }),
+            })
             // column.display({
             //     id: 'actions',
             //     header: '',
@@ -105,54 +106,60 @@ export const MealList = () => {
 
     return (
         <div>
-            <Header heading="Meals">
+            <Header heading='Meals'>
                 <Button type='button' onClick={() => router.push('/admin/meals/create')}>
                     Create Meal
                 </Button>
             </Header>
             <div className='mt-4'></div>
-            <div className="flex items-center gap-4 mb-4">
+            <div className='mb-4 flex items-center gap-4'>
                 <Select onValueChange={setSelectedType} value={selectedType}>
                     <SelectTrigger>
-                        <SelectValue placeholder="Filter by type" />
+                        <SelectValue placeholder='Filter by type' />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="All">All Types</SelectItem>
-                        <SelectItem value="MainCourse">Main Course</SelectItem>
-                        <SelectItem value="SideDish">Side Dish</SelectItem>
+                        <SelectItem value='All'>All Types</SelectItem>
+                        <SelectItem value='MainCourse'>Main Course</SelectItem>
+                        <SelectItem value='SideDish'>Side Dish</SelectItem>
                     </SelectContent>
                 </Select>
 
-                <Button variant="outline" onClick={handleResetFilters}>Reset Filters</Button>
+                <Button variant='outline' onClick={handleResetFilters}>
+                    Reset Filters
+                </Button>
             </div>
 
-            <div className="mb-4">
+            <div className='mb-4'>
                 <p>Total Meals: {totalCount}</p>
             </div>
 
             <DataTable columns={columns as ColumnDef<ReadMealResponse, unknown>[]} data={mealsData} />
 
-            <div className="flex justify-end mt-4 w-32">
-                <Select onValueChange={value => {
-                    setPageSize(Number(value))
-                    setCurrentPage(0) // Reset to first page when page size changes
-                }} value={String(pageSize)}>
+            <div className='mt-4 flex w-32 justify-end'>
+                <Select
+                    onValueChange={value => {
+                        setPageSize(Number(value))
+                        setCurrentPage(0) // Reset to first page when page size changes
+                    }}
+                    value={String(pageSize)}>
                     <SelectTrigger>
-                        <SelectValue placeholder="Meals per page" />
+                        <SelectValue placeholder='Meals per page' />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="10">10 per page</SelectItem>
-                        <SelectItem value="25">25 per page</SelectItem>
-                        <SelectItem value="50">50 per page</SelectItem>
+                        <SelectItem value='10'>10 per page</SelectItem>
+                        <SelectItem value='25'>25 per page</SelectItem>
+                        <SelectItem value='50'>50 per page</SelectItem>
                     </SelectContent>
                 </Select>
             </div>
 
-            <div className="flex justify-between mt-4">
+            <div className='mt-4 flex justify-between'>
                 <Button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 0}>
                     Previous
                 </Button>
-                <Button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= Math.ceil(totalCount / pageSize) - 1}>
+                <Button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage >= Math.ceil(totalCount / pageSize) - 1}>
                     Next
                 </Button>
             </div>

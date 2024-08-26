@@ -28,7 +28,8 @@ export const useReadUsers = (params?: UseReadUsersParams) => {
         query: { pagination: { ...DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST } }
     })
 
-    return useQuery({ gcTime: 0,
+    return useQuery({
+        gcTime: 0,
         queryKey: USER_KEYS.collection(defaultParams),
         queryFn: () => readUsers(defaultParams),
         enabled: getDefaultBooleanValue(params?.options?.enabled)
