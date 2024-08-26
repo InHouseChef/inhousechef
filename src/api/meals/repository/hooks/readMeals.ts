@@ -27,7 +27,7 @@ export const useReadMeals = (params?: UseReadMealsParams) => {
         query: { pagination: { ...DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST }},
     })
 
-    return useQuery({
+    return useQuery({ gcTime: 0,
         queryKey: MEAL_KEYS.collection(defaultParams),
         queryFn: () => readMeals(defaultParams),
         enabled: getDefaultBooleanValue(params?.options?.enabled)

@@ -25,7 +25,7 @@ export const useReadCompanies = (params?: UseReadCompaniesParams) => {
         query: { pagination: { ...DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST } }
     })
 
-    return useQuery({
+    return useQuery({ gcTime: 0,
         queryKey: COMPANY_KEYS.collection(defaultParams),
         queryFn: () => readCompanies(defaultParams),
         enabled: getDefaultBooleanValue(params?.options?.enabled)

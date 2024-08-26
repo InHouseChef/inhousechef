@@ -21,7 +21,7 @@ interface UseReadUserCompanyParams<T> extends DefaultQueryParams<ReadUserCompany
 
 // export const useReadUserCompany = <T = ReadUserCompanyResponse>(params?: UseReadUserCompanyParams<T>) => {
 //     const defaultParams = useDefaultQueryParams(params)
-//     return useQuery({
+//     return useQuery({ gcTime: 0,
 //         queryKey: COMPANY_USER_KEYS.base,
 //         queryFn: () => readUserCompany(defaultParams),
 //         select: params?.select,
