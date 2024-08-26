@@ -1,33 +1,33 @@
 'use client'
 
-import { updateMealImage, MealType, ReadMealResponse, updateMealDetails } from '@/api/meals'
+import { MealType, ReadMealResponse, updateMealDetails, updateMealImage } from '@/api/meals'
+import { deleteMeal } from '@/api/meals/repository/hooks/deleteMeal'
+import { readMeal } from '@/api/meals/repository/hooks/readMeal'
 import { Header, Loader } from '@/components'
 import { FileUploader } from '@/components/FileUploader'
-import { FileUploaderContent, FileInput, FileUploaderItem, FileSvgDraw } from '@/components/FileUploader/FileUploader'
+import { FileInput, FileSvgDraw, FileUploaderContent, FileUploaderItem } from '@/components/FileUploader/FileUploader'
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogTitle,
+    AlertDialogTrigger
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Paperclip } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { updateMealDetailsSchema } from '../../../schemas'
-import { Input } from '@/components/ui/input'
-import {
-    AlertDialogFooter,
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogTitle,
-    AlertDialogTrigger
-} from '@/components/ui/alert-dialog'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { readMeal } from '@/api/meals/repository/hooks/readMeal'
-import { deleteMeal } from '@/api/meals/repository/hooks/deleteMeal'
 
 interface MealUpdateFormProps {
     mealId: string
@@ -102,6 +102,7 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
         if (files && files.length > 0) {
             const formData = new FormData()
             formData.append('image', files[0])
+            // @ts-ignore
             const updateResult = await updateMealImage({ path: { mealId }, body: formData })
             setMeal(updateResult)
             setImageURL(updateResult.imageUrl) // Update the main image URL

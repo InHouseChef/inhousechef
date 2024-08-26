@@ -1,4 +1,4 @@
-import { create } from 'zustand'
+import { create, StoreApi, UseBoundStore } from 'zustand'
 
 interface CompanyState {
     companyCode: string | null
@@ -7,7 +7,7 @@ interface CompanyState {
     getCompany: () => { companyCode: string | null; companyId: string | null }
 }
 
-export const useCompanyStore = create<CompanyState>(set => ({
+export const useCompanyStore: UseBoundStore<StoreApi<CompanyState>> = create<CompanyState>(set => ({
     companyCode: null,
     companyId: null,
     setCompany: (companyCode, companyId) => set({ companyCode, companyId }),

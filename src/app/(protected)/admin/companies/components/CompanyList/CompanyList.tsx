@@ -1,14 +1,14 @@
 'use client'
 
 import { ReadCompanyResponse } from '@/api/companies'
-import { DataTable, Header, Loader, Place } from '@/components'
-import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import Link from 'next/link'
-import { useMemo, useState, useEffect } from 'react'
+import { readCompanies } from '@/api/companies/repository/hooks/readCompanies'
+import { DataTable, Header, Place } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { readCompanies } from '@/api/companies/repository/hooks/readCompanies'
+import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useEffect, useMemo, useState } from 'react'
 
 export const CompanyList = () => {
     const [companiesData, setCompaniesData] = useState<ReadCompanyResponse[]>([])
@@ -20,7 +20,7 @@ export const CompanyList = () => {
 
     // Fetch companies based on pagination size and page
     const fetchCompanies = () => {
-        readCompanies({ query: { pagination: { page: currentPage, size: pageSize } } }).then(res => {
+        readCompanies({ path: {}, query: { pagination: { page: currentPage, size: pageSize } } }).then(res => {
             setCompaniesData(res.results || [])
             setTotalCount(res.totalCount || 0)
         })
