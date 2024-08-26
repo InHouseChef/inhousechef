@@ -24,7 +24,8 @@ interface UseReadALaCardShiftParams<T> extends DefaultQueryParams<ReadALaCardShi
 
 export const useReadALaCardShift = <T = ReadALaCardShiftResponse>(params?: UseReadALaCardShiftParams<T>) => {
     const defaultParams = useDefaultQueryParams(params)
-    return useQuery({
+    return useQuery({ 
+        gcTime: 0,
         queryKey: ALACARD_SHIFT_KEYS.resource(),
         queryFn: () => readALaCardShift(defaultParams),
         select: params?.select,

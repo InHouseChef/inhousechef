@@ -38,7 +38,7 @@ export const useIdentity = () => {
 }
 
 export const useReadIdentity = () => {
-    return useQuery({
+    return useQuery({ gcTime: 0,
         queryKey: ['identity'],
         queryFn: () => identityStore.getState().identity || null
     })

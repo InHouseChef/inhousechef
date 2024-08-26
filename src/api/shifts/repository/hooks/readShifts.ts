@@ -22,7 +22,7 @@ interface UseReadShiftsParams extends DefaultQueryParams<ReadShiftsPath>, QueryO
 export const useReadShifts = (params?: UseReadShiftsParams) => {
     const defaultParams = useDefaultQueryParams(params)
 
-    return useQuery({
+    return useQuery({ gcTime: 0,
         queryKey: SHIFT_KEYS.collection(defaultParams),
         queryFn: () => readShifts(defaultParams),
         enabled: getDefaultBooleanValue(params?.options?.enabled)

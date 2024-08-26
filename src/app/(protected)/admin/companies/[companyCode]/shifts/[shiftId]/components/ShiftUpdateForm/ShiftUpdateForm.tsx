@@ -11,6 +11,7 @@ import { useReadShift } from '@/api/shifts/repository/hooks/readShift'
 import { updateShiftSchema } from '../../../schemas'
 import { TimePicker } from '@/components/ui/time-picker'
 import { useState } from 'react'
+import { Time } from '@/types'
 
 type ShiftUpdateFormData = z.infer<typeof updateShiftSchema>
 
@@ -25,6 +26,22 @@ const getFormattedTime = (date: Date) => {
         minute: '2-digit',
         hour12: false
     });
+}
+
+const convertTimeToDate = (timeString: Time) => {
+    // Get the current date
+    const currentDate = new Date();
+
+    // Split the time string into hours, minutes, and seconds
+    const [hours, minutes, seconds] = timeString.split(':').map(Number);
+
+    // Set the hours, minutes, and seconds on the current date
+    currentDate.setHours(hours);
+    currentDate.setMinutes(minutes);
+    currentDate.setSeconds(seconds);
+    currentDate.setMilliseconds(0); // Set milliseconds to 0 for precision
+
+    return currentDate;
 }
 
 export const ShiftUpdateForm = ({ companyCode, shiftId }: ShiftUpdateFormProps) => {
@@ -52,8 +69,8 @@ export const ShiftUpdateForm = ({ companyCode, shiftId }: ShiftUpdateFormProps) 
                 shiftEndAt: shift.shiftEndAt,
                 orderingDeadlineBeforeShiftStart: shift.orderingDeadlineBeforeShiftStart || 0,
             });
-            // setStartDate(new Date(shift.shiftStartAt));
-            // setEndDate(new Date(shift.shiftEndAt));
+            setStartDate(convertTimeToDate(shift.shiftStartAt));
+            setEndDate(convertTimeToDate(shift.shiftEndAt));
         }
     }, [shift, reset])
 

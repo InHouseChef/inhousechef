@@ -28,7 +28,7 @@ export const useReadALaCardMenus = <T = ReadALaCardMenuResponse[]>(params?: UseR
         query: { pagination: { ...DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST }}
     })
 
-    return useQuery({
+    return useQuery({ gcTime: 0,
         queryKey: ALACARD_MENU_KEYS.collection(defaultParams),
         queryFn: () => readALaCardMenus(defaultParams),
         select: params?.select,

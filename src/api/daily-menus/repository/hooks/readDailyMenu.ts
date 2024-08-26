@@ -24,7 +24,7 @@ interface UseReadDailyMenuParams<T> extends DefaultQueryParams<ReadDailyMenuPath
 
 export const useReadDailyMenu = <T = ReadDailyMenuResponse>(params?: UseReadDailyMenuParams<T>) => {
     const defaultParams = useDefaultQueryParams(params)
-    return useQuery({
+    return useQuery({ gcTime: 0,
         queryKey: DAILY_MENU_KEYS.resource(defaultParams.path.dailyMenuId),
         queryFn: () => readDailyMenu(defaultParams),
         select: params?.select,

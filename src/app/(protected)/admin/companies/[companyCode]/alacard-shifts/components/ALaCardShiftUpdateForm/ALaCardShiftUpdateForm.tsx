@@ -11,6 +11,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { createALaCardShift, readALaCardShift, useReadALaCardShift } from '@/api/alacard-shifts'
 import { createALaCardShiftSchema } from '../../schemas'
+import { Time } from '@/types'
 
 type ALaCardShiftUpdateFormData = z.infer<typeof createALaCardShiftSchema>
 
@@ -27,18 +28,32 @@ const getFormattedTime = (date: Date) => {
     });
 }
 
+const convertTimeToDate = (timeString: Time) => {
+    // Get the current date
+    const currentDate = new Date();
+
+    // Split the time string into hours, minutes, and seconds
+    const [hours, minutes, seconds] = timeString.split(':').map(Number);
+
+    // Set the hours, minutes, and seconds on the current date
+    currentDate.setHours(hours);
+    currentDate.setMinutes(minutes);
+    currentDate.setSeconds(seconds);
+    currentDate.setMilliseconds(0); // Set milliseconds to 0 for precision
+
+    return currentDate;
+}
+
 export const ALaCardShiftUpdateForm = ({ companyCode }: ALaCardShiftUpdateFormProps) => {
-    const { data: shift, isLoading } = useReadALaCardShift({ path: { companyCode } })
+    const { data: shift, isLoading, refetch: refetchALaCardShift } = useReadALaCardShift({ path: { companyCode } })
     const [startDate, setStartDate] = useState<Date>();
     const [endDate, setEndDate] = useState<Date>();
-
-///////// ALACARD CACHING PROBLEM
 
     const form = useForm<ALaCardShiftUpdateFormData>({
         resolver: zodResolver(createALaCardShiftSchema),
         defaultValues: {
-            shiftStartAt: '',
-            shiftEndAt: ''
+            shiftStartAt: new Date(),
+            shiftEndAt: new Date()
         }
     })
 
@@ -46,12 +61,11 @@ export const ALaCardShiftUpdateForm = ({ companyCode }: ALaCardShiftUpdateFormPr
 
     useEffect(() => {
         if (shift) {
-            reset({
-                shiftStartAt: shift.shiftStartAt,
-                shiftEndAt: shift.shiftEndAt,
-            });
-            setStartDate(new Date(shift.shiftStartAt));
-            setEndDate(new Date(shift.shiftEndAt));
+            const formattedStartDate = convertTimeToDate(shift.shiftStartAt)
+            const formattedEndDate = convertTimeToDate(shift.shiftEndAt)
+
+            setStartDate(formattedStartDate);
+            setEndDate(formattedEndDate);
         }
     }, [shift, reset])
 
@@ -62,11 +76,8 @@ export const ALaCardShiftUpdateForm = ({ companyCode }: ALaCardShiftUpdateFormPr
         createALaCardShift({ path: {companyCode}, body: {
             shiftStartAt: formattedStartTime,
             shiftEndAt: formattedEndTime
-        }}).then((updateResult) => {
-            reset({
-                shiftStartAt: updateResult.shiftStartAt,
-                shiftEndAt: updateResult.shiftEndAt,
-            })
+        }}).then(_ => {
+            refetchALaCardShift()
         })
     }
 
