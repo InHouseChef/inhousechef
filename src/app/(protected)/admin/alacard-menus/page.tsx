@@ -1,7 +1,5 @@
-import { ALaCardMenuManagement } from "./components/ALaCardMenuManagement";
+import { ALaCardMenuManagement } from './components/ALaCardMenuManagement'
 
 export default function Page() {
-    return (
-        <ALaCardMenuManagement />
-    )
+    return <ALaCardMenuManagement />
 }

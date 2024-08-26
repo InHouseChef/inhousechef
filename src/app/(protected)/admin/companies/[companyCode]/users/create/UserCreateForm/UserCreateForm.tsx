@@ -14,12 +14,20 @@ import { createUserSchema } from '../../schemas'
 import { Checkbox } from '@/packages/components'
 
 // Extend the schema to include confirmPassword
-const enhancedCreateUserSchema = createUserSchema.extend({
-    confirmPassword: z.string().min(8, 'Password is required.').regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/, 'Password must contain at least one uppercase letter, one lowercase letter, and one number.'),
-}).refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    message: "Passwords must match",
-});
+const enhancedCreateUserSchema = createUserSchema
+    .extend({
+        confirmPassword: z
+            .string()
+            .min(8, 'Password is required.')
+            .regex(
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+                'Password must contain at least one uppercase letter, one lowercase letter, and one number.'
+            )
+    })
+    .refine(data => data.password === data.confirmPassword, {
+        path: ['confirmPassword'],
+        message: 'Passwords must match'
+    })
 
 export const UserCreateForm = ({ params }: { params: { companyCode: string } }) => {
     const { companyCode } = params
@@ -126,7 +134,7 @@ export const UserCreateForm = ({ params }: { params: { companyCode: string } }) 
                                     <FormControl>
                                         <Select onValueChange={field.onChange} value={field.value}>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Select role" />
+                                                <SelectValue placeholder='Select role' />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value={RolesEnum.CompanyManager}>Company Manager</SelectItem>
@@ -150,7 +158,7 @@ export const UserCreateForm = ({ params }: { params: { companyCode: string } }) 
                                     <FormControl>
                                         <Checkbox
                                             checked={field.value} // Bind checked state to form value
-                                            onChange={(checked) => field.onChange(checked)} // Handle change
+                                            onChange={checked => field.onChange(checked)} // Handle change
                                         />
                                     </FormControl>
                                     <FormMessage />

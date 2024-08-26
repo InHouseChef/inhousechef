@@ -6,7 +6,7 @@ interface MessageProps extends HTMLAttributes<HTMLParagraphElement> {}
 export const Message = ({ children, className }: MessageProps) => (
     <p
         className={clsx([
-            'absolute inset-y-0 translate-y-full text-red text-xs leading-5 italic whitespace-nowrap message',
+            'text-red message absolute inset-y-0 translate-y-full whitespace-nowrap text-xs italic leading-5',
             className
         ])}>
         {children}

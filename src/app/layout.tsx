@@ -12,15 +12,12 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-
     return (
         <html lang='en'>
             <QueryProvider>
                 <DynamicTheme>
                     <RoleProvider>
-                        <MainLayout>
-                        {children}
-                        </MainLayout>
+                        <MainLayout>{children}</MainLayout>
                     </RoleProvider>
                 </DynamicTheme>
             </QueryProvider>

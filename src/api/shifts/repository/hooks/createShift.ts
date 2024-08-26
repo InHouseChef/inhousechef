@@ -6,7 +6,7 @@ import { CreateShiftRequest, CreateShiftResponse } from '../../contract'
 interface CreateShiftPath extends CompanyPath {}
 interface CreateShiftParams extends MutationParams<CreateShiftPath, CreateShiftRequest> {}
 
-export const createShift = ({ path: { companyCode }, body }: CreateShiftParams): Promise<CreateShiftResponse> => 
+export const createShift = ({ path: { companyCode }, body }: CreateShiftParams): Promise<CreateShiftResponse> =>
     axiosPrivate.post(`/companies/${companyCode}/shifts`, body)
 
 export const useCreateShift = () => useMutation({ mutationFn: createShift })

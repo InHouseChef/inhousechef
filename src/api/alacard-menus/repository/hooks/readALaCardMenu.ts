@@ -24,7 +24,8 @@ interface UseReadALaCardMenuParams<T> extends DefaultQueryParams<ReadALaCardMenu
 
 export const useReadALaCardMenu = <T = ReadALaCardMenuResponse>(params?: UseReadALaCardMenuParams<T>) => {
     const defaultParams = useDefaultQueryParams(params)
-    return useQuery({ gcTime: 0,
+    return useQuery({
+        gcTime: 0,
         queryKey: ALACARD_MENU_KEYS.resource(defaultParams.path.aLaCardMenuId),
         queryFn: () => readALaCardMenu(defaultParams),
         select: params?.select,

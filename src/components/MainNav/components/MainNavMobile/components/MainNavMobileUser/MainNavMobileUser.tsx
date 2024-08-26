@@ -24,7 +24,7 @@ export const MainNavMobileUser = () => {
                 </div>
             </div>
             <div className='flex flex-col'>
-                <span className='text-xs text-grey'>Welcome back</span>
+                <span className='text-grey text-xs'>Welcome back</span>
                 <span className='text-2xl font-bold'>{fullName}</span>
             </div>
         </div>

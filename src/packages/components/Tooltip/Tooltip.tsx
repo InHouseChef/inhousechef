@@ -21,12 +21,12 @@ export const Tooltip = ({ label, children, variant = 'dark', side = 'top' }: Too
                     side={side}
                     sideOffset={4}
                     className={clsx(
-                        'z-[60] select-none rounded-[4px]  px-[15px] py-[10px] leading-none text-white will-change-[transform,opacity]',
+                        'z-[60] select-none rounded-[4px] px-[15px] py-[10px] leading-none text-white will-change-[transform,opacity]',
                         'data-[state=delayed-open]:data-[side=top]:animate-slideUpAndFadeIn',
                         'data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFadeIn',
                         'data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFadeIn',
                         'data-[state=delayed-open]:data-[side=bottom]:animate-slideDownAndFadeIn',
-                        { 'bg-black': variant === 'dark', 'border border-grey700/50 bg-white': variant === 'light' }
+                        { 'bg-black': variant === 'dark', 'border-grey700/50 border bg-white': variant === 'light' }
                     )}>
                     {label}
                     <RadixTooltip.Arrow

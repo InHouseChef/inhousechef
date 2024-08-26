@@ -24,7 +24,7 @@ export const UserUpdateALaCardPermissionForm = ({ companyCode, userId }: UserUpd
     const form = useForm<UserALaCardPermissionUpdateFormData>({
         resolver: zodResolver(updateUserALaCardPermissionSchema),
         defaultValues: {
-            aLaCard: false,
+            aLaCard: false
         }
     })
 
@@ -33,7 +33,7 @@ export const UserUpdateALaCardPermissionForm = ({ companyCode, userId }: UserUpd
     useEffect(() => {
         if (user) {
             reset({
-                aLaCard: user.aLaCardPermission || false,
+                aLaCard: user.aLaCardPermission || false
             })
         }
     }, [user, reset])
@@ -41,11 +41,11 @@ export const UserUpdateALaCardPermissionForm = ({ companyCode, userId }: UserUpd
     const onSubmit = async (formData: UserALaCardPermissionUpdateFormData) => {
         const updateResult = await updateUserALaCardPermission({
             path: { companyCode, userId },
-            body: formData,
+            body: formData
         })
 
         reset({
-            aLaCard: updateResult.aLaCardPermission,
+            aLaCard: updateResult.aLaCardPermission
         })
     }
 
@@ -61,15 +61,12 @@ export const UserUpdateALaCardPermissionForm = ({ companyCode, userId }: UserUpd
                     <div className='col-span-12'>
                         <FormField
                             control={control}
-                            name="aLaCard"
+                            name='aLaCard'
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>A La Card Permission</FormLabel>
                                     <FormControl>
-                                        <Checkbox
-                                            checked={field.value}
-                                            onChange={field.onChange}
-                                        />
+                                        <Checkbox checked={field.value} onChange={field.onChange} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

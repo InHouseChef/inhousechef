@@ -1,12 +1,11 @@
 'use client'
 
-import { usePathParams } from "@/hooks"
-import { UserUpdateProfileForm } from "./components/UserUpdateProfileForm/UserUpdateProfileForm"
-import { UserUpdateALaCardPermissionForm } from "./components/UserUpdateALaCardPermissionForm/UserUpdateALaCardPermissionForm"
-
+import { usePathParams } from '@/hooks'
+import { UserUpdateProfileForm } from './components/UserUpdateProfileForm/UserUpdateProfileForm'
+import { UserUpdateALaCardPermissionForm } from './components/UserUpdateALaCardPermissionForm/UserUpdateALaCardPermissionForm'
 
 export default function CompanyUserPage() {
-    const { companyCode, userId } = usePathParams<{ companyCode: string, userId: string }>()
+    const { companyCode, userId } = usePathParams<{ companyCode: string; userId: string }>()
 
     return (
         <>
@@ -19,4 +18,3 @@ export default function CompanyUserPage() {
         </>
     )
 }
-

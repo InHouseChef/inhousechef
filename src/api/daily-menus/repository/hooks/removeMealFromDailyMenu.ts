@@ -1,8 +1,8 @@
-import { axiosPrivate } from "@/lib/axios"
-import { queryClient } from "@/lib/react-query"
-import { MutationParams } from "@/types"
-import { useMutation } from "@tanstack/react-query"
-import { DAILY_MENU_KEYS } from "../keys"
+import { axiosPrivate } from '@/lib/axios'
+import { queryClient } from '@/lib/react-query'
+import { MutationParams } from '@/types'
+import { useMutation } from '@tanstack/react-query'
+import { DAILY_MENU_KEYS } from '../keys'
 
 interface RemoveMealFromDailyMenuPath {
     dailyMenuId: string

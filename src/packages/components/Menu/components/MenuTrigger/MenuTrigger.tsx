@@ -13,7 +13,7 @@ export const MenuTrigger: MenuTriggerComponent = ({ children, ...rest }) => {
     return (
         <div ref={popper.setReferenceElement} onClick={toggleDropdown} {...rest}>
             {useDefaultStyles ? (
-                <div className='gap flex cursor-pointer items-center text-sm transition-colors hover:text-primary [&>svg]:h-5 [&>svg]:w-5 '>
+                <div className='gap flex cursor-pointer items-center text-sm transition-colors hover:text-primary [&>svg]:h-5 [&>svg]:w-5'>
                     {children}
                 </div>
             ) : (

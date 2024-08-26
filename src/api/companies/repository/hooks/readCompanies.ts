@@ -15,7 +15,8 @@ import { COMPANY_KEYS } from '../keys'
 interface ReadCompaniesPath {}
 interface ReadCompaniesParams extends QueryParams<ReadCompaniesPath> {}
 
-export const readCompanies = ({}: ReadCompaniesParams): OffsetResultsPromise<ReadCompanyResponse> => axiosPrivate.get('/companies')
+export const readCompanies = ({}: ReadCompaniesParams): OffsetResultsPromise<ReadCompanyResponse> =>
+    axiosPrivate.get('/companies')
 
 interface UseReadCompaniesParams extends DefaultQueryParams<ReadCompaniesPath>, QueryOptions {}
 
@@ -25,7 +26,8 @@ export const useReadCompanies = (params?: UseReadCompaniesParams) => {
         query: { pagination: { ...DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST } }
     })
 
-    return useQuery({ gcTime: 0,
+    return useQuery({
+        gcTime: 0,
         queryKey: COMPANY_KEYS.collection(defaultParams),
         queryFn: () => readCompanies(defaultParams),
         enabled: getDefaultBooleanValue(params?.options?.enabled)

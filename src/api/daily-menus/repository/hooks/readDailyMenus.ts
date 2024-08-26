@@ -25,10 +25,11 @@ interface UseReadDailyMenusParams<T> extends DefaultQueryParams<ReadDailyMenusPa
 export const useReadDailyMenus = <T = ReadDailyMenuResponse[]>(params?: UseReadDailyMenusParams<T>) => {
     const defaultParams = useDefaultQueryParams({
         ...params,
-        query: { pagination: { ...DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST }}
+        query: { pagination: { ...DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST } }
     })
 
-    return useQuery({ gcTime: 0,
+    return useQuery({
+        gcTime: 0,
         queryKey: DAILY_MENU_KEYS.collection(defaultParams),
         queryFn: () => readDailyMenus(defaultParams),
         select: params?.select,

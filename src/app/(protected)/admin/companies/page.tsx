@@ -3,6 +3,5 @@
 import { CompanyList } from './components/CompanyList/CompanyList'
 
 export default function Companies() {
-
-    return (<CompanyList />);
+    return <CompanyList />
 }

@@ -15,14 +15,16 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { updateMealDetailsSchema } from '../../../schemas'
 import { Input } from '@/components/ui/input'
-import { AlertDialogFooter, 
+import {
+    AlertDialogFooter,
     AlertDialog,
     AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
     AlertDialogTitle,
-    AlertDialogTrigger, } from '@/components/ui/alert-dialog'
+    AlertDialogTrigger
+} from '@/components/ui/alert-dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { readMeal } from '@/api/meals/repository/hooks/readMeal'
 import { deleteMeal } from '@/api/meals/repository/hooks/deleteMeal'
@@ -52,12 +54,16 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
         }
     })
 
-    const { control, reset, handleSubmit, formState: { errors } } = form
+    const {
+        control,
+        reset,
+        handleSubmit,
+        formState: { errors }
+    } = form
 
     useEffect(() => {
         setIsLoading(true)
-        readMeal({ path: { mealId }, query: {} })
-        .then((res) => {
+        readMeal({ path: { mealId }, query: {} }).then(res => {
             setMeal(res)
             setIsLoading(false)
         })
@@ -112,21 +118,20 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
     }
 
     const handleDeleteMeal = () => {
-        deleteMeal({ path: { mealId } })
-        .then(() => router.push('/admin/meals'))
+        deleteMeal({ path: { mealId } }).then(() => router.push('/admin/meals'))
     }
 
     return (
         <Form {...form}>
-            <Header heading={meal?.name}/>
+            <Header heading={meal?.name} />
             <form onSubmit={handleSubmit(onSubmit)} className='flex gap-8'>
                 {/* Left Section: Image Upload */}
-                <div className='w-1/3 flex flex-col items-center bg-gray-50 p-6 rounded-lg shadow-md'>
-                    <div className='w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center'>
+                <div className='flex w-1/3 flex-col items-center rounded-lg bg-gray-50 p-6 shadow-md'>
+                    <div className='flex h-64 w-full items-center justify-center rounded-lg bg-gray-200'>
                         {imageURL ? (
-                            <img src={imageURL} alt='Meal image' className='object-cover w-full h-full rounded-lg' />
+                            <img src={imageURL} alt='Meal image' className='h-full w-full rounded-lg object-cover' />
                         ) : (
-                            <span className='text-gray-500 text-center'>No image</span>
+                            <span className='text-center text-gray-500'>No image</span>
                         )}
                     </div>
                     <div className='mt-4'>
@@ -141,8 +146,12 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                                 </AlertDialogDescription>
 
                                 {previewImageURL && (
-                                    <div className='mt-4 w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center'>
-                                        <img src={previewImageURL} alt='Preview image' className='object-cover w-full h-full rounded-lg' />
+                                    <div className='mt-4 flex h-64 w-full items-center justify-center rounded-lg bg-gray-100'>
+                                        <img
+                                            src={previewImageURL}
+                                            alt='Preview image'
+                                            className='h-full w-full rounded-lg object-cover'
+                                        />
                                     </div>
                                 )}
 
@@ -156,10 +165,9 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                                                     {...fieldProps}
                                                     value={files}
                                                     onValueChange={handleFileChange}
-                                                    className="relative bg-background rounded-lg p-2"
-                                                >
-                                                    <FileInput className="outline-dashed outline-1 outline-white">
-                                                        <div className="flex items-center justify-center flex-col pt-3 pb-4 w-full">
+                                                    className='relative rounded-lg bg-background p-2'>
+                                                    <FileInput className='outline-dashed outline-1 outline-white'>
+                                                        <div className='flex w-full flex-col items-center justify-center pb-4 pt-3'>
                                                             <FileSvgDraw />
                                                         </div>
                                                     </FileInput>
@@ -168,7 +176,7 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                                                             files.length > 0 &&
                                                             files.map((file, i) => (
                                                                 <FileUploaderItem key={i} index={i}>
-                                                                    <Paperclip className="h-4 w-4 stroke-current" />
+                                                                    <Paperclip className='h-4 w-4 stroke-current' />
                                                                     <span>{file.name}</span>
                                                                 </FileUploaderItem>
                                                             ))}
@@ -182,7 +190,9 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
 
                                 <div className='mt-6 flex justify-end gap-4'>
                                     <AlertDialogCancel asChild>
-                                        <Button variant='secondary' onClick={() => setIsModalOpen(false)}>Cancel</Button>
+                                        <Button variant='secondary' onClick={() => setIsModalOpen(false)}>
+                                            Cancel
+                                        </Button>
                                     </AlertDialogCancel>
                                     <AlertDialogAction asChild>
                                         <Button onClick={uploadImage}>Confirm Upload</Button>
@@ -194,14 +204,16 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                 </div>
 
                 {/* Right Section: Form Fields */}
-                <div className='w-2/3 bg-white p-6 rounded-lg shadow-md'>
+                <div className='w-2/3 rounded-lg bg-white p-6 shadow-md'>
                     <div className='flex flex-col gap-4'>
                         <FormField
                             control={control}
                             name='name'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Name<span className="text-red-500">*</span></FormLabel>
+                                    <FormLabel>
+                                        Name<span className='text-red-500'>*</span>
+                                    </FormLabel>
                                     <FormControl>
                                         <Input {...field} placeholder='Cezar salata' required />
                                     </FormControl>
@@ -214,9 +226,11 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                             name='purchasePrice'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Purchase Price<span className="text-red-500">*</span></FormLabel>
+                                    <FormLabel>
+                                        Purchase Price<span className='text-red-500'>*</span>
+                                    </FormLabel>
                                     <FormControl>
-                                        <Input {...field} placeholder='30 rsd' required type='number'/>
+                                        <Input {...field} placeholder='30 rsd' required type='number' />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -227,9 +241,11 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                             name='sellingPrice'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Selling Price<span className="text-red-500">*</span></FormLabel>
+                                    <FormLabel>
+                                        Selling Price<span className='text-red-500'>*</span>
+                                    </FormLabel>
                                     <FormControl>
-                                        <Input {...field} placeholder='50 rsd' required type='number'/>
+                                        <Input {...field} placeholder='50 rsd' required type='number' />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -240,15 +256,17 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                             name='type'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Type<span className="text-red-500">*</span></FormLabel>
+                                    <FormLabel>
+                                        Type<span className='text-red-500'>*</span>
+                                    </FormLabel>
                                     <FormControl>
                                         <Select onValueChange={field.onChange} defaultValue={meal?.type} required>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Select meal type" />
+                                                <SelectValue placeholder='Select meal type' />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="MainCourse">Main Course</SelectItem>
-                                                <SelectItem value="SideDish">Side Dish</SelectItem>
+                                                <SelectItem value='MainCourse'>Main Course</SelectItem>
+                                                <SelectItem value='SideDish'>Side Dish</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </FormControl>
@@ -261,7 +279,9 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                             name='description'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Description<span className="text-red-500">*</span></FormLabel>
+                                    <FormLabel>
+                                        Description<span className='text-red-500'>*</span>
+                                    </FormLabel>
                                     <FormControl>
                                         <Textarea
                                             placeholder='Describe the meal, ingredients, and flavors.'
@@ -275,7 +295,7 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                             )}
                         />
 
-                        <div className='flex justify-end gap-4 mt-6'>
+                        <div className='mt-6 flex justify-end gap-4'>
                             <Button type='submit' disabled={!form.formState.isDirty}>
                                 Save
                             </Button>

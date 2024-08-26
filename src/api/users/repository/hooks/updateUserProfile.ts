@@ -1,9 +1,9 @@
-import { axiosPrivate } from "@/lib/axios"
-import { queryClient } from "@/lib/react-query"
-import { MutationParams } from "@/types"
-import { useMutation } from "@tanstack/react-query"
-import { USER_KEYS } from "../keys"
-import { UpdateUserProfileRequest, UpdateUserProfileResponse } from "../../contract"
+import { axiosPrivate } from '@/lib/axios'
+import { queryClient } from '@/lib/react-query'
+import { MutationParams } from '@/types'
+import { useMutation } from '@tanstack/react-query'
+import { USER_KEYS } from '../keys'
+import { UpdateUserProfileRequest, UpdateUserProfileResponse } from '../../contract'
 
 interface UpdateUserProfilePath {
     companyCode: string

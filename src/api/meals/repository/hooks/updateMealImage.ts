@@ -1,9 +1,9 @@
-import { MutationParams } from "@/types"
-import { UpdateMealImageRequest, UpdateMealResponse } from "../../contract"
-import { axiosPrivate } from "@/lib/axios"
-import { useMutation } from "@tanstack/react-query"
-import { queryClient } from "@/lib/react-query"
-import { MEAL_KEYS } from "../keys"
+import { MutationParams } from '@/types'
+import { UpdateMealImageRequest, UpdateMealResponse } from '../../contract'
+import { axiosPrivate } from '@/lib/axios'
+import { useMutation } from '@tanstack/react-query'
+import { queryClient } from '@/lib/react-query'
+import { MEAL_KEYS } from '../keys'
 
 interface UpdateMealImagePath {
     mealId: string

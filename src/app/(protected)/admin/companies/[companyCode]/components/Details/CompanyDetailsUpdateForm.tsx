@@ -86,10 +86,12 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
                             <div className='col-span-6'>
                                 <FormField
                                     control={control}
-                                    name="name"
+                                    name='name'
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Name<span className="text-red-500">*</span></FormLabel>
+                                            <FormLabel>
+                                                Name<span className='text-red-500'>*</span>
+                                            </FormLabel>
                                             <FormControl>
                                                 <Input {...field} placeholder='Kristal Ketering' required />
                                             </FormControl>
@@ -104,7 +106,9 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
                                     name='code'
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Code<span className="text-red-500">*</span></FormLabel>
+                                            <FormLabel>
+                                                Code<span className='text-red-500'>*</span>
+                                            </FormLabel>
                                             <FormControl>
                                                 <Input {...field} placeholder='KK' required />
                                             </FormControl>
@@ -162,7 +166,7 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
                     </div>
                 </div>
                 <div className='mt-8 flex items-center justify-end gap-4'>
-                    <Button type="submit" disabled={!hasChanges}>
+                    <Button type='submit' disabled={!hasChanges}>
                         Save
                     </Button>
                 </div>

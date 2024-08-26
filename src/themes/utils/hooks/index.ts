@@ -1,2 +1,1 @@
-export { useElementBreakpoint } from './useElementBreakpoint';
-
+export { useElementBreakpoint } from './useElementBreakpoint'

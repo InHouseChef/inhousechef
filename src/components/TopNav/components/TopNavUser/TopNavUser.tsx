@@ -24,7 +24,7 @@ export const TopNavUser = ({ isNavOpen }: TopNavUserProps) => {
                 'translate-x-20 lg:translate-x-0': isNavOpen
             })}>
             <div className='hidden flex-col text-right lg:flex'>
-                <span className='text-xs text-grey'>Welcome back</span>
+                <span className='text-grey text-xs'>Welcome back</span>
                 <span className='text-base font-bold'>{fullName}</span>
             </div>
             <div className='rounded-full border border-secondary p-[3px]'>

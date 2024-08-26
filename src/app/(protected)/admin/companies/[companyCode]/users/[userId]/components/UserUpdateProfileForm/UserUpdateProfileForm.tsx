@@ -26,7 +26,7 @@ export const UserUpdateProfileForm = ({ companyCode, userId }: UserUpdateProfile
         resolver: zodResolver(updateUserProfileSchema),
         defaultValues: {
             fullName: '',
-            role: RolesEnum.Employee,
+            role: RolesEnum.Employee
         }
     })
 
@@ -36,20 +36,20 @@ export const UserUpdateProfileForm = ({ companyCode, userId }: UserUpdateProfile
         if (user) {
             reset({
                 fullName: user.fullName || '',
-                role: user.role,
-            });
+                role: user.role
+            })
         }
     }, [user, reset])
 
     const onSubmit = async (formData: UserProfileUpdateFormData) => {
         const updateResult = await updateUserProfile({
             path: { companyCode, userId },
-            body: formData,
+            body: formData
         })
 
         reset({
             fullName: updateResult.fullName,
-            role: updateResult.role,
+            role: updateResult.role
         })
     }
 
@@ -67,7 +67,7 @@ export const UserUpdateProfileForm = ({ companyCode, userId }: UserUpdateProfile
                             <div className='col-span-6'>
                                 <FormField
                                     control={control}
-                                    name="fullName"
+                                    name='fullName'
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Full Name</FormLabel>
@@ -89,12 +89,16 @@ export const UserUpdateProfileForm = ({ companyCode, userId }: UserUpdateProfile
                                             <FormControl>
                                                 <Select onValueChange={field.onChange} defaultValue={user?.role}>
                                                     <SelectTrigger>
-                                                        <SelectValue placeholder="Select Role" />
+                                                        <SelectValue placeholder='Select Role' />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        <SelectItem value={RolesEnum.CompanyManager}>Company Manager</SelectItem>
+                                                        <SelectItem value={RolesEnum.CompanyManager}>
+                                                            Company Manager
+                                                        </SelectItem>
                                                         <SelectItem value={RolesEnum.Employee}>Employee</SelectItem>
-                                                        <SelectItem value={RolesEnum.RestaurantWorker}>Restaurant Worker</SelectItem>
+                                                        <SelectItem value={RolesEnum.RestaurantWorker}>
+                                                            Restaurant Worker
+                                                        </SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                             </FormControl>

@@ -13,10 +13,9 @@ export default function Layout({ children }: LayoutProps) {
     const { companyCode } = useParams()
     const links = COMPANY_LINKS.map(({ path, label }) => ({ path: `/admin/companies/${companyCode}${path}`, label }))
 
-
     return (
         <>
-            <MainTopNav links={links}/>
+            <MainTopNav links={links} />
             {children}
         </>
     )

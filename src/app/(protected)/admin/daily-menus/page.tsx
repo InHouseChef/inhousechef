@@ -1,7 +1,5 @@
-import { DailyMenuManagement } from "./components/DailyMenuManagement";
+import { DailyMenuManagement } from './components/DailyMenuManagement'
 
 export default function Page() {
-    return (
-        <DailyMenuManagement />
-    )
+    return <DailyMenuManagement />
 }

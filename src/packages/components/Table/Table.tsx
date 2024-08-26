@@ -180,14 +180,14 @@ export const Table = ({
                                                         onRowClick(row.original)
                                                     }
                                                 }}
-                                                className={`group h-10 border-b border-b-secondary100 bg-white last:border-b-0 [&.selected]:bg-secondary200/50 ${
+                                                className={`border-b-secondary100 [&.selected]:bg-secondary200/50 group h-10 border-b bg-white last:border-b-0 ${
                                                     isSelected(row.original) ? 'selected' : ''
                                                 }`}>
                                                 {row.getVisibleCells().map(cell => (
                                                     <td
                                                         key={cell.id}
                                                         className={clsx(
-                                                            'group-[&.selected] min-w-max px-3 py-1.5 hover:bg-secondary200/50 group-last:first:rounded-bl-lg group-last:last:rounded-br-lg group-hover:bg-primary200 group-even:[&.selected]:bg-secondary200/50 [&>a]:transition-colors [&>a]:hover:text-primary',
+                                                            'group-[&.selected] hover:bg-secondary200/50 group-hover:bg-primary200 group-even:[&.selected]:bg-secondary200/50 min-w-max px-3 py-1.5 group-last:first:rounded-bl-lg group-last:last:rounded-br-lg [&>a]:transition-colors [&>a]:hover:text-primary',
                                                             {
                                                                 'first:width[44px]': !!onRowSelect
                                                             }
@@ -203,7 +203,7 @@ export const Table = ({
                         </div>
                         <AnimatePresence>
                             {isFetching ? (
-                                <div className="after:bg-gradient animate-fadeIn after:animate-loader after:bg-gradient-90 relative w-full before:absolute before:-bottom-2 before:left-0 before:right-0 before:h-0.5 before:rounded-sm before:bg-primary400 before:content-['*'] after:absolute after:-bottom-2 after:left-0 after:h-0.5 after:w-[200px] after:rounded-sm after:content-['']" />
+                                <div className="after:bg-gradient animate-fadeIn after:animate-loader after:bg-gradient-90 before:bg-primary400 relative w-full before:absolute before:-bottom-2 before:left-0 before:right-0 before:h-0.5 before:rounded-sm before:content-['*'] after:absolute after:-bottom-2 after:left-0 after:h-0.5 after:w-[200px] after:rounded-sm after:content-['']" />
                             ) : undefined}
                         </AnimatePresence>
                     </div>
@@ -259,7 +259,7 @@ export const Table = ({
             ) : (
                 <div>
                     <p className='mt-3 text-2xl'>No results found</p>
-                    <p className='mt-2 text-grey'>We couldn&apos;t find what you&apos;re looking for</p>
+                    <p className='text-grey mt-2'>We couldn&apos;t find what you&apos;re looking for</p>
                     <p className='text-grey'>Please try searching for another term.</p>
                 </div>
             )}

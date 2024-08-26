@@ -45,7 +45,9 @@ export const MealCreateForm = () => {
                             name='name'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Name<span className="text-red-500">*</span></FormLabel>
+                                    <FormLabel>
+                                        Name<span className='text-red-500'>*</span>
+                                    </FormLabel>
                                     <FormControl>
                                         <Input {...field} value={field.value || ''} placeholder='Cezar salata' required />
                                     </FormControl>
@@ -60,9 +62,17 @@ export const MealCreateForm = () => {
                             name='purchasePrice'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Purchase Price<span className="text-red-500">*</span></FormLabel>
+                                    <FormLabel>
+                                        Purchase Price<span className='text-red-500'>*</span>
+                                    </FormLabel>
                                     <FormControl>
-                                        <Input {...field} value={field.value || ''} placeholder='30 rsd' required type='number' />
+                                        <Input
+                                            {...field}
+                                            value={field.value || ''}
+                                            placeholder='30 rsd'
+                                            required
+                                            type='number'
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -75,9 +85,17 @@ export const MealCreateForm = () => {
                             name='sellingPrice'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Selling Price<span className="text-red-500">*</span></FormLabel>
+                                    <FormLabel>
+                                        Selling Price<span className='text-red-500'>*</span>
+                                    </FormLabel>
                                     <FormControl>
-                                        <Input {...field} value={field.value || ''} placeholder='50 rsd' required type='number' />
+                                        <Input
+                                            {...field}
+                                            value={field.value || ''}
+                                            placeholder='50 rsd'
+                                            required
+                                            type='number'
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -90,15 +108,17 @@ export const MealCreateForm = () => {
                             name='type'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Type<span className="text-red-500">*</span></FormLabel>
+                                    <FormLabel>
+                                        Type<span className='text-red-500'>*</span>
+                                    </FormLabel>
                                     <FormControl>
                                         <Select onValueChange={field.onChange}>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Select meal type" />
+                                                <SelectValue placeholder='Select meal type' />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="MainCourse">Main Course</SelectItem>
-                                                <SelectItem value="SideDish">Side Dish</SelectItem>
+                                                <SelectItem value='MainCourse'>Main Course</SelectItem>
+                                                <SelectItem value='SideDish'>Side Dish</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </FormControl>
@@ -113,12 +133,15 @@ export const MealCreateForm = () => {
                             name='description'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Description<span className="text-red-500">*</span></FormLabel>
+                                    <FormLabel>
+                                        Description<span className='text-red-500'>*</span>
+                                    </FormLabel>
                                     <FormControl>
                                         <Textarea
                                             placeholder='Describe the meal, ingredients, and flavors.'
                                             className='resize-none'
-                                            {...field} value={field.value || ''}
+                                            {...field}
+                                            value={field.value || ''}
                                         />
                                     </FormControl>
                                     <FormMessage />

@@ -23,7 +23,8 @@ interface UseReadMyOrderParams<T> extends DefaultQueryParams<ReadMyOrderPath>, Q
 
 export const useReadMyOrder = <T = ReadMyOrderResponse>(params?: UseReadMyOrderParams<T>) => {
     const defaultParams = useDefaultQueryParams(params)
-    return useQuery({ gcTime: 0,
+    return useQuery({
+        gcTime: 0,
         queryKey: MY_ORDER_KEYS.base,
         queryFn: () => readMyOrder(defaultParams),
         select: params?.select,

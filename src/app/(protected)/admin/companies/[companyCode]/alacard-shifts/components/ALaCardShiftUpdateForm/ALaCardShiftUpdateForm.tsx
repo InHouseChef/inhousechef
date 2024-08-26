@@ -25,29 +25,29 @@ const getFormattedTime = (date: Date) => {
         minute: '2-digit',
         second: '2-digit',
         hour12: false
-    });
+    })
 }
 
 const convertTimeToDate = (timeString: Time) => {
     // Get the current date
-    const currentDate = new Date();
+    const currentDate = new Date()
 
     // Split the time string into hours, minutes, and seconds
-    const [hours, minutes, seconds] = timeString.split(':').map(Number);
+    const [hours, minutes, seconds] = timeString.split(':').map(Number)
 
     // Set the hours, minutes, and seconds on the current date
-    currentDate.setHours(hours);
-    currentDate.setMinutes(minutes);
-    currentDate.setSeconds(seconds);
-    currentDate.setMilliseconds(0); // Set milliseconds to 0 for precision
+    currentDate.setHours(hours)
+    currentDate.setMinutes(minutes)
+    currentDate.setSeconds(seconds)
+    currentDate.setMilliseconds(0) // Set milliseconds to 0 for precision
 
-    return currentDate;
+    return currentDate
 }
 
 export const ALaCardShiftUpdateForm = ({ companyCode }: ALaCardShiftUpdateFormProps) => {
     const { data: shift, isLoading, refetch: refetchALaCardShift } = useReadALaCardShift({ path: { companyCode } })
-    const [startDate, setStartDate] = useState<Date>();
-    const [endDate, setEndDate] = useState<Date>();
+    const [startDate, setStartDate] = useState<Date>()
+    const [endDate, setEndDate] = useState<Date>()
 
     const form = useForm<ALaCardShiftUpdateFormData>({
         resolver: zodResolver(createALaCardShiftSchema),
@@ -64,8 +64,8 @@ export const ALaCardShiftUpdateForm = ({ companyCode }: ALaCardShiftUpdateFormPr
             const formattedStartDate = convertTimeToDate(shift.shiftStartAt)
             const formattedEndDate = convertTimeToDate(shift.shiftEndAt)
 
-            setStartDate(formattedStartDate);
-            setEndDate(formattedEndDate);
+            setStartDate(formattedStartDate)
+            setEndDate(formattedEndDate)
         }
     }, [shift, reset])
 
@@ -73,10 +73,13 @@ export const ALaCardShiftUpdateForm = ({ companyCode }: ALaCardShiftUpdateFormPr
         const formattedStartTime = getFormattedTime(startDate)
         const formattedEndTime = getFormattedTime(endDate)
 
-        createALaCardShift({ path: {companyCode}, body: {
-            shiftStartAt: formattedStartTime,
-            shiftEndAt: formattedEndTime
-        }}).then(_ => {
+        createALaCardShift({
+            path: { companyCode },
+            body: {
+                shiftStartAt: formattedStartTime,
+                shiftEndAt: formattedEndTime
+            }
+        }).then(_ => {
             refetchALaCardShift()
         })
     }
@@ -86,7 +89,7 @@ export const ALaCardShiftUpdateForm = ({ companyCode }: ALaCardShiftUpdateFormPr
     }
 
     return (
-        <Form {...form} >
+        <Form {...form}>
             <form className='h-full' onSubmit={handleSubmit(onSubmit)}>
                 <Header heading='A La Card Shift' />
                 <div className='grid grid-cols-12'>

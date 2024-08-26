@@ -24,7 +24,8 @@ interface UseReadMealParams<T> extends DefaultQueryParams<ReadMealPath>, QueryOp
 
 export const useReadMeal = <T = ReadMealResponse>(params?: UseReadMealParams<T>) => {
     const defaultParams = useDefaultQueryParams(params)
-    return useQuery({ gcTime: 0,
+    return useQuery({
+        gcTime: 0,
         queryKey: MEAL_KEYS.resource(defaultParams.path.mealId),
         queryFn: () => readMeal(defaultParams),
         select: params?.select,
