@@ -5,13 +5,13 @@ import { Header } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { TimePicker } from '@/components/ui/time-picker'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { createShiftSchema } from '../../schemas'
-import { TimePicker } from '@/components/ui/time-picker'
-import { useState } from 'react'
 
 type ShiftCreateFormData = z.infer<typeof createShiftSchema>
 
@@ -27,8 +27,8 @@ export const ShiftCreateForm = ({ params }: { params: { companyCode: string } })
     const { companyCode } = params
     const router = useRouter()
     const { mutate: createShift } = useCreateShift()
-    const [startDate, setStartDate] = useState<Date>()
-    const [endDate, setEndDate] = useState<Date>()
+    const [startDate, setStartDate] = useState<Date>(new Date(new Date().setHours(0, 0, 0, 0)))
+    const [endDate, setEndDate] = useState<Date>(new Date(new Date().setHours(0, 0, 0, 0)))
 
     const form = useForm<ShiftCreateFormData>({
         resolver: zodResolver(createShiftSchema),
