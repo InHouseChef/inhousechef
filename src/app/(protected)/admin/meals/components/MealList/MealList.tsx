@@ -2,13 +2,13 @@
 
 import { ReadMealResponse } from '@/api/meals'
 import { readMeals } from '@/api/meals/repository/hooks/readMeals'
-import { DataTable, Header, Loader } from '@/components'
+import { DataTable, Header } from '@/components'
+import { Button } from '@/components/ui/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import Link from 'next/link'
-import { useMemo, useState, useEffect } from 'react'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
+import { useEffect, useMemo, useState } from 'react'
 
 export const MealList = () => {
     const [selectedType, setSelectedType] = useState<string>('All')
@@ -23,12 +23,13 @@ export const MealList = () => {
     const fetchMeals = () => {
         const typeFilter = selectedType !== 'All' ? selectedType : undefined
 
-        readMeals({ query: { filter: { type: typeFilter }, pagination: { page: currentPage, size: pageSize } } }).then(
-            res => {
-                setMealsData(res.results || [])
-                setTotalCount(res.totalCount || 0)
-            }
-        )
+        readMeals({
+            path: {},
+            query: { filter: { type: typeFilter }, pagination: { page: currentPage, size: pageSize } }
+        }).then(res => {
+            setMealsData(res.results || [])
+            setTotalCount(res.totalCount || 0)
+        })
     }
 
     // Trigger fetch when filters, pagination size, or page change

@@ -1,17 +1,17 @@
 'use client'
 
 import { RolesEnum, useReadUser } from '@/api/users'
+import { updateUserProfile } from '@/api/users/repository/hooks/updateUserProfile'
 import { Header, Loader } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { updateUserProfileSchema } from '../../../schemas'
-import { updateUserProfile } from '@/api/users/repository/hooks/updateUserProfile'
 import { z } from 'zod'
+import { updateUserProfileSchema } from '../../../schemas'
 
 interface UserUpdateProfileFormProps {
     companyCode: string
@@ -36,7 +36,7 @@ export const UserUpdateProfileForm = ({ companyCode, userId }: UserUpdateProfile
         if (user) {
             reset({
                 fullName: user.fullName || '',
-                role: user.role
+                role: user.role as RolesEnum.CompanyManager | RolesEnum.Employee | RolesEnum.RestaurantWorker
             })
         }
     }, [user, reset])
@@ -49,7 +49,7 @@ export const UserUpdateProfileForm = ({ companyCode, userId }: UserUpdateProfile
 
         reset({
             fullName: updateResult.fullName,
-            role: updateResult.role
+            role: updateResult.role as RolesEnum.CompanyManager | RolesEnum.Employee | RolesEnum.RestaurantWorker
         })
     }
 

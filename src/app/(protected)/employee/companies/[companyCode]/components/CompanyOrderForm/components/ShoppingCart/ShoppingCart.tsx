@@ -65,9 +65,9 @@ const ShoppingCart = ({ shiftId, selectedDate }: ShoppingCartProps) => {
                                                 <button
                                                     onClick={() => {
                                                         if (item.quantity === 1) {
-                                                            removeFromCart(shiftId, selectedDate, item.id)
+                                                            removeFromCart(item.id)
                                                         } else {
-                                                            addToCart(shiftId, selectedDate, { ...item, quantity: -1 })
+                                                            addToCart({ ...item, quantity: -1 })
                                                         }
                                                     }}
                                                     className='text-gray-600'>
@@ -81,15 +81,13 @@ const ShoppingCart = ({ shiftId, selectedDate }: ShoppingCartProps) => {
                                                     readOnly
                                                 />
                                                 <button
-                                                    onClick={() =>
-                                                        addToCart(shiftId, selectedDate, { ...item, quantity: 1 })
-                                                    }
+                                                    onClick={() => addToCart({ ...item, quantity: 1 })}
                                                     className='text-gray-600'>
                                                     <Plus className='h-5 w-5' />
                                                 </button>
                                             </div>
                                             <button
-                                                onClick={() => removeFromCart(shiftId, selectedDate, item.id)}
+                                                onClick={() => removeFromCart(item.id)}
                                                 className='text-red-500 hover:text-red-700'>
                                                 <Trash className='h-5 w-5' />
                                             </button>
@@ -111,7 +109,7 @@ const ShoppingCart = ({ shiftId, selectedDate }: ShoppingCartProps) => {
                 {cart.length > 0 && (
                     <div className='mt-6 space-y-4'>
                         <button
-                            onClick={() => clearCart(shiftId, selectedDate)}
+                            onClick={clearCart}
                             className='flex w-full items-center justify-center rounded-lg border border-red-500 px-4 py-2 text-red-500 hover:bg-red-50'
                             data-testid='cart-delete-button'>
                             <Trash className='mr-2 h-4 w-4' /> Obriši

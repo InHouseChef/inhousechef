@@ -1,16 +1,16 @@
 'use client'
 
 import { createDailyMenu, ReadDailyMenuResponse, readDailyMenus, removeMealFromDailyMenu } from '@/api/daily-menus'
+import { deleteDailyMenu } from '@/api/daily-menus/repository/hooks/deleteDailyMenu'
 import { ReadMealResponse, readMeals } from '@/api/meals'
+import { Header, Loader } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Form } from '@/components/ui/form'
-import { useState, useEffect } from 'react'
-import { useFieldArray, useForm } from 'react-hook-form'
-import { toDateIso } from '@/utils/date'
-import { Header, Loader } from '@/components'
 import { DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST } from '@/constants'
-import { deleteDailyMenu } from '@/api/daily-menus/repository/hooks/deleteDailyMenu'
+import { toDateIso } from '@/utils/date'
+import { useEffect, useState } from 'react'
+import { useFieldArray, useForm } from 'react-hook-form'
 
 interface MenuScheduleFormData {
     meals: ReadMealResponse[]
@@ -188,6 +188,7 @@ export const DailyMenuManagement = () => {
                         mode={isAssignmentMode ? 'multiple' : 'single'}
                         selected={selectedDates}
                         month={currentMonth}
+                        // @ts-ignore
                         onSelect={handleDateSelection}
                         onMonthChange={onMonthChange}
                         className='rounded-lg bg-white shadow-lg'
