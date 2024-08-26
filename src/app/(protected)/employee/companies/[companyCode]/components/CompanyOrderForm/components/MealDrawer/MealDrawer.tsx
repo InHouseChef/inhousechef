@@ -63,7 +63,13 @@ export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
             <DrawerContent>
                 <div className='mx-auto w-full max-w-sm'>
                     <DrawerHeader className='text-left'>
-                        <img src={imageUrl} alt={name} className='h-64 w-full rounded-lg object-cover' />
+                        {imageUrl ? (
+                            <img src={imageUrl} alt={name} className='h-64 w-full rounded-lg object-cover' />
+                        ) : (
+                            <div className='flex h-64 w-full flex-col items-center justify-center rounded-lg bg-gray-200 text-gray-600'>
+                                No Image
+                            </div>
+                        )}
                         <DrawerTitle className='mt-2 text-3xl font-bold lowercase'>{name}</DrawerTitle>
                         <p className='font-semibold text-blue-500'>RSD {price.toFixed(2)}</p>
                         {description ? <p className='mt-4 text-sm text-gray-600'>{description}</p> : undefined}

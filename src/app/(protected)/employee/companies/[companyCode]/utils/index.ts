@@ -61,3 +61,6 @@ export const isShiftActive = (shift: ReadShiftResponse, currentDateTime: Date) =
 export const getActiveShift = (shifts: ReadShiftResponse[], currentDateTime: Date) => {
     return shifts?.find(shift => isShiftActive(shift, currentDateTime))
 }
+
+export const sortShiftsByStartAt = (shifts?: ReadShiftResponse[]) =>
+    shifts?.sort((a, b) => toTimeFromString(a.shiftStartAt).getTime() - toTimeFromString(b.shiftStartAt).getTime())

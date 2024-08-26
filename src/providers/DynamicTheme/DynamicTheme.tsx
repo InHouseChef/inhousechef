@@ -12,7 +12,7 @@ interface DynamicThemeProps {
     children?: ReactNode
 }
 
-const robotoFlex = localFont({ src: '../../fonts/RobotoFlex/RobotoFlex-VariableFont.ttf', variable: '--font-roboto-flex' })
+const satoshi = localFont({ src: '../../fonts/Satoshi/Satoshi-Variable.ttf', variable: '--font-satoshi' })
 
 export const DynamicTheme = ({ children }: DynamicThemeProps) => {
     const { theme } = useTheme()
@@ -27,14 +27,13 @@ export const DynamicTheme = ({ children }: DynamicThemeProps) => {
 
     useEffect(() => setStyle(`:root {${createCssColorVariables(theme)}}`), [theme])
 
+    // TODO: fix font loading
     return (
         <>
             <style jsx>{`
                 ${style}
             `}</style>
-            <body className={`${robotoFlex.variable} font-roboto-flex flex min-h-dvh w-full overflow-hidden`}>
-                {children}
-            </body>
+            <body className={`${satoshi.variable} font-satoshi flex min-h-dvh w-full overflow-hidden`}>{children}</body>
         </>
     )
 }

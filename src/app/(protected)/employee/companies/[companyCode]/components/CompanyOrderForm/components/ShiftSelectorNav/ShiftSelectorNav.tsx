@@ -1,8 +1,8 @@
 import { useReadShifts } from '@/api/shifts'
 import { Loader } from '@/components'
-import { toTimeFromString } from '@/utils/date'
 import clsx from 'clsx'
 import { useCartStore } from '../../../../state'
+import { sortShiftsByStartAt } from '../../../../utils'
 
 export const ShiftSelectorNav = () => {
     const { selectedShiftId, setSelectedShift } = useCartStore()
@@ -10,14 +10,12 @@ export const ShiftSelectorNav = () => {
 
     if (isLoading) return <Loader />
 
-    const sortedShiftsByStartAt = shifts?.sort(
-        (a, b) => toTimeFromString(a.shiftStartAt).getTime() - toTimeFromString(b.shiftStartAt).getTime()
-    )
+    const sortedShifts = sortShiftsByStartAt(shifts)
 
     return (
         <nav className={clsx('topnav-horizontal h-8 min-h-8 border-b border-gray-300 bg-white')}>
             <ul className={clsx('flex h-full items-center bg-white')}>
-                {sortedShiftsByStartAt?.map(({ id, name }) => (
+                {sortedShifts?.map(({ id, name }) => (
                     <li className={clsx('relative flex-1 text-center')} key={id}>
                         <div
                             onClick={() => setSelectedShift(id)}

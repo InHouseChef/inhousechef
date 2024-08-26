@@ -1,16 +1,10 @@
 'use client'
 
-import { readCompany, updateCompanyBrandingLogo } from "@/api/companies";
-import { Header } from "@/components";
-import { FileUploader } from "@/components/FileUploader";
-import { FileUploaderContent, FileInput, FileUploaderItem, FileSvgDraw } from "@/components/FileUploader/FileUploader";
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader, Paperclip } from "lucide-react";
-import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { readCompany, updateCompanyBrandingLogo } from '@/api/companies'
+import { updateCompanyBrandingLogoSchema } from '@/app/(protected)/admin/schemas'
+import { Header } from '@/components'
+import { FileUploader } from '@/components/FileUploader'
+import { FileInput, FileSvgDraw, FileUploaderContent, FileUploaderItem } from '@/components/FileUploader/FileUploader'
 import {
     AlertDialog,
     AlertDialogAction,
@@ -19,8 +13,14 @@ import {
     AlertDialogDescription,
     AlertDialogTitle,
     AlertDialogTrigger
-} from '@/components/ui/alert-dialog';
-import { updateCompanyBrandingLogoSchema } from "@/app/(protected)/admin/schemas";
+} from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader, Paperclip } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 interface CompanyUpdateFormProps {
     companyCode: string
@@ -29,82 +29,83 @@ interface CompanyUpdateFormProps {
 type CompanyBrandingLogoUpdateFormData = z.infer<typeof updateCompanyBrandingLogoSchema>
 
 export const CompanyBrandingLogoUpdateForm = ({ companyCode }: CompanyUpdateFormProps) => {
-    const [files, setFiles] = useState<File[] | null>(null);
-    const [imageURL, setImageURL] = useState<string | null | undefined>(null); // State to hold image URL
-    const [previewImageURL, setPreviewImageURL] = useState<string | null>(null); // State for preview image
-    const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
-    const [isLoading, setIsLoading] = useState(true);
-    const [company, setCompany] = useState<any>(null); // State to store company data
+    const [files, setFiles] = useState<File[] | null>(null)
+    const [imageURL, setImageURL] = useState<string | null | undefined>(null) // State to hold image URL
+    const [previewImageURL, setPreviewImageURL] = useState<string | null>(null) // State for preview image
+    const [isModalOpen, setIsModalOpen] = useState(false) // State to control the modal
+    const [isLoading, setIsLoading] = useState(true)
+    const [company, setCompany] = useState<any>(null) // State to store company data
 
     const form = useForm<CompanyBrandingLogoUpdateFormData>({
         resolver: zodResolver(updateCompanyBrandingLogoSchema)
-    });
+    })
 
-    const { handleSubmit } = form;
+    const { handleSubmit } = form
 
     useEffect(() => {
         const fetchCompanyData = async () => {
-            setIsLoading(true);
+            setIsLoading(true)
             try {
-                const result = await readCompany({ path: { companyCode }, query: {} });
-                setCompany(result);
-                setImageURL(result.branding?.logoUrl || '');
+                const result = await readCompany({ path: { companyCode }, query: {} })
+                setCompany(result)
+                setImageURL(result.branding?.logoUrl || '')
             } catch (error) {
-                console.error('Failed to fetch company data:', error);
+                console.error('Failed to fetch company data:', error)
             } finally {
-                setIsLoading(false);
+                setIsLoading(false)
             }
-        };
+        }
 
-        fetchCompanyData();
-    }, [companyCode]);
+        fetchCompanyData()
+    }, [companyCode])
 
     if (isLoading) {
-        return <Loader />;
+        return <Loader />
     }
 
     const handleFileChange = (newFiles: File[] | null) => {
-        setFiles(newFiles);
+        setFiles(newFiles)
         if (newFiles && newFiles.length > 0) {
-            const file = newFiles[0];
-            setPreviewImageURL(URL.createObjectURL(file)); // Set the preview image URL
+            const file = newFiles[0]
+            setPreviewImageURL(URL.createObjectURL(file)) // Set the preview image URL
         } else {
-            setPreviewImageURL(null); // Clear the preview image URL
+            setPreviewImageURL(null) // Clear the preview image URL
         }
-    };
+    }
 
     const uploadImage = async () => {
         if (files && files.length > 0) {
-            const formData = new FormData();
-            formData.append('logo', files[0]);
+            const formData = new FormData()
+            formData.append('logo', files[0])
             try {
-                const updateResult = await updateCompanyBrandingLogo({ path: { companyCode }, body: formData });
-                setImageURL(updateResult.branding?.logoUrl); // Update the main image URL
-                setFiles(null); // Clear files after upload
-                setPreviewImageURL(null); // Clear the preview after upload
-                setIsModalOpen(false); // Close the modal
-                return updateResult;
+                // @ts-ignore
+                const updateResult = await updateCompanyBrandingLogo({ path: { companyCode }, body: formData })
+                setImageURL(updateResult.branding?.logoUrl) // Update the main image URL
+                setFiles(null) // Clear files after upload
+                setPreviewImageURL(null) // Clear the preview after upload
+                setIsModalOpen(false) // Close the modal
+                return updateResult
             } catch (error) {
-                console.error('Failed to update company logo:', error);
+                console.error('Failed to update company logo:', error)
             }
         }
-        return null;
-    };
+        return null
+    }
 
     const onSubmit = async () => {
-        await uploadImage();
-    };
+        await uploadImage()
+    }
 
     return (
         <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)} className='h-full'>
                 <Header heading='Logo' />
-                <div className='w-1/3 flex flex-col items-center bg-gray-50 p-6 rounded-lg shadow-md'>
-                    <div className='w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center'>
+                <div className='flex w-1/3 flex-col items-center rounded-lg bg-gray-50 p-6 shadow-md'>
+                    <div className='flex h-64 w-full items-center justify-center rounded-lg bg-gray-200'>
                         {imageURL ? (
-                            <img src={imageURL} alt='Company logo' className='object-cover w-full h-full rounded-lg' />
+                            <img src={imageURL} alt='Company logo' className='h-full w-full rounded-lg object-cover' />
                         ) : (
-                            <span className='text-gray-500 text-center'>No image</span>
+                            <span className='text-center text-gray-500'>No image</span>
                         )}
                     </div>
                     <div className='mt-4'>
@@ -119,8 +120,12 @@ export const CompanyBrandingLogoUpdateForm = ({ companyCode }: CompanyUpdateForm
                                 </AlertDialogDescription>
 
                                 {previewImageURL && (
-                                    <div className='mt-4 w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center'>
-                                        <img src={previewImageURL} alt='Preview image' className='object-cover w-full h-full rounded-lg' />
+                                    <div className='mt-4 flex h-64 w-full items-center justify-center rounded-lg bg-gray-100'>
+                                        <img
+                                            src={previewImageURL}
+                                            alt='Preview image'
+                                            className='h-full w-full rounded-lg object-cover'
+                                        />
                                     </div>
                                 )}
 
@@ -134,10 +139,9 @@ export const CompanyBrandingLogoUpdateForm = ({ companyCode }: CompanyUpdateForm
                                                     {...fieldProps}
                                                     value={files}
                                                     onValueChange={handleFileChange}
-                                                    className="relative bg-background rounded-lg p-2"
-                                                >
-                                                    <FileInput className="outline-dashed outline-1 outline-white">
-                                                        <div className="flex items-center justify-center flex-col pt-3 pb-4 w-full">
+                                                    className='relative rounded-lg bg-background p-2'>
+                                                    <FileInput className='outline-dashed outline-1 outline-white'>
+                                                        <div className='flex w-full flex-col items-center justify-center pb-4 pt-3'>
                                                             <FileSvgDraw />
                                                         </div>
                                                     </FileInput>
@@ -146,7 +150,7 @@ export const CompanyBrandingLogoUpdateForm = ({ companyCode }: CompanyUpdateForm
                                                             files.length > 0 &&
                                                             files.map((file, i) => (
                                                                 <FileUploaderItem key={i} index={i}>
-                                                                    <Paperclip className="h-4 w-4 stroke-current" />
+                                                                    <Paperclip className='h-4 w-4 stroke-current' />
                                                                     <span>{file.name}</span>
                                                                 </FileUploaderItem>
                                                             ))}
@@ -160,7 +164,9 @@ export const CompanyBrandingLogoUpdateForm = ({ companyCode }: CompanyUpdateForm
 
                                 <div className='mt-6 flex justify-end gap-4'>
                                     <AlertDialogCancel asChild>
-                                        <Button variant='secondary' onClick={() => setIsModalOpen(false)}>Cancel</Button>
+                                        <Button variant='secondary' onClick={() => setIsModalOpen(false)}>
+                                            Cancel
+                                        </Button>
                                     </AlertDialogCancel>
                                     <AlertDialogAction asChild>
                                         <Button onClick={uploadImage}>Confirm Upload</Button>
@@ -172,5 +178,5 @@ export const CompanyBrandingLogoUpdateForm = ({ companyCode }: CompanyUpdateForm
                 </div>
             </form>
         </Form>
-    );
-};
+    )
+}
