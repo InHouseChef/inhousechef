@@ -88,7 +88,7 @@ export const ShiftUpdateForm = ({ companyCode, shiftId }: ShiftUpdateFormProps) 
                                     name='shiftStartAt'
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Shift Start Time (HH:mm)</FormLabel>
+                                            <FormLabel>Shift Start Time</FormLabel>
                                             <FormControl>
                                                 <TimePicker disabled setDate={setStartDate} date={startDate} />
                                             </FormControl>
@@ -103,7 +103,7 @@ export const ShiftUpdateForm = ({ companyCode, shiftId }: ShiftUpdateFormProps) 
                                     name='shiftEndAt'
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Shift End Time (HH:mm)</FormLabel>
+                                            <FormLabel>Shift End Time</FormLabel>
                                             <FormControl>
                                                 <TimePicker disabled setDate={setEndDate} date={endDate} />
                                             </FormControl>

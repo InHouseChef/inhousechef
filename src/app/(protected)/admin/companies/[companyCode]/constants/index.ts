@@ -10,5 +10,9 @@ export const COMPANY_LINKS = [
     {
         path: '/shifts',
         label: 'Shifts'
+    },
+    {
+        path: '/alacard-shifts',
+        label: 'A La Card Shift'
     }
 ]

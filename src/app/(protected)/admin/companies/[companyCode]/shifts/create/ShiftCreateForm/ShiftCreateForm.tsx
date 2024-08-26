@@ -74,7 +74,7 @@ export const ShiftCreateForm = ({ params }: { params: { companyCode: string } })
                             name='shiftStartAt'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Shift Start Time (HH:mm)</FormLabel>
+                                    <FormLabel>Shift Start Time</FormLabel>
                                     <FormControl>
                                         <TimePicker setDate={setStartDate} date={startDate} />
                                         {/* <Input {...field} type='time' value={field.value || ''} required /> */}
@@ -90,7 +90,7 @@ export const ShiftCreateForm = ({ params }: { params: { companyCode: string } })
                             name='shiftEndAt'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Shift End Time (HH:mm)</FormLabel>
+                                    <FormLabel>Shift End Time</FormLabel>
                                     <FormControl>
                                         <TimePicker setDate={setEndDate} date={endDate} />
                                         {/* <Input {...field} type='time' value={field.value || ''} required /> */}
