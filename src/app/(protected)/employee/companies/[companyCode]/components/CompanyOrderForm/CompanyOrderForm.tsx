@@ -7,6 +7,7 @@ import { useAppDate } from '@/hooks'
 import { toDateIso } from '@/utils/date'
 import { useEffect, useState } from 'react'
 import { useCartStore } from '../../state'
+import { sortShiftsByStartAt } from '../../utils'
 import DaySelectorNav from './components/DaySelectorNav/DaySelectorNav'
 import { MealCard } from './components/MealCard/MealCard'
 import { MealDrawer } from './components/MealDrawer/MealDrawer'
@@ -50,15 +51,20 @@ export const CompanyOrderForm = () => {
     }, [selectedDate])
 
     useEffect(() => {
-        if (!selectedShiftId && shifts) return setSelectedShift(shifts[0]?.id)
-        setSelectedShift(selectedShiftId)
+        if (!shifts) return
+
+        const sortedShifts = sortShiftsByStartAt(shifts)
+
+        if (!selectedShiftId && sortedShifts && sortedShifts?.length > 0) {
+            setSelectedShift(sortedShifts[0]?.id)
+        }
     }, [selectedShiftId, shifts])
 
     useEffect(() => {
-        if (selectedDate) {
-            const meals = dailyMenus?.find(({ date }) => date === selectedDate)?.meals || []
-            setMeals(meals)
-        }
+        if (!selectedDate) return
+
+        const meals = dailyMenus?.find(({ date }) => date === selectedDate)?.meals || []
+        setMeals(meals)
     }, [selectedDate, dailyMenus])
 
     useEffect(() => {
@@ -71,9 +77,7 @@ export const CompanyOrderForm = () => {
         setIsDrawerOpen(true)
     }
 
-    const handleCloseDrawer = () => {
-        setIsDrawerOpen(false)
-    }
+    const handleCloseDrawer = () => setIsDrawerOpen(false)
 
     if (isLoading) return <Loader />
 
@@ -84,7 +88,7 @@ export const CompanyOrderForm = () => {
             <div className='mt-4'></div>
             <ShiftSelectorNav />
             <div className='relative'>
-                <div className='mx-4 mt-4 grid grid-cols-1 gap-5'>
+                <div className='mx-4 mt-4 grid grid-cols-1 gap-6'>
                     {meals.map(meal => (
                         <MealCard key={meal.id} {...meal} onClick={() => handleMealClick(meal)} />
                     ))}

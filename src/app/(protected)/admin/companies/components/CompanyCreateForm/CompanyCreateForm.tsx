@@ -1,15 +1,15 @@
 'use client'
 
-import { Header, Logo } from '@/components'
+import { createCompany } from '@/api/companies'
+import { Header } from '@/components'
 import { Button } from '@/components/ui/button'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { createCompanySchema } from '../../schemas'
-import { createCompany } from '@/api/companies'
 
 export const CompanyCreateForm = () => {
     const router = useRouter()
@@ -24,14 +24,17 @@ export const CompanyCreateForm = () => {
         const body = {
             name: formData.name,
             code: formData.code,
-            address: !formData.address || (!formData.address?.street && !formData.address.city) ? undefined : {
-                street: formData.address.street,
-                city: formData.address.city
-            },
+            address:
+                !formData.address || (!formData.address?.street && !formData.address.city)
+                    ? undefined
+                    : {
+                          street: formData.address.street,
+                          city: formData.address.city
+                      },
             telephone: formData.telephone
         }
 
-        createCompany({ path: {}, body }).then((res) => router.push(`/admin/companies/${res.code}`))
+        createCompany({ path: {}, body }).then(res => router.push(`/admin/companies/${res.code}`))
     }
 
     return (

@@ -1,20 +1,13 @@
 import { DailyMenuMeal } from '@/api/daily-menus'
 import clsx from 'clsx'
-import { useCartStore } from '../../../../state'
 
 interface MealCardProps extends DailyMenuMeal {
     onClick: () => void
 }
 
-export const MealCard = ({ name, description, price, imageUrl, onClick, id }: MealCardProps) => {
-    const { carts, selectedShiftId, selectedDate } = useCartStore()
-
-    const isInCart = !!carts[selectedShiftId]?.[selectedDate]?.find(item => item.id === id)
-
+export const MealCard = ({ name, description, price, imageUrl, onClick }: MealCardProps) => {
     return (
-        <div
-            onClick={onClick}
-            className={`col-span-full cursor-pointer rounded-xl bg-white px-4 py-6 shadow-md ${clsx(isInCart && 'bg-primary')}`}>
+        <div onClick={onClick} className={clsx('col-span-full cursor-pointer rounded-xl shadow-md')}>
             <div className='flex items-center'>
                 <div className='mr-4 h-32 w-32 flex-shrink-0 rounded-lg bg-gray-200'>
                     {imageUrl ? (
@@ -26,10 +19,10 @@ export const MealCard = ({ name, description, price, imageUrl, onClick, id }: Me
                     )}
                 </div>
                 <div className='flex flex-col gap-0'>
-                    <h4 className={`text-lg font-semibold ${clsx(isInCart && 'text-white')}`}>{name}</h4>
+                    <h4 className={clsx('text-lg font-semibold')}>{name}</h4>
                     <div className='flex flex-col gap-5'>
-                        <p className={`text-sm text-gray-600 ${clsx(isInCart && 'text-white')}`}>{description}</p>
-                        <p className={`text-blue-500 ${clsx(isInCart && 'text-white')}`}>RSD {price.toFixed(2)}</p>
+                        <p className={clsx('text-sm text-gray-600')}>{description}</p>
+                        <p className={clsx('text-blue-500')}>RSD {price.toFixed(2)}</p>
                     </div>
                 </div>
             </div>
