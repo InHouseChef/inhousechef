@@ -1,17 +1,16 @@
 'use client'
 
+import { createALaCardShift, useReadALaCardShift } from '@/api/alacard-shifts'
 import { Header, Loader } from '@/components'
+import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { TimePicker } from '@/components/ui/time-picker'
+import { Time } from '@/types'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { TimePicker } from '@/components/ui/time-picker'
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { createALaCardShift, readALaCardShift, useReadALaCardShift } from '@/api/alacard-shifts'
 import { createALaCardShiftSchema } from '../../schemas'
-import { Time } from '@/types'
 
 type ALaCardShiftUpdateFormData = z.infer<typeof createALaCardShiftSchema>
 
@@ -46,8 +45,8 @@ const convertTimeToDate = (timeString: Time) => {
 
 export const ALaCardShiftUpdateForm = ({ companyCode }: ALaCardShiftUpdateFormProps) => {
     const { data: shift, isLoading, refetch: refetchALaCardShift } = useReadALaCardShift({ path: { companyCode } })
-    const [startDate, setStartDate] = useState<Date>()
-    const [endDate, setEndDate] = useState<Date>()
+    const [startDate, setStartDate] = useState<Date>(new Date(new Date().setHours(0, 0, 0, 0)))
+    const [endDate, setEndDate] = useState<Date>(new Date(new Date().setHours(0, 0, 0, 0)))
 
     const form = useForm<ALaCardShiftUpdateFormData>({
         resolver: zodResolver(createALaCardShiftSchema),
