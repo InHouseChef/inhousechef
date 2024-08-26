@@ -102,6 +102,7 @@ export const ALaCardShiftUpdateForm = ({ companyCode }: ALaCardShiftUpdateFormPr
                                         <FormItem>
                                             <FormLabel>Shift Start Time</FormLabel>
                                             <FormControl>
+                                                {/* @ts-ignore */}
                                                 <TimePicker setDate={setStartDate} date={startDate} />
                                             </FormControl>
                                             <FormMessage />
@@ -117,6 +118,7 @@ export const ALaCardShiftUpdateForm = ({ companyCode }: ALaCardShiftUpdateFormPr
                                         <FormItem>
                                             <FormLabel>Shift End Time</FormLabel>
                                             <FormControl>
+                                                {/* @ts-ignore */}
                                                 <TimePicker setDate={setEndDate} date={endDate} />
                                             </FormControl>
                                             <FormMessage />
