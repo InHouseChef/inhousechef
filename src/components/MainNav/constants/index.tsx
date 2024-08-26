@@ -25,19 +25,19 @@ export const LINKS: MainNavLink[] = [
 
 export const CLIENT_COMPANY_LINKS: MainNavLink[] = [
     {
-        label: 'Početna',
-        path: 'pocetna'
-    },
-    {
         label: 'Moje porudžbine',
-        path: 'moje-porudzbine'
+        path: 'my-orders'
     },
     {
         label: 'Istorija poručivanja',
-        path: 'istorija-porucivanja'
+        path: 'order-history'
+    },
+    {
+        label: 'Jelovnik',
+        path: 'menu'
     },
     {
         label: 'Korisnici',
-        path: 'korisnici'
+        path: 'users'
     }
 ]

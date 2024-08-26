@@ -16,12 +16,12 @@ const DaySelectorNav = () => {
                 <li
                     className={`ml-2 flex-1 cursor-pointer rounded-lg py-2 text-center ${selectedDate === today ? 'bg-black text-white' : 'text-black'}`}
                     onClick={() => setSelectedDate(today)}>
-                    Danas
+                    Za danas
                 </li>
                 <li
                     className={`mr-2 flex-1 cursor-pointer rounded-lg py-2 text-center ${selectedDate === tomorrow ? 'bg-black text-white' : 'text-black'}`}
                     onClick={() => setSelectedDate(tomorrow)}>
-                    Sutra
+                    Za sutra
                 </li>
             </ul>
         </nav>
