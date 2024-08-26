@@ -25,7 +25,7 @@ interface UseReadUserParams<T> extends DefaultQueryParams<ReadUserPath>, QueryOp
 
 export const useReadUser = <T = ReadUserResponse>(params?: UseReadUserParams<T>) => {
     const defaultParams = useDefaultQueryParams(params)
-    return useQuery({
+    return useQuery({ gcTime: 0,
         queryKey: USER_KEYS.resource(defaultParams.path.userId),
         queryFn: () => readUser(defaultParams),
         select: params?.select,
