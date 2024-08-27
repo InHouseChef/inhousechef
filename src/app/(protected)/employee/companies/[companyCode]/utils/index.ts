@@ -8,10 +8,9 @@ export const getDayName = (dateString: string) => {
     return date.toLocaleDateString('sr-Latn-RS', { weekday: 'short' }).toUpperCase()
 }
 
-export const calculateDateRange = (today: DateIso) => {
+export const calculateDateRange = (today: DateIso, numberOfDays: number) => {
     const formattedToday = toDateFromDateIso(today)
-    const totalDays = 10
-    const toDate = addDaysToDate(totalDays - 1, formattedToday)
+    const toDate = addDaysToDate(numberOfDays - 1, formattedToday)
 
     return {
         from: toDateIso(formattedToday),

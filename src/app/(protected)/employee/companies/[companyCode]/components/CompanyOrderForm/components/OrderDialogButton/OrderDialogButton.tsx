@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useMemo } from 'react'
 import { useCartStore } from '../../../../state'
 import { OrderDialog } from '../OrderDialog/OrderDialog'

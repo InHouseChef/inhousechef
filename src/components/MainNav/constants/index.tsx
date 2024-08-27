@@ -1,3 +1,5 @@
+import { UsersIcon } from 'lucide-react'
+import { MenuIcon, ProfileIcon, UserGroupIcon } from '../components/MainNavMobile/MainNavMobile'
 import { MainNavLink } from '../types'
 
 export const LINKS: MainNavLink[] = [
@@ -23,21 +25,3 @@ export const LINKS: MainNavLink[] = [
     }
 ]
 
-export const CLIENT_COMPANY_LINKS: MainNavLink[] = [
-    {
-        label: 'Moje porudžbine',
-        path: 'my-orders'
-    },
-    {
-        label: 'Istorija poručivanja',
-        path: 'order-history'
-    },
-    {
-        label: 'Jelovnik',
-        path: 'menu'
-    },
-    {
-        label: 'Korisnici',
-        path: 'users'
-    }
-]
