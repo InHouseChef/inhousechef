@@ -1,13 +1,14 @@
 import { DailyMenuMeal, ReadDailyMenuResponse } from '@/api/daily-menus'
 import { readDailyMenus } from '@/api/daily-menus/repository/hooks/readDailyMenus'
+import { useReadMyOrder } from '@/api/order'
 import { useReadShifts } from '@/api/shifts'
 import { Loader } from '@/components'
 import { DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST } from '@/constants'
 import { useAppDate } from '@/hooks'
-import { toDateIso } from '@/utils/date'
+import { getTomorrowDateIso, toDateFromDateIso, toDateIso } from '@/utils/date'
 import { useEffect, useState } from 'react'
 import { useCartStore } from '../../state'
-import { sortShiftsByStartAt } from '../../utils'
+import { canScheduleOrder, sortShiftsByStartAt } from '../../utils'
 import DaySelectorNav from './components/DaySelectorNav/DaySelectorNav'
 import { MealCard } from './components/MealCard/MealCard'
 import { MealDrawer } from './components/MealDrawer/MealDrawer'
@@ -21,17 +22,52 @@ const getFirstAndLastDayOfMonth = (date: Date) => {
 }
 
 export const CompanyOrderForm = () => {
-    const { selectedDate, setSelectedDate, selectedShiftId, setSelectedShift } = useCartStore()
+    const cart = useCartStore()
+    const { selectedDate, setSelectedDate, selectedShiftId, setSelectedShift, addToCart, resetCart, setActiveOrderId } = cart
     const { getAppDate } = useAppDate()
     const today = getAppDate()
+    const tomorrow = getTomorrowDateIso(toDateFromDateIso(today))
     const [dailyMenus, setDailyMenus] = useState<ReadDailyMenuResponse[]>([])
     const [currentMonth, setCurrentMonth] = useState<Date>(new Date())
-    const { data: shifts } = useReadShifts()
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [meals, setMeals] = useState<DailyMenuMeal[]>([])
-
     const [selectedMeal, setSelectedMeal] = useState<DailyMenuMeal | null>(null)
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)
+
+    const { data: shifts } = useReadShifts()
+    const { data: myOrder, isLoading: isLoadingMyOrder } = useReadMyOrder({
+        query: {
+            filter: {
+                fromDate: today,
+                toDate: tomorrow
+            }
+        }
+    })
+
+    // TODO: check reset
+    useEffect(() => {
+        if (!myOrder || myOrder.length === 0) return
+
+        console.log(cart)
+        myOrder.forEach(order => {
+            const { id, orderDate, orderedForShiftId, orderItems } = order
+            console.log(order)
+
+            resetCart()
+            setActiveOrderId(id)
+            setSelectedShift(orderedForShiftId)
+            setSelectedDate(orderDate)
+            orderItems.forEach(({ skuId, name, quantity, price }) => {
+                addToCart({
+                    id: skuId,
+                    name: name,
+                    quantity: quantity,
+                    price: price,
+                    imageUrl: '' // Assuming imageUrl is not available in orderItems
+                })
+            })
+        })
+    }, [myOrder])
 
     const initialFetch = async () => {
         const { firstDay, lastDay } = getFirstAndLastDayOfMonth(currentMonth)
@@ -55,10 +91,12 @@ export const CompanyOrderForm = () => {
 
         const sortedShifts = sortShiftsByStartAt(shifts)
 
-        if (!selectedShiftId && sortedShifts && sortedShifts?.length > 0) {
-            setSelectedShift(sortedShifts[0]?.id)
+        const earliestAvailableShift = sortedShifts?.find(shift => canScheduleOrder(shift, toDateFromDateIso(today)))
+
+        if (!selectedShiftId && earliestAvailableShift) {
+            setSelectedShift(earliestAvailableShift.id)
         }
-    }, [selectedShiftId, shifts])
+    }, [selectedShiftId, shifts, today, setSelectedShift])
 
     useEffect(() => {
         if (!selectedDate) return
@@ -79,7 +117,9 @@ export const CompanyOrderForm = () => {
 
     const handleCloseDrawer = () => setIsDrawerOpen(false)
 
-    if (isLoading) return <Loader />
+    if (isLoading || isLoadingMyOrder) return <Loader />
+
+    // TODO: add meal categories
 
     return (
         <>

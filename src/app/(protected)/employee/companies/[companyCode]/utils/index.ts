@@ -1,7 +1,7 @@
 import { ReadDailyMenuResponse } from '@/api/daily-menus'
 import { ReadShiftResponse } from '@/api/shifts'
 import { DateIso } from '@/types'
-import { addDaysToDate, toDateFromDateIso, toDateIso, toTimeFromString } from '@/utils/date'
+import { addDaysToDate, toDateFromDateIso, toDateIso, toStringFromTime } from '@/utils/date'
 
 export const getDayName = (dateString: string) => {
     const date = new Date(dateString)
@@ -53,8 +53,8 @@ export const generateUpcomingDates = (today: DateIso, dailyMenus?: ReadDailyMenu
 }
 
 export const isShiftActive = (shift: ReadShiftResponse, currentDateTime: Date) => {
-    const shiftStart = toTimeFromString(shift.shiftStartAt)
-    const shiftEnd = toTimeFromString(shift.shiftEndAt)
+    const shiftStart = toStringFromTime(shift.shiftStartAt)
+    const shiftEnd = toStringFromTime(shift.shiftEndAt)
     return currentDateTime >= shiftStart && currentDateTime <= shiftEnd
 }
 
@@ -63,4 +63,31 @@ export const getActiveShift = (shifts: ReadShiftResponse[], currentDateTime: Dat
 }
 
 export const sortShiftsByStartAt = (shifts?: ReadShiftResponse[]) =>
-    shifts?.sort((a, b) => toTimeFromString(a.shiftStartAt).getTime() - toTimeFromString(b.shiftStartAt).getTime())
+    shifts?.sort((a, b) => toStringFromTime(a.shiftStartAt).getTime() - toStringFromTime(b.shiftStartAt).getTime())
+
+export const canScheduleOrder = (shift: ReadShiftResponse, date: Date) => {
+    const { shiftStartAt, orderingDeadlineBeforeShiftStart } = shift
+    const shiftStart = toStringFromTime(shiftStartAt)
+    const currentTime = date.getTime()
+    const deadlineTime = shiftStart.getTime() - orderingDeadlineBeforeShiftStart * 60 * 60 * 1000 // convert hours to milliseconds
+
+    return currentTime < deadlineTime
+}
+
+export const canImmediatelyOrder = (shift: ReadShiftResponse, date: Date) => {
+    // TODO: add permission check
+    const { shiftEndAt } = shift
+    const shiftEnd = toStringFromTime(shiftEndAt)
+    const currentTime = date.getTime()
+    const endTimeMinusOneHourThirtyMinutes = shiftEnd.getTime() - 1.5 * 60 * 60 * 1000
+    return currentTime < endTimeMinusOneHourThirtyMinutes
+}
+
+export const getRemainingTimeToEditOrder = (shift: ReadShiftResponse, date: Date) => {
+    const { shiftStartAt, orderingDeadlineBeforeShiftStart } = shift
+    const shiftStart = toStringFromTime(shiftStartAt)
+    const currentTime = date.getTime()
+    const deadlineTime = shiftStart.getTime() - orderingDeadlineBeforeShiftStart * 60 * 60 * 1000 // hours to ms
+
+    return deadlineTime - currentTime
+}

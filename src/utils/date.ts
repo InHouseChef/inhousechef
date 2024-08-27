@@ -229,8 +229,8 @@ export const formatTimeWithoutSeconds = (time: Time) => {
     return `${hours}:${minutes}`
 }
 
-export const getTomorrowDateTimeIsoUtc = (today: Date) => {
-    const tomorrow = new Date(today)
-    tomorrow.setDate(today.getDate() + 1)
-    return tomorrow
+export const getTomorrowDateIso = (today: Date) => {
+    const tomorrowDate = new Date(today)
+    tomorrowDate.setDate(tomorrowDate.getDate() + 1)
+    return toDateIso(tomorrowDate)
 }
