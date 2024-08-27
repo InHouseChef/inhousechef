@@ -204,7 +204,7 @@ export const getLastDayOfMonthDateTime = (date: Date) => new Date(date.getFullYe
 export const getLastDayOfMonthDate = (date: Date) => toDateIso(getLastDayOfMonthDateTime(date))
 export const isLastDayInMonth = (date: Date) => getLastDayOfMonthDateTime(date).getDate() === date.getDate()
 
-export const toTimeFromString = (time: Time) => {
+export const toStringFromTime = (time: Time) => {
     const [hours, minutes, seconds] = time.split(':').map(Number)
     const date = new Date()
     date.setHours(hours, minutes, seconds, 0)
@@ -222,4 +222,15 @@ export const formatDateSerbianLatin = (date: Date) => {
         .split(' ')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ')
+}
+
+export const formatTimeWithoutSeconds = (time: Time) => {
+    const [hours, minutes] = time.split(':')
+    return `${hours}:${minutes}`
+}
+
+export const getTomorrowDateTimeIsoUtc = (today: Date) => {
+    const tomorrow = new Date(today)
+    tomorrow.setDate(today.getDate() + 1)
+    return tomorrow
 }
