@@ -1,15 +1,20 @@
 import { DailyMenuMeal } from '@/api/daily-menus'
 import clsx from 'clsx'
+import { useCartStore } from '../../../../state'
 
 interface MealCardProps extends DailyMenuMeal {
     onClick: () => void
 }
 
-export const MealCard = ({ name, description, price, imageUrl, onClick }: MealCardProps) => {
+export const MealCard = ({ id, name, description, price, imageUrl, onClick }: MealCardProps) => {
+    const { carts, selectedShiftId, selectedDate } = useCartStore()
+
+    const quantity = carts[selectedShiftId]?.[selectedDate]?.find(item => item.id === id)?.quantity || 0
+
     return (
-        <div onClick={onClick} className={clsx('col-span-full cursor-pointer rounded-xl shadow-md')}>
+        <div onClick={onClick} className={clsx('relative col-span-full cursor-pointer rounded-xl shadow-md')}>
             <div className='flex items-center'>
-                <div className='mr-4 h-32 w-32 flex-shrink-0 rounded-lg bg-gray-200'>
+                <div className='relative mr-4 h-32 w-32 flex-shrink-0 rounded-lg bg-gray-200'>
                     {imageUrl ? (
                         <img src={imageUrl} alt={name} className='h-32 w-32 rounded-lg object-cover' />
                     ) : (
@@ -17,6 +22,11 @@ export const MealCard = ({ name, description, price, imageUrl, onClick }: MealCa
                             No Image
                         </div>
                     )}
+                    {quantity > 0 ? (
+                        <div className='absolute left-0 top-0 flex h-10 w-12 items-center justify-center rounded-br-lg rounded-tl-lg bg-primary text-lg text-white'>
+                            {quantity}
+                        </div>
+                    ) : undefined}
                 </div>
                 <div className='flex flex-col gap-0'>
                     <h4 className={clsx('text-lg font-semibold')}>{name}</h4>
