@@ -16,7 +16,7 @@ import { MEAL_KEYS } from '../keys'
 interface ReadMealsPath {}
 interface ReadMealsParams extends QueryParams<ReadMealsPath> {}
 
-export const readMeals = ({ query }: ReadMealsParams): OffsetResultsPromise<ReadMealResponse> =>
+export const readMeals = ({ query }: ReadMealsParams): OffsetResultsPromise<ReadMealResponse[]> =>
     axiosPrivate.get(`/meals?${createBaseUrlQuery(query)}`)
 
 interface UseReadMealsParams extends DefaultQueryParams<ReadMealsPath>, QueryOptions {}
