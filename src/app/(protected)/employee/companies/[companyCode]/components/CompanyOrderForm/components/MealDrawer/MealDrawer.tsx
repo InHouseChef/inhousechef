@@ -71,7 +71,7 @@ export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
                             </div>
                         )}
                         <DrawerTitle className='mt-2 text-3xl font-bold lowercase'>{name}</DrawerTitle>
-                        <p className='font-semibold text-blue-500'>RSD {price.toFixed(2)}</p>
+                        <p className='font-semibold text-blue-500'>{price.toFixed(2)} RSD</p>
                         {description ? <p className='mt-4 text-sm text-gray-600'>{description}</p> : undefined}
                     </DrawerHeader>
 
@@ -96,7 +96,7 @@ export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
                         </div> */}
                         <Button type='button' onClick={handleAddToCart} className='flex items-center space-x-2'>
                             <span>Dodaj u porudžbinu</span>
-                            <span className='font-semibold'>RSD {(price * quantity).toFixed(2)}</span>
+                            <span className='font-semibold'>{(price * quantity).toFixed(2)} RSD</span>
                         </Button>
                     </DrawerFooter>
                 </div>

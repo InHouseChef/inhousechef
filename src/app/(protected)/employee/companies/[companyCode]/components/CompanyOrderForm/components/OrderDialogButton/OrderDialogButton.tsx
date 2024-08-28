@@ -24,7 +24,7 @@ export const OrderDialogButton = () => {
                             </span>
                             <span>Pregledaj porudžbinu</span>
                         </div>
-                        <span className='font-semibold'>RSD {totalPrice.toFixed(2)}</span>
+                        <span className='font-semibold'>{totalPrice.toFixed(2)} RSD</span>
                     </Button>
                 </DialogTrigger>
                 <OrderDialog />
