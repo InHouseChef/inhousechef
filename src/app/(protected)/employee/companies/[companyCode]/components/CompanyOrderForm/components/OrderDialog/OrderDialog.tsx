@@ -64,7 +64,6 @@ export const OrderDialog = () => {
     const remainingTime = getRemainingTimeToEditOrder(shift, toDateFromDateIso(orderDate))
 
     const remainingMinutes = Math.floor(remainingTime / (60 * 1000))
-
     return (
         <DialogContent className='max-w-screen h-screen'>
             <DialogHeader>
@@ -93,8 +92,9 @@ export const OrderDialog = () => {
                             <div key={item.id} className='flex items-center justify-between py-2'>
                                 <div>
                                     <h4 className='font-semibold'>{item.name}</h4>
-                                    <p className='text-sm text-gray-600'>RSD {item.price.toFixed(2)}</p>
+                                    <p className='text-sm text-gray-600'>{item.price.toFixed(2)} RSD</p>
                                 </div>
+                                <img src={item.imageUrl} alt={item.name} className='h-16 w-16 rounded-lg object-cover' />
                                 <div className='flex items-center gap-4'>
                                     <Button variant='outline' onClick={() => handleDecreaseQuantity(item)}>
                                         -
@@ -112,7 +112,7 @@ export const OrderDialog = () => {
             <DialogFooter>
                 <Button onClick={handlePlaceOrder} type='button' className='flex w-full items-center justify-between'>
                     <span>Poruči </span>
-                    <span>RSD {totalPrice.toFixed(2)}</span>
+                    <span>{totalPrice.toFixed(2)} RSD</span>
                 </Button>
             </DialogFooter>
         </DialogContent>

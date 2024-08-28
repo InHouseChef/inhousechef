@@ -18,7 +18,7 @@ const DaySelectorNav = () => {
                         'text-black': selectedDate !== today
                     })}
                     onClick={() => setSelectedDate(today)}>
-                    Danas
+                    Za danas
                 </li>
                 <li
                     className={clsx('mr-2 flex-1 cursor-pointer rounded-lg py-2 text-center', {
@@ -26,7 +26,7 @@ const DaySelectorNav = () => {
                         'text-black': selectedDate !== tomorrow
                     })}
                     onClick={() => setSelectedDate(tomorrow)}>
-                    Sutra
+                    Za sutra
                 </li>
             </ul>
         </nav>
