@@ -1,6 +1,6 @@
 'use client'
 
-import { MealType, ReadMealResponse, updateMealDetails, updateMealImage } from '@/api/meals'
+import { MealTypeEnum, ReadMealResponse, updateMealDetails, updateMealImage } from '@/api/meals'
 import { deleteMeal } from '@/api/meals/repository/hooks/deleteMeal'
 import { readMeal } from '@/api/meals/repository/hooks/readMeal'
 import { Header, Loader } from '@/components'
@@ -50,7 +50,7 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
             purchasePrice: meal?.purchasePrice || 0,
             sellingPrice: meal?.sellingPrice || 0,
             description: meal?.description || '',
-            type: meal?.type || MealType.MainCourse // Set default type
+            type: meal?.type || MealTypeEnum.MainCourse // Set default type
         }
     })
 
@@ -76,7 +76,7 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                 purchasePrice: meal?.purchasePrice || 0,
                 sellingPrice: meal?.sellingPrice || 0,
                 description: meal?.description || '',
-                type: meal?.type || MealType.MainCourse // Set default type
+                type: meal?.type || MealTypeEnum.MainCourse // Set default type
             })
             setImageURL(meal?.imageUrl || '')
         }

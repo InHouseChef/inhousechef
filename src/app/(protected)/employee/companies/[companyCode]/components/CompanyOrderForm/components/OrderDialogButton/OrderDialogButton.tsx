@@ -5,9 +5,9 @@ import { useCartStore } from '../../../../state'
 import { OrderDialog } from '../OrderDialog/OrderDialog'
 
 export const OrderDialogButton = () => {
-    const { carts, selectedShiftId, selectedDate } = useCartStore()
+    const { order, selectedShiftId, selectedDate } = useCartStore()
 
-    const cart = carts[selectedShiftId]?.[selectedDate] || []
+    const cart = order[selectedShiftId]?.[selectedDate] || []
     const totalItems = useMemo(() => cart.reduce((acc, item) => acc + item.quantity, 0), [cart])
     const totalPrice = useMemo(() => cart.reduce((acc, item) => acc + item.price * item.quantity, 0), [cart])
 

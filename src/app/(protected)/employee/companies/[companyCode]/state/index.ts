@@ -1,3 +1,4 @@
+import { MealType } from '@/api/meals'
 import { DateIso } from '@/types'
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
@@ -11,11 +12,13 @@ export interface CartItem {
 }
 
 interface CartState {
-    carts: { [shiftId: string]: { [date: string]: CartItem[] } }
+    order: { [shiftId: string]: { [date: string]: CartItem[] } }
     selectedShiftId: string
     selectedDate: DateIso
+    selectedMealType: MealType
     setSelectedShift: (shiftId: string) => void
     setSelectedDate: (date: DateIso) => void
+    setSelectedMealType: (type: MealType) => void
     addToCart: (item: CartItem) => void
     removeFromCart: (itemId: string) => void
     clearCart: () => void
@@ -28,22 +31,21 @@ export const useCartStore = create<CartState>()(
     devtools(
         persist(
             set => ({
-                carts: {},
+                order: {},
                 selectedShiftId: '',
                 selectedDate: '',
+                selectedMealType: 'MainCourse',
                 activeOrderId: '',
                 setSelectedShift: shiftId => set(() => ({ selectedShiftId: shiftId })),
-
                 setSelectedDate: date => set(() => ({ selectedDate: date })),
-
+                setSelectedMealType: (type: MealType) => set(() => ({ selectedMealType: type })),
                 setActiveOrderId: orderId => set(() => ({ activeOrderId: orderId })),
-
                 addToCart: item =>
                     set(state => {
                         const { selectedShiftId, selectedDate } = state
                         if (!selectedShiftId || !selectedDate) return state
 
-                        const shiftCart = state.carts[selectedShiftId] || {}
+                        const shiftCart = state.order[selectedShiftId] || {}
                         const dateCart = shiftCart[selectedDate] || []
                         const existingItemIndex = dateCart.findIndex(cartItem => cartItem.id === item.id)
 
@@ -54,44 +56,49 @@ export const useCartStore = create<CartState>()(
                         }
 
                         return {
-                            carts: {
-                                ...state.carts,
+                            order: {
+                                ...state.order,
                                 [selectedShiftId]: { ...shiftCart, [selectedDate]: dateCart }
                             }
                         }
                     }),
-
                 removeFromCart: itemId =>
                     set(state => {
                         const { selectedShiftId, selectedDate } = state
                         if (!selectedShiftId || !selectedDate) return state
 
-                        const shiftCart = state.carts[selectedShiftId] || {}
+                        const shiftCart = state.order[selectedShiftId] || {}
                         const dateCart = shiftCart[selectedDate] || []
                         const updatedCart = dateCart.filter(item => item.id !== itemId)
 
                         return {
-                            carts: {
-                                ...state.carts,
+                            order: {
+                                ...state.order,
                                 [selectedShiftId]: { ...shiftCart, [selectedDate]: updatedCart }
                             }
                         }
                     }),
-
                 clearCart: () =>
                     set(state => {
                         const { selectedShiftId, selectedDate } = state
                         if (!selectedShiftId || !selectedDate) return state
 
-                        const shiftCart = state.carts[selectedShiftId] || {}
+                        const shiftCart = state.order[selectedShiftId] || {}
                         return {
-                            carts: {
-                                ...state.carts,
+                            order: {
+                                ...state.order,
                                 [selectedShiftId]: { ...shiftCart, [selectedDate]: [] }
                             }
                         }
                     }),
-                resetCart: () => set(() => ({ carts: {}, selectedShiftId: '', selectedDate: '', activeOrderId: '' }))
+                resetCart: () =>
+                    set(() => ({
+                        order: {},
+                        selectedShiftId: '',
+                        selectedDate: '',
+                        activeOrderId: '',
+                        selectedMealType: 'MainCourse'
+                    }))
             }),
             {
                 name: 'cart'

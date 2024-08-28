@@ -11,8 +11,8 @@ interface ShoppingCartProps {
 }
 
 const ShoppingCart = ({ shiftId, selectedDate }: ShoppingCartProps) => {
-    const { carts, removeFromCart, clearCart, addToCart } = useCartStore()
-    const cart = carts[shiftId]?.[selectedDate] || []
+    const { order, removeFromCart, clearCart, addToCart } = useCartStore()
+    const cart = order[shiftId]?.[selectedDate] || []
     const { getFormattedAppDate } = useAppDate()
     const today = getFormattedAppDate()
     const { data: shifts } = useReadShifts()

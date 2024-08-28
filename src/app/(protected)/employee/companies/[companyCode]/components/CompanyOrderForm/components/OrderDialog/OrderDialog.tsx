@@ -11,7 +11,7 @@ import { canScheduleOrder, getRemainingTimeToEditOrder } from '../../../../utils
 
 export const OrderDialog = () => {
     const path = usePathParams<CompanyPath>()
-    const { carts, selectedShiftId, selectedDate, addToCart, removeFromCart, activeOrderId } = useCartStore()
+    const { order, selectedShiftId, selectedDate, addToCart, removeFromCart, activeOrderId } = useCartStore()
     const { data: shift } = useReadShift({ path: { ...path, shiftId: selectedShiftId } })
     const [orderDate, setOrderDate] = useState<DateIso>(selectedDate)
 
@@ -20,7 +20,7 @@ export const OrderDialog = () => {
     const { mutate: increaseItemQuantity } = useAddIncrementOrderItemQuantity()
     const { mutate: decreaseItemQuantity } = useDecreaseOrderItemQuantity()
 
-    const cart = selectedShiftId && selectedDate ? carts[selectedShiftId]?.[selectedDate] || [] : []
+    const cart = selectedShiftId && selectedDate ? order[selectedShiftId]?.[selectedDate] || [] : []
     const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
 
     const handleIncreaseQuantity = (item: CartItem) => {

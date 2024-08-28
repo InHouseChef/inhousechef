@@ -2,7 +2,9 @@ import { DailyMenuMeal, ReadDailyMenuResponse } from '@/api/daily-menus'
 import { readDailyMenus } from '@/api/daily-menus/repository/hooks/readDailyMenus'
 import { useReadMyOrder } from '@/api/order'
 import { useReadShifts } from '@/api/shifts'
+import { useReadMyUser } from '@/api/users'
 import { Loader } from '@/components'
+import { Overlay } from '@/components/Overlay/Overlay'
 import { DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST } from '@/constants'
 import { useAppDate } from '@/hooks'
 import { getTomorrowDateIso, toDateFromDateIso, toDateIso } from '@/utils/date'
@@ -12,6 +14,7 @@ import { canScheduleOrder, sortShiftsByStartAt } from '../../utils'
 import DaySelectorNav from './components/DaySelectorNav/DaySelectorNav'
 import { MealCard } from './components/MealCard/MealCard'
 import { MealDrawer } from './components/MealDrawer/MealDrawer'
+import MealTypeSelectorNav from './components/MealTypeSelectorNav/MealTypeSelectorNav'
 import { OrderDialogButton } from './components/OrderDialogButton/OrderDialogButton'
 import { ShiftSelectorNav } from './components/ShiftSelectorNav/ShiftSelectorNav'
 
@@ -23,16 +26,28 @@ const getFirstAndLastDayOfMonth = (date: Date) => {
 
 export const CompanyOrderForm = () => {
     const cart = useCartStore()
-    const { selectedDate, setSelectedDate, selectedShiftId, setSelectedShift, addToCart, resetCart, setActiveOrderId } = cart
-    const { getAppDate } = useAppDate()
+    const {
+        selectedDate,
+        setSelectedDate,
+        selectedShiftId,
+        setSelectedShift,
+        addToCart,
+        resetCart,
+        setActiveOrderId,
+        selectedMealType
+    } = cart
+    const { getAppDate, getAppDateTime } = useAppDate()
     const today = getAppDate()
     const tomorrow = getTomorrowDateIso(toDateFromDateIso(today))
     const [dailyMenus, setDailyMenus] = useState<ReadDailyMenuResponse[]>([])
+    const { data: myUser, isLoading: isLoadingMyUser } = useReadMyUser()
     const [currentMonth, setCurrentMonth] = useState<Date>(new Date())
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [meals, setMeals] = useState<DailyMenuMeal[]>([])
     const [selectedMeal, setSelectedMeal] = useState<DailyMenuMeal | null>(null)
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)
+    const [filteredMeals, setFilteredMeals] = useState<DailyMenuMeal[]>([])
+    const [shiftsAvailable, setShiftsAvailable] = useState<boolean>(true)
 
     const { data: shifts } = useReadShifts()
     const { data: myOrder, isLoading: isLoadingMyOrder } = useReadMyOrder({
@@ -48,10 +63,8 @@ export const CompanyOrderForm = () => {
     useEffect(() => {
         if (!myOrder || myOrder.length === 0) return
 
-        console.log(cart)
         myOrder.forEach(order => {
             const { id, orderDate, orderedForShiftId, orderItems } = order
-            console.log(order)
 
             resetCart()
             setActiveOrderId(id)
@@ -85,18 +98,15 @@ export const CompanyOrderForm = () => {
         if (!selectedDate) return setSelectedDate(today)
         setSelectedDate(selectedDate)
     }, [selectedDate])
-
     useEffect(() => {
-        if (!shifts) return
+        if (!shifts) return setShiftsAvailable(false)
 
         const sortedShifts = sortShiftsByStartAt(shifts)
+        const availableShift = sortedShifts?.find(shift => canScheduleOrder(shift, getAppDateTime()))
 
-        const earliestAvailableShift = sortedShifts?.find(shift => canScheduleOrder(shift, toDateFromDateIso(today)))
-
-        if (!selectedShiftId && earliestAvailableShift) {
-            setSelectedShift(earliestAvailableShift.id)
-        }
-    }, [selectedShiftId, shifts, today, setSelectedShift])
+        if (!availableShift) return setShiftsAvailable(false)
+        setShiftsAvailable(true)
+    }, [shifts, today])
 
     useEffect(() => {
         if (!selectedDate) return
@@ -110,6 +120,11 @@ export const CompanyOrderForm = () => {
         initialFetch().finally(() => setIsLoading(false))
     }, [currentMonth])
 
+    useEffect(() => {
+        const filtered = meals.filter(({ type }) => type === selectedMealType)
+        setFilteredMeals(filtered)
+    }, [selectedMealType, meals])
+
     const handleMealClick = (meal: DailyMenuMeal) => {
         setSelectedMeal(meal)
         setIsDrawerOpen(true)
@@ -117,25 +132,37 @@ export const CompanyOrderForm = () => {
 
     const handleCloseDrawer = () => setIsDrawerOpen(false)
 
-    if (isLoading || isLoadingMyOrder) return <Loader />
-
-    // TODO: add meal categories
+    if (isLoading || isLoadingMyOrder || isLoadingMyUser) return <Loader />
 
     return (
         <>
             <div className='mt-4'></div>
             <DaySelectorNav />
-            <div className='mt-4'></div>
-            <ShiftSelectorNav />
-            <div className='relative'>
-                <div className='mx-4 mt-4 grid grid-cols-1 gap-6'>
-                    {meals.map(meal => (
-                        <MealCard key={meal.id} {...meal} onClick={() => handleMealClick(meal)} />
-                    ))}
+            <div>
+                {/* TODO: check out overlay */}
+                {!shiftsAvailable && (
+                    <Overlay
+                        message='
+                Nema dostupnih smena za poručivanje. Molimo pokušajte kasnije.
+            '
+                    />
+                )}
+                <div className='mt-4'></div>
+                <ShiftSelectorNav />
+                <div className='mt-2'></div>
+                <MealTypeSelectorNav />
+                <div className='relative'>
+                    <div className='mx-4 mt-4 grid grid-cols-1 gap-6'>
+                        {filteredMeals.map(meal => (
+                            <MealCard key={meal.id} {...meal} onClick={() => handleMealClick(meal)} />
+                        ))}
+                    </div>
+                    <OrderDialogButton />
                 </div>
-                <OrderDialogButton />
+                {selectedMeal ? (
+                    <MealDrawer meal={selectedMeal} isOpen={isDrawerOpen} onClose={handleCloseDrawer} />
+                ) : undefined}
             </div>
-            {selectedMeal ? <MealDrawer meal={selectedMeal} isOpen={isDrawerOpen} onClose={handleCloseDrawer} /> : undefined}
         </>
     )
 }

@@ -1,7 +1,10 @@
+import { ReadALaCardShiftResponse } from '@/api/alacard-shifts'
 import { ReadDailyMenuResponse } from '@/api/daily-menus'
+import { MealType } from '@/api/meals'
 import { ReadShiftResponse } from '@/api/shifts'
 import { DateIso } from '@/types'
 import { addDaysToDate, toDateFromDateIso, toDateIso, toStringFromTime } from '@/utils/date'
+import { MEAL_TYPE_LABELS } from '../constants'
 
 export const getDayName = (dateString: string) => {
     const date = new Date(dateString)
@@ -74,8 +77,7 @@ export const canScheduleOrder = (shift: ReadShiftResponse, date: Date) => {
     return currentTime < deadlineTime
 }
 
-export const canImmediatelyOrder = (shift: ReadShiftResponse, date: Date) => {
-    // TODO: add permission check
+export const canImmediatelyOrder = (shift: ReadALaCardShiftResponse, date: Date) => {
     const { shiftEndAt } = shift
     const shiftEnd = toStringFromTime(shiftEndAt)
     const currentTime = date.getTime()
@@ -91,3 +93,5 @@ export const getRemainingTimeToEditOrder = (shift: ReadShiftResponse, date: Date
 
     return deadlineTime - currentTime
 }
+
+export const getMealTypeLabel = (type: MealType) => MEAL_TYPE_LABELS[type]
