@@ -70,13 +70,13 @@ export const CompanyOrderForm = () => {
             setActiveOrderId(id)
             setSelectedShift(orderedForShiftId)
             setSelectedDate(orderDate)
-            orderItems.forEach(({ skuId, name, quantity, price }) => {
+            orderItems.forEach(({ skuId, name, quantity, price, imageUrl }) => {
                 addToCart({
                     id: skuId,
                     name: name,
                     quantity: quantity,
                     price: price,
-                    imageUrl: '' // Assuming imageUrl is not available in orderItems
+                    imageUrl: imageUrl
                 })
             })
         })

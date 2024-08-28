@@ -46,7 +46,7 @@ export const LoginForm = () => {
 
     return (
         <>
-            <CardWrapper label='Login to your account' title='Welcome to Kristal Ketering'>
+            <CardWrapper label='Prijavite se' title='Dobro došli'>
                 <Form {...form}>
                     <form onSubmit={handleSubmit(onSubmit)} className='space-y-8'>
                         <FormField
@@ -54,7 +54,7 @@ export const LoginForm = () => {
                             name='username'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Username</FormLabel>
+                                    <FormLabel>Korisničko ime</FormLabel>
                                     <FormControl>
                                         <Input {...field} placeholder='John Smith' required autoComplete='username' />
                                     </FormControl>
@@ -67,7 +67,7 @@ export const LoginForm = () => {
                             name='password'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Password</FormLabel>
+                                    <FormLabel>Lozinka</FormLabel>
                                     <FormControl>
                                         <Input {...field} type='password' required autoComplete='password' />
                                     </FormControl>
@@ -77,7 +77,7 @@ export const LoginForm = () => {
                         />
                         {isError ? <Error error={error} /> : undefined}
                         <Button type='submit' className='w-full' disabled={isPending}>
-                            {!isPending ? 'Login to Kristal Ketering' : 'Loading...'}
+                            {!isPending ? 'Prijavite se' : 'Učitavanje...'}
                         </Button>
                     </form>
                 </Form>

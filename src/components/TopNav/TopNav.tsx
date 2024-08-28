@@ -28,12 +28,13 @@ export const TopNav = () => {
                         'border-grey700/50': !isOpen
                     }
                 )}>
-                <TopNavHamburger isNavOpen={isOpen} onToggle={handleToggle} />
 
                 {/* <TopNavLogo /> */}
                 <div className='flex items-center justify-end gap-2 lg:gap-4'>
                     <TopNavLogout />
                 </div>
+
+                <TopNavHamburger isNavOpen={isOpen} onToggle={handleToggle} />
             </div>
             <MainNavMobile isNavOpen={isOpen} onOverlayClick={handleClose} />
         </>

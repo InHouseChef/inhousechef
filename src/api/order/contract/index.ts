@@ -22,6 +22,7 @@ interface OrderDetails {
         price: number
         productionPrice: number
         quantity: number
+        imageUrl: string
     }[]
     placedAt?: DateTimeIsoUtc
     confirmedAt?: DateTimeIsoUtc

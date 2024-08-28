@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useMemo } from 'react'
 import { useCartStore } from '../../../../state'
 import { OrderDialog } from '../OrderDialog/OrderDialog'
@@ -24,7 +24,7 @@ export const OrderDialogButton = () => {
                             </span>
                             <span>Pregledaj porudžbinu</span>
                         </div>
-                        <span className='font-semibold'>RSD {totalPrice.toFixed(2)}</span>
+                        <span className='font-semibold'>{totalPrice.toFixed(2)} RSD</span>
                     </Button>
                 </DialogTrigger>
                 <OrderDialog />
