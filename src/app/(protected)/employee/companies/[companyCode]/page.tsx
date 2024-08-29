@@ -11,6 +11,9 @@ export default function CompanyPage({ params }: { params: { companyCode: string 
             <RequireCompanyAuthorization role='Employee'>
                 <CompanyOrderForm />
             </RequireCompanyAuthorization>
+            <RequireCompanyAuthorization role='CompanyManager'>
+                <CompanyOrderForm />
+            </RequireCompanyAuthorization>
         </>
     )
 }
