@@ -128,7 +128,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                 <div
                     onClick={onOverlayClick}
                     className={clsx(
-                        'absolute inset-0 top-[var(--topnav-height)] z-30 bg-[#1B1C31]/50 backdrop-blur-[5px] backdrop-filter transition-opacity duration-300 lg:hidden',
+                        'absolute inset-0 top-[var(--topnav-height)] z-30 bg-[#1B1C31]/50 backdrop-blur-[5px] backdrop-filter transition-opacity duration-300',
                         {
                             'pointer-events-none opacity-0': !isNavOpen,
                             'pointer-events-auto opacity-100': isNavOpen
@@ -136,17 +136,17 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                     )}
                 ></div>
             </SheetTrigger>
-            <SheetContent side="right" className="px-6 py-8 lg:hidden flex flex-col h-full">
+            <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
                 <div className="flex-grow">
                     <div className="flex flex-col">
                         <div className='flex justify-left mb-6'>
                             <CloseSection close={onOverlayClick} heading='Menu' />
                         </div>
                         <div className='flex flex-col flex-start gap-8'>
-                            <ul className="bg-gray-100 py-2 px-4 rounded-lg">
-                                {MEAL_RELATED_LINKS.map(({ path, label, icon }) => (
+                            <ul>
+                                {MEAL_RELATED_LINKS.map(({ path, label, icon }, index) => (
                                     <li
-                                        className="flex items-center gap-4 py-3 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all rounded-lg"
+                                        className={clsx("flex items-center bg-gray-100 py-6 px-4 gap-4 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all", { 'rounded-t-lg': index === 0, 'rounded-b-lg': index === MEAL_RELATED_LINKS.length - 1 })}
                                         onClick={() => openDrawer(path)}
                                         key={path}
                                     >
@@ -160,10 +160,10 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                                     </li>
                                 ))}
                             </ul>
-                            <ul className="bg-gray-100 py-2 px-4 mt-4 rounded-lg">
-                                {USER_RELATED_LINKS.map(({ path, label, icon }) => (
+                            <ul>
+                                {USER_RELATED_LINKS.map(({ path, label, icon }, index) => (
                                     <li
-                                        className="flex items-center gap-4 py-3 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all rounded-lg"
+                                        className={clsx("flex items-center bg-gray-100 py-6 px-4 gap-4 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all", { 'rounded-t-lg': index === 0, 'rounded-b-lg': index === USER_RELATED_LINKS.length - 1 })}
                                         onClick={() => openDrawer(path)}
                                         key={path}
                                     >
@@ -178,10 +178,10 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                                     </li>
                                 ))}
                             </ul>
-                            <ul className="bg-gray-100 py-2 px-4 mt-4 rounded-lg">
-                                {TERMS_AND_CONDITIONS.map(({ path, label, icon }) => (
+                            <ul>
+                                {TERMS_AND_CONDITIONS.map(({ path, label, icon }, index) => (
                                     <li
-                                        className="flex items-center gap-4 py-3 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all rounded-lg"
+                                        className={clsx("flex bg-gray-100 py-6 px-4 mt-4 items-center gap-4 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all", { 'rounded-t-lg': index === 0, 'rounded-b-lg': index === TERMS_AND_CONDITIONS.length - 1 })}
                                         onClick={() => openDrawer(path)}
                                         key={path}
                                     >
@@ -219,7 +219,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
             </SheetContent>
 
             <Sheet open={activeDrawer === 'my-orders'} onOpenChange={closeDrawer}>
-                <SheetContent side="right" className="px-6 py-8 lg:hidden flex flex-col h-full">
+                <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
                     <CloseSection close={closeDrawer} heading='Moje porudžbine' />
                     <div className="flex-grow overflow-y-auto">
                         <MyOrdersPage activeOrders={activeOrders ?? []} orderHistory={orderHistory ?? []} />
@@ -228,7 +228,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
             </Sheet>
 
             <Sheet open={activeDrawer === 'menu'} onOpenChange={closeDrawer}>
-                <SheetContent side="right" className="px-6 py-8 lg:hidden flex flex-col h-full">
+                <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
                     <CloseSection close={closeDrawer} heading='7-dnevni jelovnik' />
                     <div className="flex-grow overflow-y-auto">
                         <MenuPage dailyMenus={dailyMenus ?? []} />
@@ -237,7 +237,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
             </Sheet>
 
             <Sheet open={activeDrawer === 'users'} onOpenChange={closeDrawer}>
-                <SheetContent side="right" className="px-6 py-8 lg:hidden flex flex-col h-full">
+                <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
                     <CloseSection close={closeDrawer} heading='Upravljanje korisnicima' />
                     <div className="flex-grow overflow-y-auto">
                         <UsersPage users={[]} />
@@ -246,7 +246,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
             </Sheet>
 
             <Sheet open={activeDrawer === 'privacy-policy'} onOpenChange={closeDrawer}>
-                <SheetContent side="right" className="px-6 py-8 lg:hidden flex flex-col h-full">
+                <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
                     <CloseSection close={closeDrawer} heading='Uslovi korišćenja' />
                     <div className="flex-grow overflow-y-auto">
                         <TermsAndConditionsPage />

@@ -29,7 +29,7 @@ export const MyOrdersPage = ({ activeOrders, orderHistory }: MyOrdersPageProps )
                         'text-gray-500': activeTab !== 'ongoing'
                     })}
                 >
-                    Ongoing
+                    Aktivne
                 </button>
                 <button
                     onClick={() => setActiveTab('history')}
@@ -38,7 +38,7 @@ export const MyOrdersPage = ({ activeOrders, orderHistory }: MyOrdersPageProps )
                         'text-gray-500': activeTab !== 'history'
                     })}
                 >
-                    History
+                    Istorija
                 </button>
             </div>
 
@@ -86,7 +86,7 @@ export const MyOrdersPage = ({ activeOrders, orderHistory }: MyOrdersPageProps )
                                     )}
                                     <div className="flex flex-col">
                                         <div className="flex items-center">
-                                            <h4 className="font-semibold">Order #123456{/* Placeholder for order number */}</h4>
+                                            <h4 className="font-semibold">Porudžbina #123456{/* Placeholder for order number */}</h4>
                                         </div>
                                         <p className="text-sm text-grey-500"><span className="text-sm text-blue-500">{totalPrice.toFixed(2)} RSD</span> | {description}</p>
                                     </div>
@@ -94,10 +94,10 @@ export const MyOrdersPage = ({ activeOrders, orderHistory }: MyOrdersPageProps )
                             </div>
                             <div className="mt-4 flex justify-between items-center">
                                 <button onClick={() => console.log('Track Order')} className="bg-primary text-white px-4 py-2 rounded">
-                                    Track Order
+                                    Idi na porudžbinu
                                 </button>
                                 <button onClick={() => console.log('Cancel Order')} className="border border-primary text-primary px-4 py-2 rounded">
-                                    Cancel
+                                    Otkaži
                                 </button>
                             </div>
                         </div>
@@ -147,7 +147,7 @@ export const MyOrdersPage = ({ activeOrders, orderHistory }: MyOrdersPageProps )
 
                                     <div className="flex flex-col">
                                         <div className="flex items-center">
-                                            <h4 className="font-semibold">Order #123456{/* Placeholder for order number */}</h4>
+                                            <h4 className="font-semibold">Porudžbina #123456{/* Placeholder for order number */}</h4>
                                         </div>
                                         <p className="text-sm text-grey-500"><span className="text-sm text-blue-500">{totalPrice.toFixed(2)} RSD</span> | {description}</p>
                                     </div>
@@ -155,10 +155,10 @@ export const MyOrdersPage = ({ activeOrders, orderHistory }: MyOrdersPageProps )
                             </div>
                             <div className="mt-4 flex justify-between items-center">
                                 <button onClick={() => console.log('Rate Order')} className="border border-primary text-primary px-4 py-2 rounded">
-                                    Rate
+                                    Oceni
                                 </button>
                                 <button onClick={() => console.log('Reorder')} className="bg-primary text-white px-4 py-2 rounded">
-                                    Re-Order
+                                    Naruči ponovo
                                 </button>
                             </div>
                         </div>

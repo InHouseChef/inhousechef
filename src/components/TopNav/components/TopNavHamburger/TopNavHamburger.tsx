@@ -10,7 +10,7 @@ export const TopNavHamburger = ({ isNavOpen, onToggle }: TopNavHamburgerProps) =
         <button
             onClick={onToggle}
             className={clsx(
-                'relative h-8 w-8 translate-x-0 transform cursor-pointer transition-transform duration-300 lg:hidden',
+                'relative h-8 w-8 translate-x-0 transform cursor-pointer transition-transform duration-300 ',
                 {
                     'translate-x-14': isNavOpen
                 }
