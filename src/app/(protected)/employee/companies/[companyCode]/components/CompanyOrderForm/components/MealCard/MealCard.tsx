@@ -8,9 +8,9 @@ interface MealCardProps extends DailyMenuMeal {
 }
 
 export const MealCard = ({ id, name, description, price, imageUrl, onClick, small }: MealCardProps) => {
-    const { order, selectedShiftId, selectedDate } = useCartStore()
+    const { order, selectedShift, selectedDate } = useCartStore()
 
-    const quantity = order[selectedShiftId]?.[selectedDate]?.find(item => item.id === id)?.quantity || 0
+    const quantity = (selectedShift && order[selectedShift?.id]?.[selectedDate]?.find(item => item.id === id)?.quantity) ?? 0
 
     return (
         <div onClick={onClick} className={clsx('relative col-span-full cursor-pointer rounded-xl bg-white shadow-md')}>

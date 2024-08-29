@@ -1,13 +1,13 @@
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { useMemo } from 'react'
 import { useCartStore } from '../../../../state'
 import { OrderDialog } from '../OrderDialog/OrderDialog'
 
 export const OrderDialogButton = () => {
-    const { order, selectedShiftId, selectedDate } = useCartStore()
+    const { order, selectedShift, selectedDate } = useCartStore()
 
-    const cart = order[selectedShiftId]?.[selectedDate] || []
+    const cart = (selectedShift && order[selectedShift.id]?.[selectedDate]) || []
     const totalItems = useMemo(() => cart.reduce((acc, item) => acc + item.quantity, 0), [cart])
     const totalPrice = useMemo(() => cart.reduce((acc, item) => acc + item.price * item.quantity, 0), [cart])
 

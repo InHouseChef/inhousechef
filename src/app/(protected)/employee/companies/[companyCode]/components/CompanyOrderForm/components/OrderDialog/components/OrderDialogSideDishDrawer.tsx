@@ -8,14 +8,14 @@ import { useState } from 'react'
 import { useCartStore } from '../../../../../state'
 import MealDrawerCard from './MealDrawerCard'
 
-interface OrderDialogMainCourseDrawerProps {
+interface OrderDialogSideDishDrawerProps {
     isOpen: boolean
     onClose: () => void
 }
 
-export const OrderDialogMainCourseDrawer = ({ isOpen, onClose }: OrderDialogMainCourseDrawerProps) => {
+export const OrderDialogSideDishDrawer = ({ isOpen, onClose }: OrderDialogSideDishDrawerProps) => {
     const path = usePathParams<CompanyPath>()
-    const { addToCart, selectedDate, selectedShiftId, setActiveOrderId, activeOrderId } = useCartStore()
+    const { addToCart, selectedDate, selectedShift, setActiveOrderId, activeOrderId } = useCartStore()
     const { mutate } = useAddIncrementOrderItemQuantity()
     const [selectedMeal, setSelectedMeal] = useState<DailyMenuMeal | null>(null)
     const { data: dailyMenus, isLoading } = useReadDailyMenus({
@@ -29,7 +29,7 @@ export const OrderDialogMainCourseDrawer = ({ isOpen, onClose }: OrderDialogMain
 
     if (isLoading) return <Loader />
 
-    const mainCourseMeals = dailyMenus?.flatMap(menu => menu.meals.filter(meal => meal.type === 'MainCourse')) || []
+    const mainCourseMeals = dailyMenus?.flatMap(menu => menu.meals.filter(meal => meal.type === 'SideDish')) || []
 
     const handleMealClick = (meal: DailyMenuMeal) => {
         setSelectedMeal(meal)
@@ -49,7 +49,7 @@ export const OrderDialogMainCourseDrawer = ({ isOpen, onClose }: OrderDialogMain
                         price: meal.price,
                         quantity: 1, // Assuming quantity is always 1 when adding directly
                         imageUrl: meal.imageUrl,
-                        type: 'MainCourse'
+                        type: 'SideDish'
                     })
                     onClose()
                 }

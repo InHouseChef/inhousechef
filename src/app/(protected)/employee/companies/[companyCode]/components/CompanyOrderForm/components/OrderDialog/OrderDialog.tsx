@@ -1,30 +1,40 @@
-import { useAddIncrementOrderItemQuantity, useDecreaseOrderItemQuantity, usePlaceOrder } from '@/api/order'
+import { useAddIncrementOrderItemQuantity, useDecreaseOrderItemQuantity, useDeleteOrder, usePlaceOrder } from '@/api/order'
 import { useReadShift } from '@/api/shifts/repository/hooks/readShift'
 import { Button } from '@/components/ui/button'
 import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { usePathParams } from '@/hooks'
 import { CompanyPath, DateIso } from '@/types'
-import { formatDateIso, formatEuropeanDate, formatTimeWithoutSeconds, toDateFromDateIso } from '@/utils/date'
+import { formatDateIso, formatEuropeanDate, formatTimeWithoutSeconds } from '@/utils/date'
 import { Minus, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { CartItem, useCartStore } from '../../../../state'
-import { canScheduleOrder, Time } from '../../../../utils'
+import { Time } from '../../../../utils'
 import { OrderDialogMainCourseDrawer } from './components/OrderDialogMainCourseDrawer'
+import { OrderDialogSideDishDrawer } from './components/OrderDialogSideDishDrawer'
 
 export const OrderDialog = () => {
     const path = usePathParams<CompanyPath>()
-    const { order, selectedShiftId, selectedDate, addToCart, removeFromCart, activeOrderId } = useCartStore()
-    const { data: shift } = useReadShift({ path: { ...path, shiftId: selectedShiftId } })
+    const {
+        order,
+        selectedShift,
+        canImmediatelyOrder,
+        canScheduleOrder,
+        selectedDate,
+        addToCart,
+        removeFromCart,
+        activeOrderId
+    } = useCartStore()
+    const { data: shift } = useReadShift({ path: { ...path, shiftId: selectedShift?.id || '' } })
     const [orderDate, setOrderDate] = useState<DateIso>(selectedDate)
     const [isOpenMainCourseDrawer, setIsOpenMainCourseDrawer] = useState(false)
     const [isOpenSideDishDrawer, setIsOpenSideDishDrawer] = useState(false)
 
     const { mutate: placeOrder } = usePlaceOrder()
-
+    const { mutate: deleteOrder } = useDeleteOrder()
     const { mutate: increaseItemQuantity } = useAddIncrementOrderItemQuantity()
     const { mutate: decreaseItemQuantity } = useDecreaseOrderItemQuantity()
 
-    const cart = selectedShiftId && selectedDate ? order[selectedShiftId]?.[selectedDate] || [] : []
+    const cart = selectedShift?.id && selectedDate ? order[selectedShift?.id]?.[selectedDate] || [] : []
     const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
 
     const handleIncreaseQuantity = (item: CartItem) => {
@@ -70,6 +80,10 @@ export const OrderDialog = () => {
 
     const timeLeft = time1.subtract(deadLine)
 
+    const handleDeleteOrder = () => deleteOrder({ path: { ...path, orderId: activeOrderId } })
+
+    if (!canScheduleOrder() && !canImmediatelyOrder()) return
+
     return (
         <>
             <DialogContent className='max-w-screen h-screen'>
@@ -83,9 +97,7 @@ export const OrderDialog = () => {
                             </span>
                             <span>
                                 Porudžbinu možete izmeniti najkasnije do&nbsp;
-                                {canScheduleOrder(shift, toDateFromDateIso(selectedDate)) && (
-                                    <span className='font-semibold'>{timeLeft.toString()}</span>
-                                )}
+                                {canScheduleOrder() && <span className='font-semibold'>{timeLeft.toString()}</span>}
                             </span>
                         </div>
                     </DialogDescription>
@@ -107,7 +119,7 @@ export const OrderDialog = () => {
                                                 return (
                                                     <div
                                                         key={item.id}
-                                                        className='flex items-center justify-between rounded-lg bg-slate-200 px-2 py-2'>
+                                                        className='flex items-center justify-between rounded-lg bg-slate-200 p-2'>
                                                         <div className='flex items-center gap-4'>
                                                             <img
                                                                 src={item.imageUrl}
@@ -166,19 +178,15 @@ export const OrderDialog = () => {
                                             .map(item => (
                                                 <div
                                                     key={item.id}
-                                                    className='flex items-center justify-between rounded-lg bg-slate-200 py-2'>
+                                                    className='flex items-center justify-between rounded-lg bg-slate-200 p-2'>
                                                     <div className='flex items-center gap-4'>
-                                                        <div>
-                                                            <h4 className='font-semibold'>{item.name}</h4>
-                                                            <p className='text-sm text-gray-600'>
-                                                                {item.price.toFixed(2)} RSD
-                                                            </p>
-                                                        </div>
                                                         <img
                                                             src={item.imageUrl}
                                                             alt={item.name}
                                                             className='h-16 w-16 rounded-lg object-cover'
                                                         />
+                                                        <h4 className='font-semibold'>{item.name}</h4>
+                                                        <p className='text-sm text-gray-600'>{item.price.toFixed(2)} RSD</p>
                                                     </div>
                                                     <div className='flex items-center gap-1'>
                                                         <Button
@@ -202,7 +210,7 @@ export const OrderDialog = () => {
                                         variant='ghost'
                                         className='justify-end'
                                         onClick={() => {
-                                            /* Handle add more side dishes */
+                                            setIsOpenSideDishDrawer(true)
                                         }}>
                                         Dodaj još dodataka
                                     </Button>
@@ -211,14 +219,20 @@ export const OrderDialog = () => {
                         </div>
                     )}
                 </div>
-                <DialogFooter>
+                <DialogFooter className='gap-4'>
                     <Button onClick={handlePlaceOrder} type='button' className='flex w-full items-center justify-between'>
                         <span>Poruči </span>
                         <span>{totalPrice.toFixed(2)} RSD</span>
                     </Button>
+                    {activeOrderId ? (
+                        <Button variant='destructive' onClick={handleDeleteOrder}>
+                            Otkaži porudžbinu
+                        </Button>
+                    ) : undefined}
                 </DialogFooter>
             </DialogContent>
             <OrderDialogMainCourseDrawer isOpen={isOpenMainCourseDrawer} onClose={() => setIsOpenMainCourseDrawer(false)} />
+            <OrderDialogSideDishDrawer isOpen={isOpenSideDishDrawer} onClose={() => setIsOpenSideDishDrawer(false)} />
         </>
     )
 }
