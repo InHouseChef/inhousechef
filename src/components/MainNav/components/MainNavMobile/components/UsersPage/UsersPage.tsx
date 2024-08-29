@@ -73,8 +73,8 @@ export const UsersPage = () => {
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value='All'>A la carte</SelectItem>
-                        <SelectItem value='true'>Ima a la carte permisiju</SelectItem>
-                        <SelectItem value='false'>Nema a la carte permisiju</SelectItem>
+                        <SelectItem value='true'>Ima a la carte dozvolu</SelectItem>
+                        <SelectItem value='false'>Nema a la carte dozvolu</SelectItem>
                     </SelectContent>
                 </Select>
 

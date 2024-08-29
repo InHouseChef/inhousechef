@@ -3,19 +3,14 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Checkbox } from '@/packages/components'
 import { nameSchema } from '@/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { boolean, object, z } from 'zod'
+import { object, z } from 'zod'
 
 const updateUserProfileSchema = object({
     fullName: nameSchema.max(100, 'Name cannot be longer than 100 characters.'),
     role: z.enum([RolesEnum.CompanyManager, RolesEnum.Employee, RolesEnum.RestaurantWorker])
-})
-
-const updateUserALaCardPermissionSchema = object({
-    aLaCard: boolean()
 })
 
 type UpdateUserProfileData = {
@@ -99,24 +94,6 @@ export const UpdateUserForm = ({ companyCode, user, onSubmit, onClose }: UpdateU
                             )}
                         />
                     </div>
-                    {/* <div className='col-span-6'>
-                        <FormField
-                            control={control}
-                            name='aLaCardPermission'
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>A la carte permisija</FormLabel>
-                                    <FormControl>
-                                        <Checkbox
-                                            checked={field.value} // Bind checked state to form value
-                                            onChange={checked => field.onChange(checked)} // Handle change
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div> */}
                 </div>
                 <div className='py-6 flex items-center justify-center gap-4'>
                     <Button variant="outline" onClick={handleOnClose}>Otkaži</Button>

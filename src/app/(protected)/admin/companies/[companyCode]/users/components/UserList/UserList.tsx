@@ -6,7 +6,7 @@ import { DataTable, Loader } from '@/components'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import Link from 'next/link'
 import { useMemo, useState, useEffect } from 'react'
-import { CheckCircle, XCircle } from 'lucide-react'
+import { CheckCircle2Icon } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 
@@ -84,9 +84,9 @@ export const UserList = ({ params }: { params: { companyCode: string } }) => {
                 cell: props => (
                     <div className='justify-left flex items-center'>
                         {props.getValue() ? (
-                            <CheckCircle className='text-green-500' size={24} />
+                            <CheckCircle2Icon  className='text-green-500' size={24} />
                         ) : (
-                            <XCircle className='text-red-500' size={24} />
+                            <CheckCircle2Icon size={24} />
                         )}
                     </div>
                 )

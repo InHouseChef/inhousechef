@@ -1,27 +1,29 @@
 import { readUsers } from '@/api/users/repository/hooks/readUsers'
 import { Loader } from '@/components'
-import { CheckCircle } from 'lucide-react'
+import { CheckCircle, CheckCircle2Icon } from 'lucide-react'
 import { DEFAULT_OFFSET_PAGINATION_REQUEST } from '@/constants'
 import { useCallback, useEffect, useState, useRef, CSSProperties } from 'react';
 import { FixedSizeList as List } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
-import { ReadUserResponse } from '@/api/users';
+import { ReadUserResponse, useUpdateUserALaCardPermission } from '@/api/users';
 
 export type UserPageTableProps = {
-    toggleRefresh: boolean // switches between true and false to trigger a refresh
+    toggleRefresh: boolean
     companyCode: string
     selectedRole: string
     selectedPermission: string
-    onEditUser: (user: ReadUserResponse) => void; // New prop for editing user
+    onEditUser: (user: ReadUserResponse) => void
 }
 
 export const UserPageTable = ({ toggleRefresh, companyCode, selectedRole, selectedPermission, onEditUser }: UserPageTableProps) => {
     const [usersData, setUsersData] = useState<ReadUserResponse[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [page, setPage] = useState(0)  // Start from page 0
+    const [page, setPage] = useState(0)
     const [hasMore, setHasMore] = useState(true)
-    const [listHeight, setListHeight] = useState(0) // Start with 0
-    const parentRef = useRef(null) // Reference to the parent container
+    const [listHeight, setListHeight] = useState(0)
+    const parentRef = useRef(null)
+
+    const { mutate: updateUserALaCardPermission } = useUpdateUserALaCardPermission();
 
     const fetchUsers = useCallback(async () => {
         setIsLoading(true)
@@ -32,18 +34,17 @@ export const UserPageTable = ({ toggleRefresh, companyCode, selectedRole, select
             const res = await readUsers({
                 path: { companyCode },
                 query: {
-                    pagination: { ...DEFAULT_OFFSET_PAGINATION_REQUEST, page }, // Using the correct page value
+                    pagination: { ...DEFAULT_OFFSET_PAGINATION_REQUEST, page },
                     filter: { role: roleFilter, aLaCardPermission: permissionFilter },
                 }
             })
 
             if (res.results && res.results.length > 0) {
-                // If page is 0, reset data, otherwise append to it
                 setUsersData(prev => page === 0 ? res.results : [...prev, ...res.results.filter((item, index, self) =>
-                    index === self.findIndex((t) => t.id === item.id))]) // Prevent duplicate data
-                setHasMore(res.results.length >= DEFAULT_OFFSET_PAGINATION_REQUEST.size); // Check if there's more data
+                    index === self.findIndex((t) => t.id === item.id))])
+                setHasMore(res.results.length >= DEFAULT_OFFSET_PAGINATION_REQUEST.size);
             } else {
-                setHasMore(false)  // No more data to load
+                setHasMore(false)
             }
         } catch (error) {
             console.error("Failed to fetch users:", error);
@@ -54,28 +55,19 @@ export const UserPageTable = ({ toggleRefresh, companyCode, selectedRole, select
     }, [selectedRole, selectedPermission, companyCode, page])
 
     useEffect(() => {
-        // Reset page and data when filters change
-        setPage(0);
-        setUsersData([]);
-        setHasMore(true); // Reset hasMore to true when filters change
-    }, [selectedRole, selectedPermission])
-
-
-    useEffect(() => {
         setPage(0);
         setUsersData([]);
         setHasMore(true);
-    }, [toggleRefresh])
+    }, [selectedRole, selectedPermission, toggleRefresh])
 
     useEffect(() => {
-        fetchUsers();  // Fetch new data whenever page changes or filters are reset
+        fetchUsers();
     }, [page, fetchUsers])
 
-    // Function to adjust the list height based on viewport height minus any fixed headers, footers, etc.
     useEffect(() => {
         const calculateHeight = () => {
             if (parentRef.current) {
-                const offset = 230; // Adjust this value based on the layout (header, filter menu, add button)
+                const offset = 230;
                 const height = window.innerHeight - offset;
                 setListHeight(height);
             }
@@ -95,6 +87,20 @@ export const UserPageTable = ({ toggleRefresh, companyCode, selectedRole, select
 
     const isItemLoaded = (index: number) => !hasMore || index < usersData.length
 
+    const handlePermissionChange = (userId: string, currentPermission: boolean) => {
+        updateUserALaCardPermission(
+            { path: { companyCode, userId }, body: { aLaCard: !currentPermission } },
+            {
+                onSuccess: (updatedUser) => {
+                    setUsersData((prevUsers) => prevUsers.map(user => user.id === updatedUser.id ? updatedUser : user))
+                },
+                onError: (error) => {
+                    console.error("Failed to update user permission:", error);
+                }
+            }
+        );
+    };
+
     const Row = ({ index, style }: {index: number, style: CSSProperties }) => {
         const user = usersData[index];
         if (!user) {
@@ -105,7 +111,7 @@ export const UserPageTable = ({ toggleRefresh, companyCode, selectedRole, select
             <div 
                 style={style} 
                 key={user.id} 
-                className="flex items-center justify-between py-4 bg-white border-b pr-4 cursor-pointer"
+                className="flex items-center justify-between py-4 bg-white border-b pr-8 cursor-pointer"
                 onClick={() => onEditUser(user)} // Handle click to edit the user
             >
                 <div className="flex flex-col">
@@ -113,9 +119,14 @@ export const UserPageTable = ({ toggleRefresh, companyCode, selectedRole, select
                     {user.role === 'Employee' && <span className="text-sm text-gray-500">Radnik</span>}
                     {user.role === 'CompanyManager' && <span className="text-sm text-gray-500">Menadžer</span>}
                 </div>
-                {user.aLaCardPermission && (
-                    <CheckCircle className='text-green-500' size={24} />
-                )}
+                <CheckCircle2Icon
+                    className={`cursor-pointer ${user.aLaCardPermission ? 'text-green-500' : 'text-gray-500'}`}
+                    size={24}
+                    onClick={(e) => {
+                        e.stopPropagation(); // Prevent triggering the row click event
+                        handlePermissionChange(user.id, user.aLaCardPermission);
+                    }}
+                />
             </div>
         )
     }
@@ -124,15 +135,15 @@ export const UserPageTable = ({ toggleRefresh, companyCode, selectedRole, select
         <div ref={parentRef} className="relative" style={{ height: `${listHeight}px`, marginBottom: '50px' }}>
             <InfiniteLoader
                 isItemLoaded={isItemLoaded}
-                itemCount={hasMore ? usersData.length + 1 : usersData.length} // Adjust itemCount if more data is expected
+                itemCount={hasMore ? usersData.length + 1 : usersData.length}
                 loadMoreItems={loadMoreItems}
             >
                 {({ onItemsRendered, ref }: {onItemsRendered: any, ref: any}) => (
                     <List
-                        height={listHeight}  // Dynamic height based on calculation
-                        itemCount={usersData.length}  // Total number of items
-                        itemSize={70}  // Height of each row in pixels
-                        width={'100%'}  // Full width of the container
+                        height={listHeight}
+                        itemCount={usersData.length}
+                        itemSize={70}
+                        width={'100%'}
                         onItemsRendered={onItemsRendered}
                         ref={ref}
                     >
