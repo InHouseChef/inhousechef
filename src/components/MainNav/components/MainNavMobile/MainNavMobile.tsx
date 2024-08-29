@@ -231,7 +231,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                 <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
                     <CloseSection close={closeDrawer} heading='7-dnevni jelovnik' />
                     <div className="flex-grow overflow-y-auto">
-                        <MenuPage dailyMenus={dailyMenus ?? []} />
+                        <MenuPage dailyMenus={dailyMenus ?? []} days={7} />
                     </div>
                 </SheetContent>
             </Sheet>
