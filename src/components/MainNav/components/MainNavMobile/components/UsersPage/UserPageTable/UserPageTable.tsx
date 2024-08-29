@@ -1,6 +1,6 @@
 import { readUsers } from '@/api/users/repository/hooks/readUsers'
 import { Loader } from '@/components'
-import { CheckCircle, CheckCircle2Icon } from 'lucide-react'
+import { CheckCircle2Icon } from 'lucide-react'
 import { DEFAULT_OFFSET_PAGINATION_REQUEST } from '@/constants'
 import { useCallback, useEffect, useState, useRef, CSSProperties } from 'react';
 import { FixedSizeList as List } from 'react-window';

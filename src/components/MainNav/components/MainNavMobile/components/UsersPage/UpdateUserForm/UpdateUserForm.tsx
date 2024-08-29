@@ -84,8 +84,8 @@ export const UpdateUserForm = ({ companyCode, user, onSubmit, onClose }: UpdateU
                                                 <SelectValue placeholder='Select role' />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value={RolesEnum.CompanyManager}>Company Manager</SelectItem>
-                                                <SelectItem value={RolesEnum.Employee}>Employee</SelectItem>
+                                                <SelectItem value={RolesEnum.CompanyManager}>Menadžer</SelectItem>
+                                                <SelectItem value={RolesEnum.Employee}>Radnik</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </FormControl>

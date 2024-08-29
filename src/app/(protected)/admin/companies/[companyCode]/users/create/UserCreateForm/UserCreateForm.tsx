@@ -137,9 +137,9 @@ export const UserCreateForm = ({ params }: { params: { companyCode: string } }) 
                                                 <SelectValue placeholder='Select role' />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value={RolesEnum.CompanyManager}>Company Manager</SelectItem>
-                                                <SelectItem value={RolesEnum.Employee}>Employee</SelectItem>
-                                                <SelectItem value={RolesEnum.RestaurantWorker}>Restaurant Worker</SelectItem>
+                                                <SelectItem value={RolesEnum.CompanyManager}>Menadžer</SelectItem>
+                                                <SelectItem value={RolesEnum.Employee}>Radnik</SelectItem>
+                                                <SelectItem value={RolesEnum.RestaurantWorker}>Restoranski radnik</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </FormControl>

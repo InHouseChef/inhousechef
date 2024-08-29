@@ -79,7 +79,7 @@ export const UsersPage = () => {
                 </Select>
 
                 <Button variant='outline' className='w-full' size={'sm'} onClick={handleResetFilters}>
-                    Reset
+                    Resetuj
                 </Button>
             </div>
 

@@ -93,11 +93,11 @@ export const UserUpdateProfileForm = ({ companyCode, userId }: UserUpdateProfile
                                                     </SelectTrigger>
                                                     <SelectContent>
                                                         <SelectItem value={RolesEnum.CompanyManager}>
-                                                            Company Manager
+                                                            Menadžer
                                                         </SelectItem>
-                                                        <SelectItem value={RolesEnum.Employee}>Employee</SelectItem>
+                                                        <SelectItem value={RolesEnum.Employee}>Radnik</SelectItem>
                                                         <SelectItem value={RolesEnum.RestaurantWorker}>
-                                                            Restaurant Worker
+                                                            Restoranski radnik
                                                         </SelectItem>
                                                     </SelectContent>
                                                 </Select>

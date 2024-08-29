@@ -210,7 +210,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                     </div>
 
                     <div className="text-lg font-medium text-center text-gray-700">
-                        Log Out
+                        Odjavi se
                     </div>
                     <ChevronRight className="ml-auto text-gray-400" />
                 </Button>
