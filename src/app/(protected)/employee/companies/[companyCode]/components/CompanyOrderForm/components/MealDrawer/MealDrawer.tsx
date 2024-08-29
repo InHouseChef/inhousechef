@@ -19,7 +19,7 @@ export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
     const { addToCart, selectedDate, selectedShiftId, setActiveOrderId } = useCartStore()
     const [quantity, setQuantity] = useState(1)
 
-    const { id, name, description, price, imageUrl } = meal
+    const { id, name, description, price, imageUrl, type } = meal
 
     const { mutate: createScheduledOrder } = useCreateScheduledOrder()
 
@@ -29,7 +29,8 @@ export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
             name,
             price,
             quantity,
-            imageUrl
+            imageUrl,
+            type
         })
         createScheduledOrder(
             {

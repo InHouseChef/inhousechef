@@ -64,6 +64,16 @@ export const formatAppDateTime = (
 export const formatDateIso = (date?: DateIso, props?: DateFormatProps) =>
     date ? formatDate(toDateFromDateIso(date), props).date : ''
 
+export const formatEuropeanDate = (date: number | string | Date) => {
+    const parts = getDateFormatterParts(date, {
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric'
+    })
+
+    return `${parts.day}.${parts.month}.${parts.year}`
+}
+
 export const formatDate = (
     date: number | string | Date = new Date(),
     props?: DateFormatProps
@@ -233,4 +243,14 @@ export const getTomorrowDateIso = (today: Date) => {
     const tomorrowDate = new Date(today)
     tomorrowDate.setDate(tomorrowDate.getDate() + 1)
     return toDateIso(tomorrowDate)
+}
+
+export const formatHoursToTime = (hours: number): string => {
+    const pad = (num: number) => String(num).padStart(2, '0')
+    return `${pad(hours)}:00:00`
+}
+
+export const timeStringToMinutes = (timeString: string): number => {
+    const [hours, minutes, seconds] = timeString.split(':').map(Number)
+    return hours * 60 + minutes + seconds / 60
 }
