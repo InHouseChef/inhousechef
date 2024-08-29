@@ -11,7 +11,7 @@ import { canScheduleOrder, sortShiftsByStartAt } from '../../../../utils'
 
 export const ShiftSelectorNav = () => {
     const path = usePathParams<CompanyPath>()
-    const { selectedShiftId, setSelectedShift } = useCartStore()
+    const { selectedShift, setSelectedShift } = useCartStore()
     const { data: shifts, isLoading } = useReadShifts()
     const { selectedDate } = useCartStore()
     const { getAppDateTime } = useAppDate()
@@ -55,11 +55,11 @@ export const ShiftSelectorNav = () => {
                                     getAppDateTime()
                                 )
                             }
-                            onClick={() => setSelectedShift(id)}
+                            onClick={() => setSelectedShift({ ...rest, shiftStartAt, shiftEndAt, id })}
                             // TODO: make shifts take full width
                             className={clsx('relative flex-1', {
-                                'bg-primary hover:text-secondary': selectedShiftId === id,
-                                'bg-gray-300 text-black': selectedShiftId !== id,
+                                'bg-primary hover:text-secondary': selectedShift?.id === id,
+                                'bg-gray-300 text-black': selectedShift?.id !== id,
                                 'cursor-not-allowed': !canScheduleOrder(
                                     {
                                         ...rest,

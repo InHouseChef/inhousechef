@@ -25,17 +25,8 @@ const getFirstAndLastDayOfMonth = (date: Date) => {
 
 export const CompanyOrderForm = () => {
     const cart = useCartStore()
-    const {
-        selectedDate,
-        setSelectedDate,
-        selectedShiftId,
-
-        setSelectedShift,
-        addToCart,
-        resetCart,
-        setActiveOrderId,
-        selectedMealType
-    } = cart
+    const { selectedDate, setSelectedDate, setSelectedShift, addToCart, resetCart, setActiveOrderId, selectedMealType } =
+        cart
     const { getAppDate, getAppDateTime } = useAppDate()
     const today = getAppDate()
     const tomorrow = getTomorrowDateIso(toDateFromDateIso(today))
@@ -65,10 +56,11 @@ export const CompanyOrderForm = () => {
 
         myOrder.forEach(order => {
             const { id, orderDate, orderedForShiftId, orderItems } = order
+            const orderShift = shifts?.find(({ id }) => id === orderedForShiftId)
 
             resetCart()
             setActiveOrderId(id)
-            setSelectedShift(orderedForShiftId)
+            setSelectedShift(orderShift)
             setSelectedDate(orderDate)
             orderItems.forEach(({ skuId, name, quantity, price, imageUrl, type }) => {
                 addToCart({

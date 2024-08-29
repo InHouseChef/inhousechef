@@ -16,7 +16,7 @@ interface MealDrawerProps {
 
 export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
     const path = usePathParams<CompanyPath>()
-    const { addToCart, selectedDate, selectedShiftId, setActiveOrderId } = useCartStore()
+    const { addToCart, selectedDate, selectedShift, setActiveOrderId } = useCartStore()
     const [quantity, setQuantity] = useState(1)
 
     const { id, name, description, price, imageUrl, type } = meal
@@ -36,7 +36,7 @@ export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
             {
                 path,
                 body: {
-                    shiftId: selectedShiftId,
+                    shiftId: selectedShift?.id || '',
                     orderDate: selectedDate,
                     meals: [
                         {
