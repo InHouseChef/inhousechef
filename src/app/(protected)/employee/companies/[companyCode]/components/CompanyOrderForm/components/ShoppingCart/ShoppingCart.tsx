@@ -11,7 +11,7 @@ interface ShoppingCartProps {
 }
 
 const ShoppingCart = ({ shiftId, selectedDate }: ShoppingCartProps) => {
-    const { order, removeFromCart, clearCart, addToCart } = useCartStore()
+    const { order, removeFromCart, resetCart, addToCart } = useCartStore()
     const cart = order[shiftId]?.[selectedDate] || []
     const { getFormattedAppDate } = useAppDate()
     const today = getFormattedAppDate()
@@ -109,7 +109,7 @@ const ShoppingCart = ({ shiftId, selectedDate }: ShoppingCartProps) => {
                 {cart.length > 0 && (
                     <div className='mt-6 space-y-4'>
                         <button
-                            onClick={clearCart}
+                            onClick={resetCart}
                             className='flex w-full items-center justify-center rounded-lg border border-red-500 px-4 py-2 text-red-500 hover:bg-red-50'
                             data-testid='cart-delete-button'>
                             <Trash className='mr-2 h-4 w-4' /> Obriši
