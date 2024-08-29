@@ -8,12 +8,14 @@ import InfiniteLoader from 'react-window-infinite-loader';
 import { ReadUserResponse } from '@/api/users';
 
 export type UserPageTableProps = {
+    toggleRefresh: boolean // switches between true and false to trigger a refresh
     companyCode: string
     selectedRole: string
     selectedPermission: string
+    onEditUser: (user: ReadUserResponse) => void; // New prop for editing user
 }
 
-export const UserPageTable = ({ companyCode, selectedRole, selectedPermission }: UserPageTableProps) => {
+export const UserPageTable = ({ toggleRefresh, companyCode, selectedRole, selectedPermission, onEditUser }: UserPageTableProps) => {
     const [usersData, setUsersData] = useState<ReadUserResponse[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [page, setPage] = useState(0)  // Start from page 0
@@ -58,6 +60,13 @@ export const UserPageTable = ({ companyCode, selectedRole, selectedPermission }:
         setHasMore(true); // Reset hasMore to true when filters change
     }, [selectedRole, selectedPermission])
 
+
+    useEffect(() => {
+        setPage(0);
+        setUsersData([]);
+        setHasMore(true);
+    }, [toggleRefresh])
+
     useEffect(() => {
         fetchUsers();  // Fetch new data whenever page changes or filters are reset
     }, [page, fetchUsers])
@@ -93,7 +102,12 @@ export const UserPageTable = ({ companyCode, selectedRole, selectedPermission }:
         }
 
         return (
-            <div style={style} key={user.id} className="flex items-center justify-between py-4 bg-white border-b">
+            <div 
+                style={style} 
+                key={user.id} 
+                className="flex items-center justify-between py-4 bg-white border-b pr-4 cursor-pointer"
+                onClick={() => onEditUser(user)} // Handle click to edit the user
+            >
                 <div className="flex flex-col">
                     <span className="text-lg font-semibold">{user.fullName}</span>
                     {user.role === 'Employee' && <span className="text-sm text-gray-500">Radnik</span>}

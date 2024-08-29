@@ -1,17 +1,23 @@
 'use client'
 
-import { RolesEnum } from '@/api/users'
+import { ReadUserResponse, RolesEnum, useUpdateUserALaCardPermission } from '@/api/users'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
-import { useParams } from 'next/navigation'
 import { UserPageTable } from './UserPageTable/UserPageTable'
+import { UserPageUserDrawer } from './UserPageUserDrawer/UserPageUserDrawer'
+import { usePathParams } from '@/hooks'
 
 export const UsersPage = () => {
-    const { companyCode } = useParams()
+    const { companyCode } = usePathParams<{ companyCode: string }>()
 
     const [selectedRole, setSelectedRole] = useState<string>('All')
     const [selectedPermission, setSelectedPermission] = useState<string>('All')
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+    const [selectedUser, setSelectedUser] = useState<ReadUserResponse|null>(null)
+    const [tableRefreshToggle, setTableRefreshToggle] = useState(false)
+
+    const { mutate: updateUserALaCardPermission } = useUpdateUserALaCardPermission()
 
     const handleResetFilters = () => {
         setSelectedRole('All')
@@ -24,6 +30,27 @@ export const UsersPage = () => {
 
     const handlePermissionChange = (permission: string) => {
         setSelectedPermission(permission)
+    }
+
+    const handleStartNewUserForm = () => {
+        setSelectedUser(null) // No user selected, indicating a new user will be added
+        setIsDrawerOpen(true)
+    }
+
+    const handleStartEditUserForm = (user: ReadUserResponse) => {
+        setSelectedUser(user)
+        setIsDrawerOpen(true)
+    }
+
+    const handleDrawerClose = () => {
+        setIsDrawerOpen(false)
+        setSelectedUser(null)
+    }
+
+    const submitSaveUser = () => {
+        setIsDrawerOpen(false)
+        setSelectedUser(null)
+        setTableRefreshToggle(!tableRefreshToggle)
     }
 
     return (
@@ -57,16 +84,26 @@ export const UsersPage = () => {
             </div>
 
             <UserPageTable 
+                toggleRefresh={tableRefreshToggle}
                 companyCode={companyCode} 
                 selectedRole={selectedRole} 
                 selectedPermission={selectedPermission} 
+                onEditUser={handleStartEditUserForm} // Pass the edit handler
             />
 
             <div className="fixed bottom-0 left-0 right-0 p-4 bg-white drop-shadow-lg">
-                <Button className="w-full" variant="default">
+                <Button className="w-full" variant="default" onClick={handleStartNewUserForm}>
                     Dodaj novog korisnika
                 </Button>
             </div>
+
+            <UserPageUserDrawer 
+                companyCode={companyCode}
+                isOpen={isDrawerOpen} 
+                user={selectedUser} 
+                key={selectedUser?.id} 
+                onSave={submitSaveUser}
+                onClose={handleDrawerClose} />
         </div>
     )
 }
