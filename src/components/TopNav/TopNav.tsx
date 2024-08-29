@@ -33,6 +33,8 @@ export const TopNav = () => {
                     {/* <TopNavLogout /> */}
                     <TopNavHamburger isNavOpen={isOpen} onToggle={handleToggle} />
                 </div>
+
+                <TopNavHamburger isNavOpen={isOpen} onToggle={handleToggle} />
             </div>
             <MainNavMobile isNavOpen={isOpen} onOverlayClick={handleClose} />
         </>

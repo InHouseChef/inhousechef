@@ -1,3 +1,4 @@
+import { MealType } from '@/api/meals'
 import { DateIso } from '@/types'
 
 export interface DailyMenuMeal {
@@ -5,8 +6,7 @@ export interface DailyMenuMeal {
     name: string
     description: string
     price: number
-    // TODO: check type
-    type: string
+    type: MealType
     imageUrl: string
 }
 

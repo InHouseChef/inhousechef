@@ -3,14 +3,16 @@ interface Meal {
     description: string
     purchasePrice: number
     sellingPrice: number
-    type: MealType
+    type: MealTypeEnum
     imageUrl?: string
 }
 
-export enum MealType {
+export enum MealTypeEnum {
     MainCourse = 'MainCourse',
     SideDish = 'SideDish'
 }
+
+export type MealType = 'MainCourse' | 'SideDish'
 
 export interface ReadMealResponse extends Meal {
     id: string
