@@ -16,6 +16,8 @@ import { MainNavLink } from '../../types'
 import { UsersPage } from './components/UsersPage/UsersPage'
 import { TermsAndConditionsPage } from './components/TermsAndConditionsPage/TermsAndConditionsPage'
 import { useReadMyOrders } from '@/api/order/repository/hooks/readMyOrder'
+import { RequireCompanyAuthorization } from '@/components/RequireAuthorization/RequireAuthorization'
+import { useRoles } from '@/providers/RoleProvider/RoleProvider'
 
 interface MainNavMobileProps {
     isNavOpen: boolean
@@ -81,6 +83,7 @@ export const CloseSection = ({ close, heading }: CloseSectionProps) => {
 
 export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps) => {
     const logout = useLogout()
+    const { roles } = useRoles()
     const { from: sevenDayMenuFrom, to: sevenDayMenuTo } = calculateDateRange(new Date().toISOString(), 7)
     const {from, to} = calculateDateRange(new Date().toISOString(), -7)
     const { data: dailyMenus } = useReadDailyMenus({
@@ -161,27 +164,41 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                                 ))}
                             </ul>
                             <ul>
-                                {USER_RELATED_LINKS.map(({ path, label, icon }, index) => (
+                                <li
+                                    className={clsx("flex items-center bg-gray-100 py-6 px-4 gap-4 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all rounded-t-lg", { '': roles.CompanyManager === true, 'rounded-b-lg': roles.CompanyManager === false })}
+                                    onClick={() => openDrawer('profile')}
+                                    key={'profile'}
+                                >
+                                    <div className="flex items-center justify-center h-10 w-10 bg-gray-50 rounded-full">
+                                        {/* Replace with your icon component */}
+                                        {<UserProfileIcon />}
+                                    </div>
+                                    <span className="text-lg font-medium text-gray-700">
+                                        {'Moj profil'}
+                                    </span>
+                                    <ChevronRight className="ml-auto text-gray-400" />
+                                </li>
+                                <RequireCompanyAuthorization role="CompanyManager">
                                     <li
-                                        className={clsx("flex items-center bg-gray-100 py-6 px-4 gap-4 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all", { 'rounded-t-lg': index === 0, 'rounded-b-lg': index === USER_RELATED_LINKS.length - 1 })}
-                                        onClick={() => openDrawer(path)}
-                                        key={path}
+                                        className={clsx("flex items-center bg-gray-100 py-6 px-4 gap-4 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all rounded-b-lg")}
+                                        onClick={() => openDrawer('users')}
+                                        key={'users'}
                                     >
                                         <div className="flex items-center justify-center h-10 w-10 bg-gray-50 rounded-full">
                                             {/* Replace with your icon component */}
-                                            {icon}
+                                            {<UserGroupIcon />}
                                         </div>
                                         <span className="text-lg font-medium text-gray-700">
-                                            {label}
+                                            {'Upravljanje korisnicima'}
                                         </span>
                                         <ChevronRight className="ml-auto text-gray-400" />
                                     </li>
-                                ))}
+                                </RequireCompanyAuthorization>
                             </ul>
                             <ul>
                                 {TERMS_AND_CONDITIONS.map(({ path, label, icon }, index) => (
                                     <li
-                                        className={clsx("flex bg-gray-100 py-6 px-4 mt-4 items-center gap-4 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all", { 'rounded-t-lg': index === 0, 'rounded-b-lg': index === TERMS_AND_CONDITIONS.length - 1 })}
+                                        className={clsx("flex bg-gray-100 py-6 px-4 items-center gap-4 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all", { 'rounded-t-lg': index === 0, 'rounded-b-lg': index === TERMS_AND_CONDITIONS.length - 1 })}
                                         onClick={() => openDrawer(path)}
                                         key={path}
                                     >
