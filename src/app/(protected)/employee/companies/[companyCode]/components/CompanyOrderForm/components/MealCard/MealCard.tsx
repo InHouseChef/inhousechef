@@ -4,7 +4,7 @@ import { useCartStore } from '../../../../state'
 
 interface MealCardProps extends DailyMenuMeal {
     onClick: () => void
-    small: boolean
+    small?: boolean
 }
 
 export const MealCard = ({ id, name, description, price, imageUrl, onClick, small }: MealCardProps) => {

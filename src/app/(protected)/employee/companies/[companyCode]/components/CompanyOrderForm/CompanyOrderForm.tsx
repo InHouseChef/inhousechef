@@ -4,7 +4,6 @@ import { useReadMyOrder } from '@/api/order'
 import { useReadShifts } from '@/api/shifts'
 import { useReadMyUser } from '@/api/users'
 import { Loader } from '@/components'
-import { Overlay } from '@/components/Overlay/Overlay'
 import { DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST } from '@/constants'
 import { useAppDate } from '@/hooks'
 import { getTomorrowDateIso, toDateFromDateIso, toDateIso } from '@/utils/date'
@@ -30,6 +29,7 @@ export const CompanyOrderForm = () => {
         selectedDate,
         setSelectedDate,
         selectedShiftId,
+
         setSelectedShift,
         addToCart,
         resetCart,
@@ -70,13 +70,14 @@ export const CompanyOrderForm = () => {
             setActiveOrderId(id)
             setSelectedShift(orderedForShiftId)
             setSelectedDate(orderDate)
-            orderItems.forEach(({ skuId, name, quantity, price, imageUrl }) => {
+            orderItems.forEach(({ skuId, name, quantity, price, imageUrl, type }) => {
                 addToCart({
                     id: skuId,
                     name: name,
                     quantity: quantity,
                     price: price,
-                    imageUrl: imageUrl
+                    imageUrl: imageUrl,
+                    type: type
                 })
             })
         })
@@ -140,13 +141,13 @@ export const CompanyOrderForm = () => {
             <DaySelectorNav />
             <div>
                 {/* TODO: check out overlay */}
-                {!shiftsAvailable && (
+                {/* {!shiftsAvailable && (
                     <Overlay
                         message='
                 Nema dostupnih smena za poručivanje. Molimo pokušajte kasnije.
             '
                     />
-                )}
+                )} */}
                 <div className='mt-4'></div>
                 <ShiftSelectorNav />
                 <div className='mt-2'></div>

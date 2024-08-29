@@ -56,7 +56,7 @@ export const ShiftSelectorNav = () => {
                                 )
                             }
                             onClick={() => setSelectedShift(id)}
-                            className={clsx('relative', {
+                            className={clsx('relative flex-1', {
                                 'bg-primary hover:text-secondary': selectedShiftId === id,
                                 'bg-gray-300 text-black': selectedShiftId !== id,
                                 'cursor-not-allowed': !canScheduleOrder(

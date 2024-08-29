@@ -1,3 +1,4 @@
+import { MealType } from '@/api/meals'
 import { DateIso, DateTimeIsoUtc, OrderState, OrderType } from '@/types'
 
 interface Order {
@@ -23,6 +24,7 @@ interface OrderDetails {
         productionPrice: number
         quantity: number
         imageUrl: string
+        type: MealType
     }[]
     placedAt?: DateTimeIsoUtc
     confirmedAt?: DateTimeIsoUtc
