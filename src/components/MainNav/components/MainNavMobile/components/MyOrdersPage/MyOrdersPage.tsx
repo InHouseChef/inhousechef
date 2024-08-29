@@ -153,14 +153,14 @@ export const MyOrdersPage = ({ activeOrders, orderHistory }: MyOrdersPageProps )
                                     </div>
                                 </div>
                             </div>
-                            <div className="mt-4 flex justify-between items-center">
+                            {/* <div className="mt-4 flex justify-between items-center">
                                 <button onClick={() => console.log('Rate Order')} className="border border-primary text-primary px-4 py-2 rounded">
                                     Oceni
                                 </button>
                                 <button onClick={() => console.log('Reorder')} className="bg-primary text-white px-4 py-2 rounded">
                                     Naruči ponovo
                                 </button>
-                            </div>
+                            </div> */}
                         </div>
                     );
                 })}

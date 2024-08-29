@@ -4,6 +4,7 @@ import { ReactNode } from 'react'
 import { COMPANY_LINKS } from './constants'
 import { useParams } from 'next/navigation'
 import { MainTopNav } from '@/components/MainNav'
+import { MainNavLink } from '@/components/MainNav/types'
 
 interface LayoutProps {
     children: ReactNode
@@ -11,7 +12,7 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
     const { companyCode } = useParams()
-    const links = COMPANY_LINKS.map(({ path, label }) => ({ path: `/admin/companies/${companyCode}${path}`, label }))
+    const links = COMPANY_LINKS.map(({ path, label }) => ({ path: `/admin/companies/${companyCode}${path}`, label })) as MainNavLink[]
 
     return (
         <>

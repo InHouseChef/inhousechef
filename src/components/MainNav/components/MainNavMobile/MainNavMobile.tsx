@@ -221,7 +221,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
             <Sheet open={activeDrawer === 'my-orders'} onOpenChange={closeDrawer}>
                 <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
                     <CloseSection close={closeDrawer} heading='Moje porudžbine' />
-                    <div className="flex-grow overflow-y-auto">
+                    <div className="flex-grow overflow-y-auto p-1">
                         <MyOrdersPage activeOrders={activeOrders ?? []} orderHistory={orderHistory ?? []} />
                     </div>
                 </SheetContent>
@@ -230,7 +230,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
             <Sheet open={activeDrawer === 'menu'} onOpenChange={closeDrawer}>
                 <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
                     <CloseSection close={closeDrawer} heading='7-dnevni jelovnik' />
-                    <div className="flex-grow overflow-y-auto">
+                    <div className="flex-grow overflow-y-auto p-1">
                         <MenuPage dailyMenus={dailyMenus ?? []} days={7} />
                     </div>
                 </SheetContent>
@@ -239,8 +239,8 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
             <Sheet open={activeDrawer === 'users'} onOpenChange={closeDrawer}>
                 <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
                     <CloseSection close={closeDrawer} heading='Upravljanje korisnicima' />
-                    <div className="flex-grow overflow-y-auto">
-                        <UsersPage users={[]} />
+                    <div className="flex-grow overflow-y-hidden p-1">
+                        <UsersPage />
                     </div>
                 </SheetContent>
             </Sheet>
@@ -248,7 +248,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
             <Sheet open={activeDrawer === 'privacy-policy'} onOpenChange={closeDrawer}>
                 <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
                     <CloseSection close={closeDrawer} heading='Uslovi korišćenja' />
-                    <div className="flex-grow overflow-y-auto">
+                    <div className="flex-grow overflow-y-auto p-1">
                         <TermsAndConditionsPage />
                     </div>
                 </SheetContent>
