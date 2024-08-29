@@ -56,6 +56,7 @@ export const ShiftSelectorNav = () => {
                                 )
                             }
                             onClick={() => setSelectedShift(id)}
+                            // TODO: make shifts take full width
                             className={clsx('relative flex-1', {
                                 'bg-primary hover:text-secondary': selectedShiftId === id,
                                 'bg-gray-300 text-black': selectedShiftId !== id,

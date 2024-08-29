@@ -22,7 +22,7 @@ export const useLogout = () => {
         return safeReplace(`${baseUrl}/login`)
     }
 
-    // TODO: clear cart state
+    // TODO: check clear cart state
 
     return () => {
         mutate(undefined, {
