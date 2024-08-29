@@ -1,0 +1,6 @@
+export { CartIcon } from './CartIcon/CartIcon'
+export { MenuIcon } from './MenuIcon/MenuIcon'
+export { UserProfileIcon } from './UserProfileIcon/UserProfileIcon'
+export { TermsAndConditionsIcon } from './TermsAndConditionsIcon/TermsAndConditionsIcon'
+export { UserGroupIcon } from './UserGroupIcon/UserGroupIcon'
+export { LogoutIcon } from './LogoutIcon/LogoutIcon'
