@@ -1,5 +1,3 @@
-import { UsersIcon } from 'lucide-react'
-import { MenuIcon, ProfileIcon, UserGroupIcon } from '../components/MainNavMobile/MainNavMobile'
 import { MainNavLink } from '../types'
 
 export const LINKS: MainNavLink[] = [

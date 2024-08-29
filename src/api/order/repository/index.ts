@@ -4,7 +4,7 @@ export { useDecreaseOrderItemQuantity } from './hooks/decreaseOrderItemQuantity'
 export { useDeleteOrder } from './hooks/deleteOrder'
 export { useAddIncrementOrderItemQuantity } from './hooks/incrementOrderItemQuantity'
 export { usePlaceOrder } from './hooks/placeOrder'
-export { useReadMyOrder } from './hooks/readMyOrder'
+export { useReadMyOrders as useReadMyOrder } from './hooks/readMyOrder'
 export { useReadOrders } from './hooks/readOrders'
 export { useReadOrderSummary } from './hooks/readOrderSummary'
 

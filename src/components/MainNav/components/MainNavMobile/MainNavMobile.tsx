@@ -1,383 +1,45 @@
 'use client'
 
-import { DailyMenuMeal, ReadDailyMenuResponse, useReadDailyMenus } from '@/api/daily-menus'
-import { MealTypeEnum } from '@/api/meals'
-import { MealCard } from '@/app/(protected)/employee/companies/[companyCode]/components/CompanyOrderForm/components/MealCard/MealCard'
-import { calculateDateRange } from '@/app/(protected)/employee/companies/[companyCode]/utils'
-import { Button } from '@/components/ui/button'
-import { Sheet, SheetClose, SheetContent, SheetFooter, SheetTrigger } from '@/components/ui/sheet'
-import { useLogout } from '@/hooks'
-import { ChevronRight } from '@/packages/icons'
-import { formatDateSerbianLatin } from '@/utils/date'
-import clsx from 'clsx'
-import { ChevronLeft, UsersIcon } from 'lucide-react'
 import { useState } from 'react'
+import { Sheet, SheetContent, SheetFooter, SheetTrigger, SheetClose } from '@/components/ui/sheet'
+import { useLogout } from '@/hooks'
+import clsx from 'clsx'
+import { Button } from '@/components/ui/button'
+import { ChevronLeft } from 'lucide-react'
+import { ChevronRight } from '@/packages/icons'
+import { useReadDailyMenus } from '@/api/daily-menus'
+import { calculateDateRange } from '@/app/(protected)/employee/companies/[companyCode]/utils'
+import { MenuPage } from './components/MenuPage/MenuPage'
+import { MyOrdersPage } from './components/MyOrdersPage/MyOrdersPage'
+import { CartIcon, LogoutIcon, MenuIcon, TermsAndConditionsIcon, UserGroupIcon, UserProfileIcon } from './icons'
 import { MainNavLink } from '../../types'
+import { UsersPage } from './components/UsersPage/UsersPage'
+import { TermsAndConditionsPage } from './components/TermsAndConditionsPage/TermsAndConditionsPage'
+import { useReadMyOrders } from '@/api/order/repository/hooks/readMyOrder'
 
 interface MainNavMobileProps {
     isNavOpen: boolean
     onOverlayClick: VoidFunction
 }
 
-const sampleMeals = [
-    {
-        id: '1',
-        name: 'Grilled Chicken with Vegetables',
-        description: 'Tender grilled chicken served with seasonal vegetables.',
-        price: 10.99,
-        type: 'Main Course',
-        imageUrl: '/images/chicken.jpg'
-    },
-    {
-        id: '2',
-        name: 'Beef Steak with Mashed Potatoes',
-        description: 'Juicy beef steak with creamy mashed potatoes.',
-        price: 15.99,
-        type: 'Main Course',
-        imageUrl: '/images/steak.jpg'
-    },
-    {
-        id: '3',
-        name: 'Vegetarian Pasta',
-        description: 'Pasta with fresh tomatoes, basil, and olive oil.',
-        price: 8.99,
-        type: 'Main Course',
-        imageUrl: '/images/pasta.jpg'
-    }
-]
-
-const sampleOrders = {
-    ongoing: [
-        {
-            id: '1',
-            orderNumber: '123456',
-            name: 'Grilled Chicken with Vegetables',
-            description: 'Tender grilled chicken served with seasonal vegetables.',
-            price: 10.99,
-            type: 'Main Course',
-            imageUrl: '/images/chicken.jpg',
-            date: '2021-10-10',
-            status: 'In Progress'
-        },
-        {
-            id: '2',
-            orderNumber: '123456',
-            name: 'Beef Steak with Mashed Potatoes',
-            description: 'Juicy beef steak with creamy mashed potatoes.',
-            price: 15.99,
-            type: 'Main Course',
-            imageUrl: '/images/steak.jpg',
-            date: '2021-10-10',
-            status: 'In Progress'
-        },
-        {
-            id: '3',
-            orderNumber: '123456',
-            name: 'Vegetarian Pasta',
-            description: 'Pasta with fresh tomatoes, basil, and olive oil.',
-            price: 8.99,
-            type: 'Main Course',
-            imageUrl: '/images/pasta.jpg',
-            date: '2021-10-10',
-            status: 'In Progress'
-        }
-    ],
-    history: [
-        {
-            id: '1',
-            orderNumber: '123456',
-            name: 'Grilled Chicken with Vegetables',
-            description: 'Tender grilled chicken served with seasonal vegetables.',
-            price: 10.99,
-            type: 'Main Course',
-            imageUrl: '/images/chicken.jpg',
-            date: '2021-10-10',
-            status: 'Completed'
-        },
-        {
-            id: '2',
-            orderNumber: '123456',
-            name: 'Beef Steak with Mashed Potatoes',
-            description: 'Juicy beef steak with creamy mashed potatoes.',
-            price: 15.99,
-            type: 'Main Course',
-            imageUrl: '/images/steak.jpg',
-            date: '2021-10-10',
-            status: 'Completed'
-        },
-        {
-            id: '3',
-            orderNumber: '123456',
-            name: 'Vegetarian Pasta',
-            description: 'Pasta with fresh tomatoes, basil, and olive oil.',
-            price: 8.99,
-            type: 'Main Course',
-            imageUrl: '/images/pasta.jpg',
-            date: '2021-10-10',
-            status: 'Completed'
-        }
-    ]
-}
-
-const OrderPage = () => {
-    const [activeTab, setActiveTab] = useState('ongoing')
-
-    return (
-        <div>
-            {/* Tabs */}
-            <div className='mt-4 flex justify-around border-b border-gray-300'>
-                <button
-                    onClick={() => setActiveTab('ongoing')}
-                    className={`w-1/2 py-2 text-center ${activeTab === 'ongoing' ? 'border-b-2 border-primary font-semibold text-primary' : 'text-gray-500'}`}>
-                    Ongoing
-                </button>
-                <button
-                    onClick={() => setActiveTab('history')}
-                    className={`w-1/2 py-2 text-center ${activeTab === 'history' ? 'border-b-2 border-primary font-semibold text-primary' : 'text-gray-500'}`}>
-                    History
-                </button>
-            </div>
-
-            {/* Content */}
-            <div className='mt-6'>
-                {activeTab === 'ongoing' && (
-                    <div>
-                        {sampleOrders.ongoing.map(order => (
-                            <div key={order.id} className='mb-4 rounded-lg bg-white p-4 shadow'>
-                                <div className='flex items-center justify-between'>
-                                    <div className='flex items-center'>
-                                        <img
-                                            src={order.imageUrl}
-                                            alt={order.name}
-                                            className='mr-4 h-12 w-12 rounded-md object-cover'
-                                        />
-                                        <div>
-                                            <p className='font-semibold'>{order.name}</p>
-                                            <p className='text-gray-500'>
-                                                {order.price} | {order.type}
-                                            </p>
-                                            <p className='text-sm text-gray-500'>{order.description}</p>
-                                        </div>
-                                    </div>
-                                    <p className='text-sm text-gray-500'>{order.orderNumber}</p>
-                                </div>
-                                <div className='mt-4 flex items-center justify-between'>
-                                    <button className='rounded bg-primary px-4 py-2 text-white'>Track Order</button>
-                                    <button className='rounded border border-primary px-4 py-2 text-primary'>Cancel</button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-
-                {activeTab === 'history' && (
-                    <div>
-                        {sampleOrders.history.map(order => (
-                            <div key={order.id} className='mb-4 rounded-lg bg-white p-4 shadow'>
-                                <div className='flex items-center justify-between'>
-                                    <div className='flex items-center'>
-                                        <img
-                                            src={order.imageUrl}
-                                            alt={order.name}
-                                            className='mr-4 h-12 w-12 rounded-md object-cover'
-                                        />
-                                        <div>
-                                            <p className='font-semibold'>{order.name}</p>
-                                            <p className='text-gray-500'>
-                                                {order.price} | {order.type}
-                                            </p>
-                                            <p className='text-sm text-gray-500'>{order.description}</p>
-                                            <p className='text-sm text-gray-500'>{order.date}</p>
-                                        </div>
-                                    </div>
-                                    <p
-                                        className={`text-sm font-semibold ${order.status === 'Completed' ? 'text-green-500' : order.status === 'Canceled' ? 'text-red-500' : ''}`}>
-                                        {order.status}
-                                    </p>
-                                </div>
-                                <div className='mt-4 flex items-center justify-between'>
-                                    <button className='rounded border border-primary px-4 py-2 text-primary'>Rate</button>
-                                    <button className='rounded bg-primary px-4 py-2 text-white'>Re-Order</button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
-        </div>
-    )
-}
-
-export const MenuPage = ({ dailyMenus }: { dailyMenus: ReadDailyMenuResponse[] }) => (
-    <div className='mx-4 mt-4'>
-        {dailyMenus.map((dailyMenu: ReadDailyMenuResponse) => (
-            <div key={dailyMenu.date} className='mb-6'>
-                <h2 className='text-xl font-semibold'>{formatDateSerbianLatin(new Date(dailyMenu.date))}</h2>
-                <div className='mt-4 grid grid-cols-1 gap-6'>
-                    {dailyMenu.meals
-                        .filter(meal => meal.type === MealTypeEnum.MainCourse)
-                        .map((meal: DailyMenuMeal) => (
-                            <MealCard
-                                key={meal.id}
-                                id={meal.id}
-                                name={meal.name}
-                                price={meal.price}
-                                imageUrl={meal.imageUrl}
-                                small={true}
-                            />
-                        ))}
-                </div>
-            </div>
-        ))}
-    </div>
-)
-
-const sampleUsers = [
-    { id: '1', name: 'John Doe', username: 'johndoe' },
-    { id: '2', name: 'Jane Smith', username: 'janesmith' },
-    { id: '3', name: 'Mike Johnson', username: 'mikejohnson' }
-]
-
-export const UsersPage = () => (
-    <div className='mx-4 mt-4'>
-        <table className='min-w-full border-collapse'>
-            <thead>
-                <tr>
-                    <th className='border-b-2 border-gray-300 px-4 py-2 text-left text-sm font-semibold text-gray-700'>
-                        Name
-                    </th>
-                    <th className='border-b-2 border-gray-300 px-4 py-2 text-left text-sm font-semibold text-gray-700'>
-                        Username
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                {sampleUsers.map(user => (
-                    <tr key={user.id}>
-                        <td className='border-b border-gray-200 px-4 py-2 text-sm text-gray-700'>{user.name}</td>
-                        <td className='border-b border-gray-200 px-4 py-2 text-sm text-gray-700'>{user.username}</td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
-    </div>
-)
-
-export interface CloseSectionProps {
-    close: () => void
-    heading: string
-}
-
-export const CloseSection = ({ close, heading }: CloseSectionProps) => {
-    return (
-        <SheetClose asChild>
-            <button onClick={close} className='mb-4 text-right text-black'>
-                <div className='flex-start flex gap-4'>
-                    <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-200'>
-                        <ChevronLeft className='h-5 w-5' />
-                    </div>
-                    <div className='flex items-center justify-center'>
-                        <p className='text-xl font-semibold'>{heading}</p>
-                    </div>
-                </div>
-            </button>
-        </SheetClose>
-    )
-}
-
-export const LogoutIcon = () => {
-    return (
-        <svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40' fill='none'>
-            <circle cx='20' cy='20' r='20' fill='white' />
-            <path
-                d='M23.0041 16.4947V15.7886C23.0041 14.2486 21.7907 13 20.2942 13H16.7092C15.2134 13 14 14.2486 14 15.7886V24.2114C14 25.7514 15.2134 27 16.7092 27H20.3016C21.7937 27 23.0041 25.7551 23.0041 24.2197V23.5061'
-                stroke='#7c3aed'
-                stroke-width='1.5'
-                stroke-linecap='round'
-                stroke-linejoin='round'
-            />
-            <path
-                d='M27.0004 20H18.1455'
-                stroke='#7c3aed'
-                stroke-width='1.5'
-                stroke-linecap='round'
-                stroke-linejoin='round'
-            />
-            <path
-                d='M24.8467 17.7939L26.9999 19.9999L24.8467 22.2066'
-                stroke='#7c3aed'
-                stroke-width='1.5'
-                stroke-linecap='round'
-                stroke-linejoin='round'
-            />
-        </svg>
-    )
-}
-
-export const ProfileIcon = () => {
-    return (
-        <svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40' fill='none'>
-            <circle cx='20' cy='20' r='19.5' fill='white' stroke='white' />
-            <path
-                d='M26 27V25.3333C26 24.4493 25.6839 23.6014 25.1213 22.9763C24.5587 22.3512 23.7956 22 23 22H17C16.2044 22 15.4413 22.3512 14.8787 22.9763C14.3161 23.6014 14 24.4493 14 25.3333V27'
-                stroke='#7c3aed'
-                stroke-width='1.6'
-                stroke-linecap='round'
-                stroke-linejoin='round'
-            />
-            <path
-                d='M20 19C21.6569 19 23 17.6569 23 16C23 14.3431 21.6569 13 20 13C18.3431 13 17 14.3431 17 16C17 17.6569 18.3431 19 20 19Z'
-                stroke='#7c3aed'
-                stroke-width='1.6'
-                stroke-linecap='round'
-                stroke-linejoin='round'
-            />
-        </svg>
-    )
-}
-
-export const MenuIcon = () => {
-    return (
-        <svg xmlns='http://www.w3.org/2000/svg' width='25' height='25' fill='none' viewBox='0 0 96 96'>
-            <path
-                stroke='#7c3aed'
-                stroke-width='4'
-                d='M21 28C21 24.6863 23.6863 22 27 22H69C72.3137 22 75 24.6863 75 28V80C75 83.3137 72.3137 86 69 86H27C23.6863 86 21 83.3137 21 80V28Z'></path>
-            <path
-                stroke='#7c3aed'
-                stroke-width='4'
-                d='M21 74V27.2656C21 24.7117 22.6167 22.4377 25.0289 21.5987L59.0289 9.77257C62.9279 8.41638 67 11.3114 67 15.4395V21.5'></path>
-            <path
-                stroke='#7c3aed'
-                stroke-linecap='round'
-                stroke-width='4'
-                d='M48 37C40.6043 37 34.548 42.7346 34.0352 49.9999 33.9963 50.5508 34.4477 51 35 51L61 51C61.5523 51 62.0037 50.5508 61.9648 49.9999 61.452 42.7347 55.3957 37 48 37zM48 33L48 35M31 51H65M32 64H54M32 72H48M56 72H65'></path>
-        </svg>
-    )
-}
-
-export const UserGroupIcon = () => {
-    return <UsersIcon color='#7c3aed' height={18} width={18} />
-}
-
-const MEAL_RELATED_LINKS: MainNavLink[] = [
+export const MEAL_RELATED_LINKS: MainNavLink[] = [
     {
         label: 'Moje porudžbine',
         path: 'my-orders',
-        icon: <ProfileIcon />
+        icon: <CartIcon />
     },
     {
         label: '7-dnevni jelovnik',
         path: 'menu',
         icon: <MenuIcon />
-    }
+    },
 ]
 
-const USER_RELATED_LINKS: MainNavLink[] = [
+export const USER_RELATED_LINKS: MainNavLink[] = [
     {
         label: 'Moj profil',
         path: 'profile',
-        icon: <ProfileIcon />
+        icon: <UserProfileIcon />
     },
     {
         label: 'Upravljanje korisnicima',
@@ -386,23 +48,76 @@ const USER_RELATED_LINKS: MainNavLink[] = [
     }
 ]
 
+export const TERMS_AND_CONDITIONS = [
+    {
+        label: 'Uslovi korišćenja',
+        path: 'privacy-policy',
+        icon: <TermsAndConditionsIcon />
+    }
+]
+
+
+export interface CloseSectionProps {
+    close: () => void;
+    heading: string;
+}
+
+export const CloseSection = ({ close, heading }: CloseSectionProps) => {
+    return (
+        <SheetClose asChild>
+            <button onClick={close} className="mb-4 text-right text-black">
+                <div className="flex flex-start gap-4">
+                    <div className="flex items-center justify-center h-10 w-10 bg-gray-200 rounded-full">
+                        <ChevronLeft className="h-5 w-5" />
+                    </div>
+                    <div className='flex items-center justify-center'>
+                        <p className="text-xl font-semibold">{heading}</p>
+                    </div>
+                </div>
+            </button>
+        </SheetClose>
+    )
+}
+
 export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps) => {
     const logout = useLogout()
-    const { from, to } = calculateDateRange(new Date().toISOString(), 7)
+    const { from: sevenDayMenuFrom, to: sevenDayMenuTo } = calculateDateRange(new Date().toISOString(), 7)
+    const {from, to} = calculateDateRange(new Date().toISOString(), -7)
     const { data: dailyMenus } = useReadDailyMenus({
         path: '',
         query: {
-            filter: { from: from, to: to }
+            filter: { from: sevenDayMenuFrom, to: sevenDayMenuTo }
         }
     })
+    const { data: activeOrders } = useReadMyOrders({
+        query: { 
+            filter: { 
+                fromDate: to, 
+                toDate: from, 
+                orderStates: ["Draft", "Placed"].join(','), 
+                orderTypes: ["Scheduled", "Immediate"].join(',') 
+            }
+        },
+        options: {enabled: true}
+    })
+
+    const { data: orderHistory } = useReadMyOrders({
+        query: { 
+            filter: { 
+                fromDate: from, 
+                toDate: to, 
+                orderStates: ["Confirmed", "Cancelled"].join(','), 
+                orderTypes: ["Scheduled", "Immediate"].join(',') 
+            }
+        },
+        options: {enabled: true}
+    });
 
     // State to track which sub-drawer is open
     const [activeDrawer, setActiveDrawer] = useState<string | null>(null)
-
     const openDrawer = (drawerId: string) => {
-        setActiveDrawer(drawerId)
+         setActiveDrawer(drawerId)
     }
-
     const closeDrawer = () => {
         setActiveDrawer(null)
     }
@@ -413,94 +128,131 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                 <div
                     onClick={onOverlayClick}
                     className={clsx(
-                        'absolute inset-0 top-[var(--topnav-height)] z-30 bg-[#1B1C31]/50 backdrop-blur-[5px] backdrop-filter transition-opacity duration-300 lg:hidden',
+                        'absolute inset-0 top-[var(--topnav-height)] z-30 bg-[#1B1C31]/50 backdrop-blur-[5px] backdrop-filter transition-opacity duration-300',
                         {
                             'pointer-events-none opacity-0': !isNavOpen,
                             'pointer-events-auto opacity-100': isNavOpen
                         }
-                    )}></div>
+                    )}
+                ></div>
             </SheetTrigger>
-            <SheetContent side='right' className='flex h-full flex-col px-6 py-8 lg:hidden'>
-                <div className='flex-grow'>
-                    {/* <MainNavMobileUser /> */}
-                    <div className='flex flex-col'>
-                        <div className='justify-left mb-6 flex'>
+            <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
+                <div className="flex-grow">
+                    <div className="flex flex-col">
+                        <div className='flex justify-left mb-6'>
                             <CloseSection close={onOverlayClick} heading='Menu' />
                         </div>
-                        <div className='flex-start flex flex-col gap-8'>
-                            <ul className='rounded-lg bg-gray-100 p-4'>
-                                {MEAL_RELATED_LINKS.map(({ path, label, icon }) => (
+                        <div className='flex flex-col flex-start gap-8'>
+                            <ul>
+                                {MEAL_RELATED_LINKS.map(({ path, label, icon }, index) => (
                                     <li
-                                        className='flex cursor-pointer items-center gap-4 rounded-lg border-b py-3 transition-all last:border-b-0 hover:bg-gray-200'
+                                        className={clsx("flex items-center bg-gray-100 py-6 px-4 gap-4 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all", { 'rounded-t-lg': index === 0, 'rounded-b-lg': index === MEAL_RELATED_LINKS.length - 1 })}
                                         onClick={() => openDrawer(path)}
-                                        key={path}>
-                                        <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-50'>
+                                        key={path}
+                                    >
+                                        <div className="flex items-center justify-center h-10 w-10 bg-gray-50 rounded-full">
                                             {icon}
                                         </div>
-                                        <span className='text-lg font-medium text-gray-700'>{label}</span>
-                                        <ChevronRight className='ml-auto text-gray-400' />
+                                        <span className="text-lg font-medium text-gray-700">
+                                            {label}
+                                        </span>
+                                        <ChevronRight className="ml-auto text-gray-400" />
                                     </li>
                                 ))}
                             </ul>
-                            <ul className='mt-4 rounded-lg bg-gray-100 p-4'>
-                                {USER_RELATED_LINKS.map(({ path, label, icon }) => (
+                            <ul>
+                                {USER_RELATED_LINKS.map(({ path, label, icon }, index) => (
                                     <li
-                                        className='flex cursor-pointer items-center gap-4 rounded-lg border-b py-3 transition-all last:border-b-0 hover:bg-gray-200'
+                                        className={clsx("flex items-center bg-gray-100 py-6 px-4 gap-4 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all", { 'rounded-t-lg': index === 0, 'rounded-b-lg': index === USER_RELATED_LINKS.length - 1 })}
                                         onClick={() => openDrawer(path)}
-                                        key={path}>
-                                        <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-50'>
+                                        key={path}
+                                    >
+                                        <div className="flex items-center justify-center h-10 w-10 bg-gray-50 rounded-full">
                                             {/* Replace with your icon component */}
                                             {icon}
                                         </div>
-                                        <span className='text-lg font-medium text-gray-700'>{label}</span>
-                                        <ChevronRight className='ml-auto text-gray-400' />
+                                        <span className="text-lg font-medium text-gray-700">
+                                            {label}
+                                        </span>
+                                        <ChevronRight className="ml-auto text-gray-400" />
+                                    </li>
+                                ))}
+                            </ul>
+                            <ul>
+                                {TERMS_AND_CONDITIONS.map(({ path, label, icon }, index) => (
+                                    <li
+                                        className={clsx("flex bg-gray-100 py-6 px-4 mt-4 items-center gap-4 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all", { 'rounded-t-lg': index === 0, 'rounded-b-lg': index === TERMS_AND_CONDITIONS.length - 1 })}
+                                        onClick={() => openDrawer(path)}
+                                        key={path}
+                                    >
+                                        <div className="flex items-center justify-center h-10 w-10 bg-gray-50 rounded-full">
+                                            {/* Replace with your icon component */}
+                                            {icon}
+                                        </div>
+                                        <span className="text-lg font-medium text-gray-700">
+                                            {label}
+                                        </span>
+                                        <ChevronRight className="ml-auto text-gray-400" />
                                     </li>
                                 ))}
                             </ul>
                         </div>
                     </div>
                 </div>
-                <SheetFooter className='mt-auto'>
-                    <Button
-                        onClick={logout}
-                        className='flex w-full cursor-pointer items-center gap-4 rounded-lg bg-gray-100 px-4 py-10 transition-all hover:bg-gray-200'>
-                        <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-50'>
-                            {/* Replace with your logout icon component */}
-                            <LogoutIcon />
-                        </div>
+                <SheetFooter className="mt-auto">
+                <Button
+                    onClick={logout}
+                    className="flex items-center gap-4 py-10 px-4 bg-gray-100 w-full rounded-lg hover:bg-gray-200 transition-all cursor-pointer"
+                >
+                    <div className="flex items-center justify-center h-10 w-10 bg-gray-50 rounded-full">
+                        {/* Replace with your logout icon component */}
+                        <LogoutIcon />
+                    </div>
 
-                        <div className='text-center text-lg font-medium text-gray-700'>Log Out</div>
-                        <ChevronRight className='ml-auto text-gray-400' />
-                    </Button>
+                    <div className="text-lg font-medium text-center text-gray-700">
+                        Log Out
+                    </div>
+                    <ChevronRight className="ml-auto text-gray-400" />
+                </Button>
+
                 </SheetFooter>
             </SheetContent>
 
             <Sheet open={activeDrawer === 'my-orders'} onOpenChange={closeDrawer}>
-                <SheetContent side='right' className='flex h-full flex-col px-6 py-8 lg:hidden'>
+                <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
                     <CloseSection close={closeDrawer} heading='Moje porudžbine' />
-                    <div className='flex-grow'>
-                        <OrderPage />
+                    <div className="flex-grow overflow-y-auto">
+                        <MyOrdersPage activeOrders={activeOrders ?? []} orderHistory={orderHistory ?? []} />
                     </div>
                 </SheetContent>
             </Sheet>
 
             <Sheet open={activeDrawer === 'menu'} onOpenChange={closeDrawer}>
-                <SheetContent side='right' className='flex h-full flex-col px-6 py-8 lg:hidden'>
+                <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
                     <CloseSection close={closeDrawer} heading='7-dnevni jelovnik' />
-                    <div className='flex-grow overflow-y-auto'>
-                        <MenuPage dailyMenus={dailyMenus} />
+                    <div className="flex-grow overflow-y-auto">
+                        <MenuPage dailyMenus={dailyMenus ?? []} />
                     </div>
                 </SheetContent>
             </Sheet>
 
             <Sheet open={activeDrawer === 'users'} onOpenChange={closeDrawer}>
-                <SheetContent side='right' className='flex h-full flex-col px-6 py-8 lg:hidden'>
+                <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
                     <CloseSection close={closeDrawer} heading='Upravljanje korisnicima' />
-                    <div className='flex-grow'>
-                        <UsersPage />
+                    <div className="flex-grow overflow-y-auto">
+                        <UsersPage users={[]} />
                     </div>
                 </SheetContent>
             </Sheet>
+
+            <Sheet open={activeDrawer === 'privacy-policy'} onOpenChange={closeDrawer}>
+                <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
+                    <CloseSection close={closeDrawer} heading='Uslovi korišćenja' />
+                    <div className="flex-grow overflow-y-auto">
+                        <TermsAndConditionsPage />
+                    </div>
+                </SheetContent>
         </Sheet>
+    </Sheet>
     )
 }
