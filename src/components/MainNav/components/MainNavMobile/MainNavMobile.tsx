@@ -15,7 +15,6 @@ import { CartIcon, LogoutIcon, MenuIcon, TermsAndConditionsIcon, UserGroupIcon, 
 import { MainNavLink } from '../../types'
 import { UsersPage } from './components/UsersPage/UsersPage'
 import { TermsAndConditionsPage } from './components/TermsAndConditionsPage/TermsAndConditionsPage'
-import { useReadMyOrders } from '@/api/order/repository/hooks/readMyOrder'
 import { RequireCompanyAuthorization } from '@/components/RequireAuthorization/RequireAuthorization'
 import { useRoles } from '@/providers/RoleProvider/RoleProvider'
 
@@ -85,36 +84,12 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
     const logout = useLogout()
     const { roles } = useRoles()
     const { from: sevenDayMenuFrom, to: sevenDayMenuTo } = calculateDateRange(new Date().toISOString(), 7)
-    const {from, to} = calculateDateRange(new Date().toISOString(), -7)
     const { data: dailyMenus } = useReadDailyMenus({
         path: '',
         query: {
             filter: { from: sevenDayMenuFrom, to: sevenDayMenuTo }
         }
     })
-    const { data: activeOrders } = useReadMyOrders({
-        query: { 
-            filter: { 
-                fromDate: to, 
-                toDate: from, 
-                orderStates: ["Draft", "Placed"].join(','), 
-                orderTypes: ["Scheduled", "Immediate"].join(',') 
-            }
-        },
-        options: {enabled: true}
-    })
-
-    const { data: orderHistory } = useReadMyOrders({
-        query: { 
-            filter: { 
-                fromDate: from, 
-                toDate: to, 
-                orderStates: ["Confirmed", "Cancelled"].join(','), 
-                orderTypes: ["Scheduled", "Immediate"].join(',') 
-            }
-        },
-        options: {enabled: true}
-    });
 
     // State to track which sub-drawer is open
     const [activeDrawer, setActiveDrawer] = useState<string | null>(null)
@@ -239,7 +214,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                 <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
                     <CloseSection close={closeDrawer} heading='Moje porudžbine' />
                     <div className="flex-grow overflow-y-auto p-1">
-                        <MyOrdersPage activeOrders={activeOrders ?? []} orderHistory={orderHistory ?? []} />
+                        <MyOrdersPage />
                     </div>
                 </SheetContent>
             </Sheet>

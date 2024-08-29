@@ -1,17 +1,13 @@
 import { DailyMenuMeal } from '@/api/daily-menus'
 import clsx from 'clsx'
-import { useCartStore } from '../../../../state'
 
 interface MealCardProps extends DailyMenuMeal {
+    quantity?: number
     onClick: () => void
     small?: boolean
 }
 
-export const MealCard = ({ id, name, description, price, imageUrl, onClick, small }: MealCardProps) => {
-    const { order, selectedShift, selectedDate } = useCartStore()
-
-    const quantity = (selectedShift && order[selectedShift?.id]?.[selectedDate]?.find(item => item.id === id)?.quantity) ?? 0
-
+export const MealCard = ({ id, name, description, price, imageUrl, onClick, small, quantity }: MealCardProps) => {
     return (
         <div onClick={onClick} className={clsx('relative col-span-full cursor-pointer rounded-xl bg-white shadow-md')}>
             <div className='flex h-full items-center'>
@@ -35,7 +31,7 @@ export const MealCard = ({ id, name, description, price, imageUrl, onClick, smal
                             No Image
                         </div>
                     )}
-                    {quantity > 0 ? (
+                    {quantity && quantity > 0 ? (
                         <div className='absolute left-0 top-0 flex h-10 w-12 items-center justify-center rounded-br-lg rounded-tl-lg bg-primary text-lg text-white'>
                             {quantity}
                         </div>
