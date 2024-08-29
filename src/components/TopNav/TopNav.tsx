@@ -29,11 +29,6 @@ export const TopNav = () => {
                     }
                 )}
             >
-                <div className="flex items-center justify-end gap-2">
-                    {/* <TopNavLogout /> */}
-                    <TopNavHamburger isNavOpen={isOpen} onToggle={handleToggle} />
-                </div>
-
                 <TopNavHamburger isNavOpen={isOpen} onToggle={handleToggle} />
             </div>
             <MainNavMobile isNavOpen={isOpen} onOverlayClick={handleClose} />
