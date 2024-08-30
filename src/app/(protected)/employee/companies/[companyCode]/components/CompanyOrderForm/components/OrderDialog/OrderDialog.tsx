@@ -115,7 +115,6 @@ export const OrderDialog = () => {
                                         {cart
                                             .filter(item => item.type === 'MainCourse')
                                             .map(item => {
-                                                console.log(item)
                                                 return (
                                                     <div
                                                         key={item.id}

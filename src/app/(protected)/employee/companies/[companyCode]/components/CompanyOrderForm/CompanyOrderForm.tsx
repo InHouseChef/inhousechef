@@ -1,3 +1,4 @@
+import { ALaCardMenuMeal, useReadALaCardMenus } from '@/api/alacard-menus'
 import { DailyMenuMeal, ReadDailyMenuResponse } from '@/api/daily-menus'
 import { readDailyMenus } from '@/api/daily-menus/repository/hooks/readDailyMenus'
 import { useReadMyOrder } from '@/api/order'
@@ -9,7 +10,6 @@ import { useAppDate } from '@/hooks'
 import { getTomorrowDateIso, toDateFromDateIso, toDateIso } from '@/utils/date'
 import { useEffect, useState } from 'react'
 import { useCartStore } from '../../state'
-import { canScheduleOrder, sortShiftsByStartAt } from '../../utils'
 import DaySelectorNav from './components/DaySelectorNav/DaySelectorNav'
 import { MealCard } from './components/MealCard/MealCard'
 import { MealDrawer } from './components/MealDrawer/MealDrawer'
@@ -25,8 +25,17 @@ const getFirstAndLastDayOfMonth = (date: Date) => {
 
 export const CompanyOrderForm = () => {
     const cart = useCartStore()
-    const { selectedDate, setSelectedDate, setSelectedShift, addToCart, resetCart, setActiveOrderId, selectedMealType } =
-        cart
+    const {
+        selectedDate,
+        setSelectedDate,
+        setSelectedShift,
+        addToCart,
+        resetCart,
+        setActiveOrderId,
+        selectedMealType,
+        selectedShift,
+        aLaCardShift
+    } = cart
     const { getAppDate, getAppDateTime } = useAppDate()
     const today = getAppDate()
     const tomorrow = getTomorrowDateIso(toDateFromDateIso(today))
@@ -39,6 +48,7 @@ export const CompanyOrderForm = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)
     const [filteredMeals, setFilteredMeals] = useState<DailyMenuMeal[]>([])
     const [shiftsAvailable, setShiftsAvailable] = useState<boolean>(true)
+    const [aLaCardMeals, setALaCardMeals] = useState<ALaCardMenuMeal[]>([])
 
     const { data: shifts } = useReadShifts()
     const { data: myOrder, isLoading: isLoadingMyOrder } = useReadMyOrder({
@@ -50,30 +60,39 @@ export const CompanyOrderForm = () => {
         }
     })
 
+    const { data: aLaCardMenus, isLoading: isLoadingALaCardMenus } = useReadALaCardMenus({
+        query: {
+            filter: {
+                from: today,
+                to: tomorrow
+            }
+        }
+    })
+
     // TODO: check reset
-    useEffect(() => {
-        if (!myOrder || myOrder.length === 0) return
+    // useEffect(() => {
+    //     if (!myOrder || myOrder.length === 0) return
 
-        myOrder.forEach(order => {
-            const { id, orderDate, orderedForShiftId, orderItems } = order
-            const orderShift = shifts?.find(({ id }) => id === orderedForShiftId)
+    //     myOrder.forEach(order => {
+    //         const { id, orderDate, orderedForShiftId, orderItems } = order
+    //         const orderShift = shifts?.find(({ id }) => id === orderedForShiftId)
 
-            resetCart()
-            setActiveOrderId(id)
-            setSelectedShift(orderShift)
-            setSelectedDate(orderDate)
-            orderItems.forEach(({ skuId, name, quantity, price, imageUrl, type }) => {
-                addToCart({
-                    id: skuId,
-                    name: name,
-                    quantity: quantity,
-                    price: price,
-                    imageUrl: imageUrl,
-                    type: type
-                })
-            })
-        })
-    }, [myOrder])
+    //         resetCart()
+    //         setActiveOrderId(id)
+    //         setSelectedShift(orderShift)
+    //         setSelectedDate(orderDate)
+    //         orderItems.forEach(({ skuId, name, quantity, price, imageUrl, type }) => {
+    //             addToCart({
+    //                 id: skuId,
+    //                 name: name,
+    //                 quantity: quantity,
+    //                 price: price,
+    //                 imageUrl: imageUrl,
+    //                 type: type
+    //             })
+    //         })
+    //     })
+    // }, [myOrder])
 
     const initialFetch = async () => {
         const { firstDay, lastDay } = getFirstAndLastDayOfMonth(currentMonth)
@@ -91,19 +110,9 @@ export const CompanyOrderForm = () => {
         if (!selectedDate) return setSelectedDate(today)
         setSelectedDate(selectedDate)
     }, [selectedDate])
-    useEffect(() => {
-        if (!shifts) return setShiftsAvailable(false)
-
-        const sortedShifts = sortShiftsByStartAt(shifts)
-        const availableShift = sortedShifts?.find(shift => canScheduleOrder(shift, getAppDateTime()))
-
-        if (!availableShift) return setShiftsAvailable(false)
-        setShiftsAvailable(true)
-    }, [shifts, today])
 
     useEffect(() => {
         if (!selectedDate) return
-
         const meals = dailyMenus?.find(({ date }) => date === selectedDate)?.meals || []
         setMeals(meals)
     }, [selectedDate, dailyMenus])
@@ -118,6 +127,13 @@ export const CompanyOrderForm = () => {
         setFilteredMeals(filtered)
     }, [selectedMealType, meals])
 
+    useEffect(() => {
+        if (selectedShift?.id === aLaCardShift?.id) {
+            const aLaCardMeals = aLaCardMenus?.find(({ date }) => date === selectedDate)?.meals || []
+            setALaCardMeals(aLaCardMeals)
+        }
+    }, [selectedShift, selectedDate, aLaCardShift])
+
     const handleMealClick = (meal: DailyMenuMeal) => {
         setSelectedMeal(meal)
         setIsDrawerOpen(true)
@@ -125,7 +141,7 @@ export const CompanyOrderForm = () => {
 
     const handleCloseDrawer = () => setIsDrawerOpen(false)
 
-    if (isLoading || isLoadingMyOrder || isLoadingMyUser) return <Loader />
+    if (isLoading || isLoadingMyOrder || isLoadingMyUser || isLoadingALaCardMenus) return <Loader />
 
     return (
         <>
@@ -150,6 +166,13 @@ export const CompanyOrderForm = () => {
                             <MealCard key={meal.id} {...meal} onClick={() => handleMealClick(meal)} />
                         ))}
                     </div>
+                    {selectedShift?.id === aLaCardShift?.id && (
+                        <div className='mx-4 mt-4 grid grid-cols-1 gap-6'>
+                            {aLaCardMeals.map(meal => (
+                                <MealCard key={meal.id} {...meal} onClick={() => handleMealClick(meal)} />
+                            ))}
+                        </div>
+                    )}
                     <OrderDialogButton />
                 </div>
                 {selectedMeal ? (
