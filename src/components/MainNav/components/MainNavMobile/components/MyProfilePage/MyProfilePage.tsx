@@ -5,7 +5,7 @@ import { UserProfileIcon } from '../../icons';
 
 export const MyProfilePage = ({ user }: { user: ReadUserResponse}) => {
     return (
-        <div className="max-w-lg mx-auto mt-8 px-4">
+        <div className="max-w-lg mx-auto mt-8">
             {/* User Profile Icon */}
             <div className="flex justify-center mb-4">
                 <div className="h-24 w-24 bg-primary rounded-full flex items-center justify-center">
