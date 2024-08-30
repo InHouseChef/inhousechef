@@ -1,74 +1,87 @@
 import { useReadALaCardShift } from '@/api/alacard-shifts'
 import { useReadShifts } from '@/api/shifts'
+import { useReadMyUser } from '@/api/users'
 import { Loader } from '@/components'
 import { Button } from '@/components/ui/button'
-import { useAppDate, usePathParams } from '@/hooks'
+import { usePathParams } from '@/hooks'
 import { CompanyPath } from '@/types'
-import { formatTimeWithoutSeconds, toDateFromDateIso } from '@/utils/date'
+import { formatTimeWithoutSeconds } from '@/utils/date'
 import clsx from 'clsx'
+import { useEffect } from 'react'
 import { useCartStore } from '../../../../state'
-import { canScheduleOrder, sortShiftsByStartAt } from '../../../../utils'
+import { sortShiftsByStartAt } from '../../../../utils'
 
 export const ShiftSelectorNav = () => {
     const path = usePathParams<CompanyPath>()
-    const { selectedShift, setSelectedShift } = useCartStore()
+    const { selectedShift, setSelectedShift, canImmediatelyOrder, aLaCardShift, setALaCardShift, canScheduleOrder } =
+        useCartStore()
     const { data: shifts, isLoading } = useReadShifts()
-    const { selectedDate } = useCartStore()
-    const { getAppDateTime } = useAppDate()
-    // const { data: myUser, isLoading: isLoadingMyUser } = useReadMyUser({
-    //     path
-    // })
+    const { data: myUser, isLoading: isLoadingMyUser } = useReadMyUser({
+        path
+    })
 
-    const { data: aLaCardShift, isLoading: isLoadingALaCardShift } = useReadALaCardShift()
+    const { data, isLoading: isLoadingALaCardShift } = useReadALaCardShift({ path })
 
-    // TODO: add a la carte shift based on permission
+    useEffect(() => {
+        if (!data) return
+        setALaCardShift(data)
+    }, [data])
 
-    if (isLoading || isLoadingALaCardShift) return <Loader />
+    useEffect(() => {
+        if (!shifts) return
+
+        const firstAvailableShift = shifts.find(() => canScheduleOrder())
+        console.log(firstAvailableShift)
+        if (firstAvailableShift) {
+            setSelectedShift(firstAvailableShift)
+        }
+    }, [shifts, canScheduleOrder, setSelectedShift])
+
+    if (isLoading || isLoadingALaCardShift || isLoadingMyUser) return <Loader />
 
     const sortedShifts = sortShiftsByStartAt(shifts)
 
     return (
+        // TODO: check why there is no horizontal scroll
         <nav className={clsx('topnav-horizontal h-10 min-h-10 border-gray-300')}>
-            <ul className={clsx('flex h-full items-center')}>
-                {/* {myUser?.aLaCardPermission ? (
-                    <li className={clsx('relative flex-1 text-center')}>
+            <ul className={clsx('flex h-full items-center justify-start gap-2')}>
+                {myUser?.aLaCardPermission && data?.shiftStartAt ? (
+                    <li className={clsx('relative text-center')}>
                         <Button
                             type='button'
-                            disabled={canImmediatelyOrder(aLaCardShift, new Date())}
-                            className={clsx('relative bg-green-200 text-black')}>
-                            A La Carte
+                            disabled={!canImmediatelyOrder()}
+                            onClick={() => {
+                                setSelectedShift({
+                                    companyId: data.companyId,
+                                    shiftStartAt: data.shiftStartAt,
+                                    id: data.id,
+                                    shiftEndAt: data.shiftEndAt,
+                                    name: '',
+                                    orderingDeadlineBeforeShiftStart: 0
+                                })
+                                setALaCardShift(data)
+                            }}
+                            className={clsx('relative bg-green-500', {
+                                'bg-green-500 hover:text-secondary': selectedShift?.id === data.id,
+                                // 'bg-gray-300 text-black': selectedShift?.id !== data.id,
+                                'cursor-not-allowed': !canImmediatelyOrder()
+                            })}>
+                            {formatTimeWithoutSeconds(aLaCardShift?.shiftStartAt || '')} -{' '}
+                            {formatTimeWithoutSeconds(aLaCardShift?.shiftEndAt || '')}
                         </Button>
                     </li>
-                ) : undefined} */}
+                ) : undefined}
                 {sortedShifts?.map(({ id, shiftStartAt, shiftEndAt, ...rest }) => (
-                    <li className={clsx('relative flex-1 text-center')} key={id}>
+                    <li className={clsx('relative text-center')} key={id}>
                         <Button
                             type='button'
-                            disabled={
-                                !canScheduleOrder(
-                                    {
-                                        ...rest,
-                                        shiftStartAt,
-                                        shiftEndAt,
-                                        id
-                                    },
-                                    getAppDateTime()
-                                )
-                            }
+                            disabled={!canScheduleOrder()}
                             onClick={() => setSelectedShift({ ...rest, shiftStartAt, shiftEndAt, id })}
                             // TODO: make shifts take full width
-                            className={clsx('relative flex-1', {
+                            className={clsx('relative', {
                                 'bg-primary hover:text-secondary': selectedShift?.id === id,
                                 'bg-gray-300 text-black': selectedShift?.id !== id,
-                                'cursor-not-allowed': !canScheduleOrder(
-                                    {
-                                        ...rest,
-                                        shiftStartAt,
-                                        shiftEndAt,
-                                        id
-                                    },
-                                    toDateFromDateIso(selectedDate)
-                                )
+                                'cursor-not-allowed': !canScheduleOrder()
                             })}>
                             {formatTimeWithoutSeconds(shiftStartAt)} - {formatTimeWithoutSeconds(shiftEndAt)}
                         </Button>

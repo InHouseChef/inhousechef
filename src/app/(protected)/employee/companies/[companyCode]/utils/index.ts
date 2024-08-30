@@ -159,4 +159,8 @@ export class Time {
         }
         return new Time(hours, minutes, seconds)
     }
+
+    toDate(date: Date): Date {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate(), this._hours, this._minutes, this._seconds)
+    }
 }
