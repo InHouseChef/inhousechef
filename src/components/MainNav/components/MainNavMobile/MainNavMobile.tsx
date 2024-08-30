@@ -2,10 +2,10 @@
 
 import { useState } from 'react'
 import { Sheet, SheetContent, SheetFooter, SheetTrigger, SheetClose } from '@/components/ui/sheet'
-import { useLogout } from '@/hooks'
+import { useLogout, usePathParams } from '@/hooks'
 import clsx from 'clsx'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, UserIcon } from 'lucide-react'
 import { ChevronRight } from '@/packages/icons'
 import { useReadDailyMenus } from '@/api/daily-menus'
 import { calculateDateRange } from '@/app/(protected)/employee/companies/[companyCode]/utils'
@@ -17,6 +17,9 @@ import { UsersPage } from './components/UsersPage/UsersPage'
 import { TermsAndConditionsPage } from './components/TermsAndConditionsPage/TermsAndConditionsPage'
 import { RequireCompanyAuthorization } from '@/components/RequireAuthorization/RequireAuthorization'
 import { useRoles } from '@/providers/RoleProvider/RoleProvider'
+import { MyProfilePage } from './components/MyProfilePage/MyProfilePage'
+import { useReadMyUser } from '@/api/users'
+import { usePathname } from 'next/navigation'
 
 interface MainNavMobileProps {
     isNavOpen: boolean
@@ -68,7 +71,7 @@ export const CloseSection = ({ close, heading }: CloseSectionProps) => {
         <SheetClose asChild>
             <button onClick={close} className="mb-4 text-right text-black">
                 <div className="flex flex-start gap-4">
-                    <div className="flex items-center justify-center h-10 w-10 bg-gray-200 rounded-full">
+                    <div className="flex items-center justify-center h-10 w-10 bg-gray-100 hover:bg-gray-200 rounded-full">
                         <ChevronLeft className="h-5 w-5" />
                     </div>
                     <div className='flex items-center justify-center'>
@@ -82,6 +85,10 @@ export const CloseSection = ({ close, heading }: CloseSectionProps) => {
 
 export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps) => {
     const logout = useLogout()
+    const { companyCode } = usePathParams<{ companyCode: string }>()
+    const { data: user} = useReadMyUser({
+        path: { companyCode },
+    })
     const { roles } = useRoles()
     const { from: sevenDayMenuFrom, to: sevenDayMenuTo } = calculateDateRange(new Date().toISOString(), 7)
     const { data: dailyMenus } = useReadDailyMenus({
@@ -128,7 +135,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                                         onClick={() => openDrawer(path)}
                                         key={path}
                                     >
-                                        <div className="flex items-center justify-center h-10 w-10 bg-gray-50 rounded-full">
+                                        <div className="flex items-center justify-center h-10 w-10 bg-gray-100 rounded-full">
                                             {icon}
                                         </div>
                                         <span className="text-lg font-medium text-gray-700">
@@ -144,9 +151,9 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                                     onClick={() => openDrawer('profile')}
                                     key={'profile'}
                                 >
-                                    <div className="flex items-center justify-center h-10 w-10 bg-gray-50 rounded-full">
+                                    <div className="flex items-center justify-center h-10 w-10 bg-gray-100 rounded-full">
                                         {/* Replace with your icon component */}
-                                        {<UserProfileIcon />}
+                                        {<UserIcon color='#7c3aed' />}
                                     </div>
                                     <span className="text-lg font-medium text-gray-700">
                                         {'Moj profil'}
@@ -159,7 +166,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                                         onClick={() => openDrawer('users')}
                                         key={'users'}
                                     >
-                                        <div className="flex items-center justify-center h-10 w-10 bg-gray-50 rounded-full">
+                                        <div className="flex items-center justify-center h-10 w-10 bg-gray-100 rounded-full">
                                             {/* Replace with your icon component */}
                                             {<UserGroupIcon />}
                                         </div>
@@ -177,7 +184,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                                         onClick={() => openDrawer(path)}
                                         key={path}
                                     >
-                                        <div className="flex items-center justify-center h-10 w-10 bg-gray-50 rounded-full">
+                                        <div className="flex items-center justify-center h-10 w-10 bg-gray-100 rounded-full">
                                             {/* Replace with your icon component */}
                                             {icon}
                                         </div>
@@ -196,7 +203,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                     onClick={logout}
                     className="flex items-center gap-4 py-10 px-4 bg-gray-100 w-full rounded-lg hover:bg-gray-200 transition-all cursor-pointer"
                 >
-                    <div className="flex items-center justify-center h-10 w-10 bg-gray-50 rounded-full">
+                    <div className="flex items-center justify-center h-10 w-10 bg-gray-100 rounded-full">
                         {/* Replace with your logout icon component */}
                         <LogoutIcon />
                     </div>
@@ -215,6 +222,15 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                     <CloseSection close={closeDrawer} heading='Moje porudžbine' />
                     <div className="flex-grow overflow-y-auto p-1">
                         <MyOrdersPage />
+                    </div>
+                </SheetContent>
+            </Sheet>
+
+            <Sheet open={activeDrawer === 'profile'} onOpenChange={closeDrawer}>
+                <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
+                    <CloseSection close={closeDrawer} heading='Moj profil' />
+                    <div className="flex-grow overflow-y-auto p-1">
+                        <MyProfilePage user={user} />
                     </div>
                 </SheetContent>
             </Sheet>
