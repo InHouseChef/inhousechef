@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 import { MainNavMobile } from '../MainNav'
 import { TopNavHamburger } from './components/TopNavHamburger'
-import { TopNavLogout } from './components/TopNavLogout'
 
 export const TopNav = () => {
     const { isOpen, setIsOpen, handleClose } = useDialogControl()
