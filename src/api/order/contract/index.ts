@@ -3,6 +3,7 @@ import { DateIso, DateTimeIsoUtc, OrderState, OrderType } from '@/types'
 
 interface Order {
     shiftId: string
+    number: string
     orderDate: DateIso
     meals: {
         id: string
@@ -12,6 +13,7 @@ interface Order {
 
 interface OrderDetails {
     id: string
+    number: string
     companyId: string
     customerId: string
     state: OrderState

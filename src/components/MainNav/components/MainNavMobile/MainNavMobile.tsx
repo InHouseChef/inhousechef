@@ -2,10 +2,10 @@
 
 import { useState } from 'react'
 import { Sheet, SheetContent, SheetFooter, SheetTrigger, SheetClose } from '@/components/ui/sheet'
-import { useLogout } from '@/hooks'
+import { useLogout, usePathParams } from '@/hooks'
 import clsx from 'clsx'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, UserIcon } from 'lucide-react'
 import { ChevronRight } from '@/packages/icons'
 import { useReadDailyMenus } from '@/api/daily-menus'
 import { calculateDateRange } from '@/app/(protected)/employee/companies/[companyCode]/utils'
@@ -15,7 +15,11 @@ import { CartIcon, LogoutIcon, MenuIcon, TermsAndConditionsIcon, UserGroupIcon, 
 import { MainNavLink } from '../../types'
 import { UsersPage } from './components/UsersPage/UsersPage'
 import { TermsAndConditionsPage } from './components/TermsAndConditionsPage/TermsAndConditionsPage'
-import { useReadMyOrders } from '@/api/order/repository/hooks/readMyOrder'
+import { RequireCompanyAuthorization } from '@/components/RequireAuthorization/RequireAuthorization'
+import { useRoles } from '@/providers/RoleProvider/RoleProvider'
+import { MyProfilePage } from './components/MyProfilePage/MyProfilePage'
+import { useReadMyUser } from '@/api/users'
+import { usePathname } from 'next/navigation'
 
 interface MainNavMobileProps {
     isNavOpen: boolean
@@ -67,7 +71,7 @@ export const CloseSection = ({ close, heading }: CloseSectionProps) => {
         <SheetClose asChild>
             <button onClick={close} className="mb-4 text-right text-black">
                 <div className="flex flex-start gap-4">
-                    <div className="flex items-center justify-center h-10 w-10 bg-gray-200 rounded-full">
+                    <div className="flex items-center justify-center h-10 w-10 bg-gray-100 hover:bg-gray-200 rounded-full">
                         <ChevronLeft className="h-5 w-5" />
                     </div>
                     <div className='flex items-center justify-center'>
@@ -81,37 +85,18 @@ export const CloseSection = ({ close, heading }: CloseSectionProps) => {
 
 export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps) => {
     const logout = useLogout()
+    const { companyCode } = usePathParams<{ companyCode: string }>()
+    const { data: user} = useReadMyUser({
+        path: { companyCode },
+    })
+    const { roles } = useRoles()
     const { from: sevenDayMenuFrom, to: sevenDayMenuTo } = calculateDateRange(new Date().toISOString(), 7)
-    const {from, to} = calculateDateRange(new Date().toISOString(), -7)
     const { data: dailyMenus } = useReadDailyMenus({
         path: '',
         query: {
             filter: { from: sevenDayMenuFrom, to: sevenDayMenuTo }
         }
     })
-    const { data: activeOrders } = useReadMyOrders({
-        query: { 
-            filter: { 
-                fromDate: to, 
-                toDate: from, 
-                orderStates: ["Draft", "Placed"].join(','), 
-                orderTypes: ["Scheduled", "Immediate"].join(',') 
-            }
-        },
-        options: {enabled: true}
-    })
-
-    const { data: orderHistory } = useReadMyOrders({
-        query: { 
-            filter: { 
-                fromDate: from, 
-                toDate: to, 
-                orderStates: ["Confirmed", "Cancelled"].join(','), 
-                orderTypes: ["Scheduled", "Immediate"].join(',') 
-            }
-        },
-        options: {enabled: true}
-    });
 
     // State to track which sub-drawer is open
     const [activeDrawer, setActiveDrawer] = useState<string | null>(null)
@@ -150,7 +135,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                                         onClick={() => openDrawer(path)}
                                         key={path}
                                     >
-                                        <div className="flex items-center justify-center h-10 w-10 bg-gray-50 rounded-full">
+                                        <div className="flex items-center justify-center h-10 w-10 bg-gray-100 rounded-full">
                                             {icon}
                                         </div>
                                         <span className="text-lg font-medium text-gray-700">
@@ -161,31 +146,45 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                                 ))}
                             </ul>
                             <ul>
-                                {USER_RELATED_LINKS.map(({ path, label, icon }, index) => (
+                                <li
+                                    className={clsx("flex items-center bg-gray-100 py-6 px-4 gap-4 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all rounded-t-lg", { '': roles.CompanyManager === true, 'rounded-b-lg': roles.CompanyManager === false })}
+                                    onClick={() => openDrawer('profile')}
+                                    key={'profile'}
+                                >
+                                    <div className="flex items-center justify-center h-10 w-10 bg-gray-100 rounded-full">
+                                        {/* Replace with your icon component */}
+                                        {<UserIcon color='#7c3aed' />}
+                                    </div>
+                                    <span className="text-lg font-medium text-gray-700">
+                                        {'Moj profil'}
+                                    </span>
+                                    <ChevronRight className="ml-auto text-gray-400" />
+                                </li>
+                                <RequireCompanyAuthorization role="CompanyManager">
                                     <li
-                                        className={clsx("flex items-center bg-gray-100 py-6 px-4 gap-4 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all", { 'rounded-t-lg': index === 0, 'rounded-b-lg': index === USER_RELATED_LINKS.length - 1 })}
-                                        onClick={() => openDrawer(path)}
-                                        key={path}
+                                        className={clsx("flex items-center bg-gray-100 py-6 px-4 gap-4 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all rounded-b-lg")}
+                                        onClick={() => openDrawer('users')}
+                                        key={'users'}
                                     >
-                                        <div className="flex items-center justify-center h-10 w-10 bg-gray-50 rounded-full">
+                                        <div className="flex items-center justify-center h-10 w-10 bg-gray-100 rounded-full">
                                             {/* Replace with your icon component */}
-                                            {icon}
+                                            {<UserGroupIcon />}
                                         </div>
                                         <span className="text-lg font-medium text-gray-700">
-                                            {label}
+                                            {'Upravljanje korisnicima'}
                                         </span>
                                         <ChevronRight className="ml-auto text-gray-400" />
                                     </li>
-                                ))}
+                                </RequireCompanyAuthorization>
                             </ul>
                             <ul>
                                 {TERMS_AND_CONDITIONS.map(({ path, label, icon }, index) => (
                                     <li
-                                        className={clsx("flex bg-gray-100 py-6 px-4 mt-4 items-center gap-4 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all", { 'rounded-t-lg': index === 0, 'rounded-b-lg': index === TERMS_AND_CONDITIONS.length - 1 })}
+                                        className={clsx("flex bg-gray-100 py-6 px-4 items-center gap-4 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all", { 'rounded-t-lg': index === 0, 'rounded-b-lg': index === TERMS_AND_CONDITIONS.length - 1 })}
                                         onClick={() => openDrawer(path)}
                                         key={path}
                                     >
-                                        <div className="flex items-center justify-center h-10 w-10 bg-gray-50 rounded-full">
+                                        <div className="flex items-center justify-center h-10 w-10 bg-gray-100 rounded-full">
                                             {/* Replace with your icon component */}
                                             {icon}
                                         </div>
@@ -204,13 +203,13 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                     onClick={logout}
                     className="flex items-center gap-4 py-10 px-4 bg-gray-100 w-full rounded-lg hover:bg-gray-200 transition-all cursor-pointer"
                 >
-                    <div className="flex items-center justify-center h-10 w-10 bg-gray-50 rounded-full">
+                    <div className="flex items-center justify-center h-10 w-10 bg-gray-100 rounded-full">
                         {/* Replace with your logout icon component */}
                         <LogoutIcon />
                     </div>
 
                     <div className="text-lg font-medium text-center text-gray-700">
-                        Log Out
+                        Odjavi se
                     </div>
                     <ChevronRight className="ml-auto text-gray-400" />
                 </Button>
@@ -221,8 +220,17 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
             <Sheet open={activeDrawer === 'my-orders'} onOpenChange={closeDrawer}>
                 <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
                     <CloseSection close={closeDrawer} heading='Moje porudžbine' />
-                    <div className="flex-grow overflow-y-auto">
-                        <MyOrdersPage activeOrders={activeOrders ?? []} orderHistory={orderHistory ?? []} />
+                    <div className="flex-grow overflow-y-auto p-1">
+                        <MyOrdersPage />
+                    </div>
+                </SheetContent>
+            </Sheet>
+
+            <Sheet open={activeDrawer === 'profile'} onOpenChange={closeDrawer}>
+                <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
+                    <CloseSection close={closeDrawer} heading='Moj profil' />
+                    <div className="flex-grow overflow-y-auto p-1">
+                        <MyProfilePage user={user} />
                     </div>
                 </SheetContent>
             </Sheet>
@@ -230,7 +238,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
             <Sheet open={activeDrawer === 'menu'} onOpenChange={closeDrawer}>
                 <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
                     <CloseSection close={closeDrawer} heading='7-dnevni jelovnik' />
-                    <div className="flex-grow overflow-y-auto">
+                    <div className="flex-grow overflow-y-auto p-1">
                         <MenuPage dailyMenus={dailyMenus ?? []} days={7} />
                     </div>
                 </SheetContent>
@@ -239,8 +247,8 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
             <Sheet open={activeDrawer === 'users'} onOpenChange={closeDrawer}>
                 <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
                     <CloseSection close={closeDrawer} heading='Upravljanje korisnicima' />
-                    <div className="flex-grow overflow-y-auto">
-                        <UsersPage users={[]} />
+                    <div className="flex-grow overflow-y-hidden p-1">
+                        <UsersPage />
                     </div>
                 </SheetContent>
             </Sheet>
@@ -248,7 +256,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
             <Sheet open={activeDrawer === 'privacy-policy'} onOpenChange={closeDrawer}>
                 <SheetContent side="right" className="px-6 py-8 flex flex-col h-full">
                     <CloseSection close={closeDrawer} heading='Uslovi korišćenja' />
-                    <div className="flex-grow overflow-y-auto">
+                    <div className="flex-grow overflow-y-auto p-1">
                         <TermsAndConditionsPage />
                     </div>
                 </SheetContent>

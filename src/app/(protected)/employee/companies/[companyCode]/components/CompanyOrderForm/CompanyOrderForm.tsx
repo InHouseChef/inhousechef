@@ -163,7 +163,12 @@ export const CompanyOrderForm = () => {
                 <div className='relative'>
                     <div className='mx-4 mt-4 grid grid-cols-1 gap-6'>
                         {filteredMeals.map(meal => (
-                            <MealCard key={meal.id} {...meal} onClick={() => handleMealClick(meal)} />
+                            <MealCard 
+                                key={meal.id} 
+                                {...meal} 
+                                onClick={() => handleMealClick(meal)}
+                                quantity={(selectedShift && order[selectedShift?.id]?.[selectedDate]?.find(item => item.id === meal.id)?.quantity) ?? 0}
+                                />
                         ))}
                     </div>
                     {selectedShift?.id === aLaCardShift?.id && (

@@ -10,11 +10,11 @@ const DaySelectorNav = () => {
     const tomorrow = getTomorrowDateIso(toDateFromDateIso(today))
 
     return (
-        <nav className='topnav-horizontal mx-2 h-14 min-h-14 rounded-md bg-[#D9D9D9]'>
+        <nav className='topnav-horizontal mx-2 h-14 min-h-14 rounded-md bg-gray-100'>
             <ul className='flex h-full items-center'>
                 <li
                     className={clsx('ml-2 flex-1 cursor-pointer rounded-lg py-2 text-center', {
-                        'bg-black text-white': selectedDate === today,
+                        'bg-[#282828] text-white': selectedDate === today,
                         'text-black': selectedDate !== today
                     })}
                     onClick={() => setSelectedDate(today)}>
@@ -22,7 +22,7 @@ const DaySelectorNav = () => {
                 </li>
                 <li
                     className={clsx('mr-2 flex-1 cursor-pointer rounded-lg py-2 text-center', {
-                        'bg-black text-white': selectedDate === tomorrow,
+                        'bg-[#282828] text-white': selectedDate === tomorrow,
                         'text-black': selectedDate !== tomorrow
                     })}
                     onClick={() => setSelectedDate(tomorrow)}>

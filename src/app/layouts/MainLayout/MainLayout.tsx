@@ -47,10 +47,8 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
         }
     }, [identity, isFetchingIdentity, userCompany])
 
-    if (isFetchingIdentity || isFetchingCompany) return <Loader />
-
     return (
-        <section className='w-full'>
+        <section className='w-full bg-primary'>
             <div className='flex h-full items-center justify-center'>{children}</div>
         </section>
     )
