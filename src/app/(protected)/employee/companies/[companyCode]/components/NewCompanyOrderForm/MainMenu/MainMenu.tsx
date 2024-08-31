@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { OrderDetails, useCartStore } from '@/app/(protected)/employee/newstate';
+import { useCartStore } from '@/app/(protected)/employee/newstate';
 import { MealCard } from '../../CompanyOrderForm/components/MealCard/MealCard';
 import DaySelector from '../DaySelector/DaySelector';
 import { ShiftSelector } from '../ShiftSelector/ShiftSelector';
@@ -8,7 +8,6 @@ import { MealDrawer } from '../MealDrawer/MealDrawer';
 import { DailyMenuMeal } from '@/api/daily-menus';
 import { DateIso } from '@/types';
 import Cart from '../Cart/Cart';
-import { Button } from '@/components/ui/button';
 
 const MainMenu: React.FC = () => {
     const [selectedMealType, setSelectedMealType] = useState<'MainCourse' | 'SideDish'>('MainCourse');
@@ -71,8 +70,6 @@ const MainMenu: React.FC = () => {
 
     const isTodaySelected = activeDay === new Date().toISOString().split('T')[0] as DateIso;
 
-    const totalAmount = selectedOrder?.orderItems.reduce((total, item) => total + item.price * item.quantity, 0) || 0;
-
     return (
         <div className="relative p-4">
             {/* Day Selector */}
@@ -107,13 +104,6 @@ const MainMenu: React.FC = () => {
             {/* Meal Drawer */}
             {selectedMeal && (
                 <MealDrawer meal={selectedMeal} isOpen={isDrawerOpen} onClose={closeDrawer} />
-            )}
-
-            {/* Floating Button */}
-            {selectedOrder && (
-                <Button className="fixed bottom-4 left-4 right-4 py-3 bg-primary text-white font-semibold text-lg text-center rounded-lg z-50">
-                    Pregledaj porudžbinu - {totalAmount} RSD
-                </Button>
             )}
 
             {/* Cart */}

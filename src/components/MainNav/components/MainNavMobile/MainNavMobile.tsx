@@ -19,7 +19,6 @@ import { RequireCompanyAuthorization } from '@/components/RequireAuthorization/R
 import { useRoles } from '@/providers/RoleProvider/RoleProvider'
 import { MyProfilePage } from './components/MyProfilePage/MyProfilePage'
 import { useReadMyUser } from '@/api/users'
-import { usePathname } from 'next/navigation'
 
 interface MainNavMobileProps {
     isNavOpen: boolean

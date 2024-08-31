@@ -235,7 +235,6 @@ export const formatDateSerbianLatin = (date: Date) => {
 }
 
 export const formatTimeWithoutSeconds = (time: Time) => {
-    console.log('time', time)
     const [hours, minutes] = time.split(':')
     return `${hours}:${minutes}`
 }

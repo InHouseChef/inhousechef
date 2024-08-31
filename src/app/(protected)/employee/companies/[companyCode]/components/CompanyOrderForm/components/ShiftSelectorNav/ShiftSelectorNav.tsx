@@ -31,7 +31,6 @@ export const ShiftSelectorNav = () => {
         if (!shifts) return
 
         const firstAvailableShift = shifts.find(() => canScheduleOrder())
-        console.log(firstAvailableShift)
         if (firstAvailableShift) {
             setSelectedShift(firstAvailableShift)
         }

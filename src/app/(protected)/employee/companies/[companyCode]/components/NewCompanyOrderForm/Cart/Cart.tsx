@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useCartStore } from '@/app/(protected)/employee/newstate';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader, SheetClose } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react'; // Icon for the close button
+import { Loader } from '@/components';
 
 const Cart = () => {
     const { selectedOrder, addOrUpdateOrder, cancelOrder, placeOrder } = useCartStore();
+    const [isOpen, setIsOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    
     const mainCourses = selectedOrder?.orderItems.filter(item => item.type === 'MainCourse') || [];
     const sideDishes = selectedOrder?.orderItems.filter(item => item.type === 'SideDish') || [];
     const totalAmount = selectedOrder?.orderItems.reduce((total, item) => total + item.price * item.quantity, 0) || 0;
@@ -17,35 +21,45 @@ const Cart = () => {
         <>
             <div className="p-4 bg-gray-100 text-center text-sm text-gray-700">
                 Nakon što se odobri od strane restorana Vaša porudžbina će biti dostavljena u roku od <strong>dva sata</strong>.
-                {/* <br />
-                Porudžbinu možete izmeniti najkasnije do <strong>23:00:00</strong> */}
             </div>
         </>
-    }
-    else {
+    } else {
         message = <>
             <div className="p-4 bg-gray-100 text-center text-sm text-gray-700">
                 Vaša porudžbina će biti dostavljena u naredna <strong>dva sata</strong>.
-                {/* <br />
-                Porudžbinu možete izmeniti najkasnije do <strong>23:00:00</strong> */}
             </div>
         </>
     }
 
+    const handleCancelOrder = () => {
+        setIsLoading(true);
+        cancelOrder()
+            .then(() => {
+                setIsLoading(false);
+                setIsOpen(false);
+            })
+    };
+
     return (
-        <Sheet>
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-            {selectedOrder && (
-                <Button className="fixed bottom-4 left-4 right-4 py-3 bg-primary text-white font-semibold text-sm text-center rounded-lg z-50">
-                    Pregledaj porudžbinu - {totalAmount} RSD
-                </Button>
-            )}
+                {selectedOrder && (
+                    <Button 
+                        className="fixed bottom-4 left-4 right-4 py-3 bg-primary text-white font-semibold text-sm text-center rounded-lg z-50"
+                        onClick={() => setIsOpen(true)}
+                    >
+                        Pregledaj porudžbinu - {totalAmount} RSD
+                    </Button>
+                )}
             </SheetTrigger>
             <SheetContent side="bottom" className="w-full h-full bg-white">
                 <SheetHeader className="flex justify-between items-center p-4 border-b">
                     <SheetTitle className="text-lg font-bold">Vaša porudžbina</SheetTitle>
                     <SheetClose asChild>
-                        <button className="text-gray-500 hover:text-gray-700 transition">
+                        <button 
+                            className="text-gray-500 hover:text-gray-700 transition"
+                            onClick={() => setIsOpen(false)}
+                        >
                             <X className="h-6 w-6" />
                         </button>
                     </SheetClose>
@@ -53,6 +67,7 @@ const Cart = () => {
 
                 {message}
 
+                {isLoading && <Loader />}
                 <div className="p-4 space-y-4 overflow-auto">
                     {/* Main Courses */}
                     {mainCourses.length > 0 && (
@@ -140,14 +155,14 @@ const Cart = () => {
                                 Poruči - {totalAmount} RSD
                             </Button>
                             <Button
-                                onClick={cancelOrder}
+                                onClick={handleCancelOrder}
                                 className="w-full py-3 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition">
                                 Otkaži porudžbinu
                             </Button>
                         </div>
                     ) : (
                         <Button
-                            onClick={cancelOrder}
+                            onClick={handleCancelOrder}
                             className="w-full py-3 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition">
                             Otkaži porudžbinu
                         </Button>

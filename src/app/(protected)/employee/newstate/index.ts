@@ -82,7 +82,7 @@ export interface CartStore {
     setMenus: (menu: ReadDailyMenuResponse, aLaCarteMenu?: ReadDailyMenuResponse) => void;
     addOrder: (order: ScheduledOrderDetails | ImmediateOrderDetails) => void;
     updateOrder: (orderId: string, orderItems: OrderItem[]) => void;
-    cancelOrder: (orderId: string) => void;
+    cancelOrder: () => void;
     confirmOrder: (orderId: string) => void;
     updateSelectedOrder(): void;
     resetCart: () => void;
@@ -323,18 +323,31 @@ export const useCartStore = create<CartStore>()(
                     }
                 },
 
-                cancelOrder: async (orderId: string) => {
-                    const companyCode = get().companyCode;
-                    if (companyCode) {
-                        const orderType = get().selectedOrder?.type === 'Immediate' ? 'immediateOrders' : 'scheduledOrders';
+                cancelOrder: async () => {
+                    const state = get();
+                    const { selectedOrder, companyCode } = state;
+                
+                    if (!companyCode || !selectedOrder) return;
+                
+                    const orderId = selectedOrder.id;
+                    const orderType = selectedOrder.type === 'Immediate' ? 'immediateOrders' : 'scheduledOrders';
+                
+                    try {
+                        // Call the API to cancel the order
+                        await api.cancelOrder(companyCode, orderId);
+                
+                        // After successful API call, update the state to remove the order
                         set(state => {
                             const orderIndex = state[orderType].findIndex(order => order.id === orderId);
                             if (orderIndex !== -1) {
-                                state[orderType][orderIndex].state = 'Canceled';
-                                state[orderType][orderIndex].updatedAt = new Date().toISOString() as DateTimeIsoUtc;
+                                // Remove the order from the state
+                                state[orderType].splice(orderIndex, 1);
+                                state.selectedOrder = undefined; // Clear the selected order
                             }
                         });
-                        await api.cancelOrder(companyCode, orderId);
+                    } catch (error) {
+                        console.error('Failed to cancel the order:', error);
+                        // Handle error accordingly, maybe set an error state or show a notification
                     }
                 },
 
