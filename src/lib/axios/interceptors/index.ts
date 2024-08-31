@@ -38,7 +38,6 @@ export const refreshToken = async (error: any) => {
             config.headers.Authorization = `Bearer ${refreshCredentials.accessToken}`
             return axiosPrivate(config)
         } catch (error) {
-            localStorage.clear()
             identityStore.setState({ identity: null })
         }
     }
