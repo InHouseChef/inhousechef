@@ -1,7 +1,10 @@
 'use client'
+import { CompanyPath } from '@/types'
 import { useEffect } from 'react'
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
+import { usePathParams } from './useDefaultQueryParams'
+import { settingsStore } from './useSettings'
 
 interface DynamicTheme {
     colors: Record<string, string>
@@ -12,7 +15,7 @@ interface UseThemeStore {
     setTheme: (theme: DynamicTheme) => void
 }
 
-const DEFAULT_COLOR = '44, 85, 251'
+const DEFAULT_COLOR = '124,58,237'
 
 export const themeStore = create<UseThemeStore>()(
     devtools(
@@ -39,11 +42,20 @@ const hexToRgb = (hex: string) => {
 }
 
 export const useTheme = () => {
+    const { companyCode } = usePathParams<CompanyPath>()
     const { theme, setTheme } = themeStore()
 
+    const { branding } = settingsStore()
+
     useEffect(() => {
+        const color = branding?.primaryColor
+        setTheme({ colors: { primary: color ? hexToRgb(color) : DEFAULT_COLOR } })
+    }, [branding])
+
+    useEffect(() => {
+        if (companyCode) return
         setTheme({ colors: { primary: DEFAULT_COLOR } })
-    }, [])
+    }, [companyCode])
 
     return {
         theme

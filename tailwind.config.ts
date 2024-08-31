@@ -2,7 +2,16 @@ import type { Config } from 'tailwindcss'
 
 const config = {
     darkMode: ['class'],
-    content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './app/**/*.{ts,tsx}', './src/**/*.{ts,tsx}'],
+    content: [
+        './pages/**/*.{ts,tsx}',
+        './components/**/*.{ts,tsx}',
+        './app/**/*.{ts,tsx}',
+        './src/**/*.{ts,tsx}',
+        './src/providers/**/*.{js,ts,jsx,tsx,mdx}',
+        './src/packages/**/*.{js,ts,jsx,tsx,mdx}',
+        './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+        './src/components/**/*.{js,ts,jsx,tsx,mdx}'
+    ],
     prefix: '',
     theme: {
         container: {
@@ -13,6 +22,9 @@ const config = {
             }
         },
         extend: {
+            fontFamily: {
+                satoshi: ['var(--font-satoshi)']
+            },
             colors: {
                 border: 'hsl(var(--border))',
                 input: 'hsl(var(--input))',
@@ -20,7 +32,7 @@ const config = {
                 background: 'hsl(var(--background))',
                 foreground: 'hsl(var(--foreground))',
                 primary: {
-                    DEFAULT: 'hsl(var(--primary))',
+                    DEFAULT: 'rgba(var(--color-primary), <alpha-value>)',
                     foreground: 'hsl(var(--primary-foreground))'
                 },
                 secondary: {

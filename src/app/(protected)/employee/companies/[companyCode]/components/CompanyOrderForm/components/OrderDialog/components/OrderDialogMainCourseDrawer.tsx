@@ -44,7 +44,7 @@ export const OrderDialogMainCourseDrawer = ({ isOpen, onClose }: OrderDialogMain
                         id: meal.id,
                         name: meal.name,
                         price: meal.price,
-                        quantity: 1, // Assuming quantity is always 1 when adding directly
+                        quantity: 1,
                         imageUrl: meal.imageUrl,
                         type: 'MainCourse'
                     })

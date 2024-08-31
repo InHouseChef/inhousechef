@@ -132,7 +132,7 @@ export const MealUpdateForm = ({ mealId }: MealUpdateFormProps) => {
                         {imageURL ? (
                             <img src={imageURL} alt='Meal image' className='h-full w-full rounded-lg object-cover' />
                         ) : (
-                            <span className='text-center text-gray-500'>No image</span>
+                            <span className='text-center text-gray-500'>Nema slike</span>
                         )}
                     </div>
                     <div className='mt-4'>

@@ -67,7 +67,7 @@ export const CompanyList = () => {
                         />
                     ) : (
                         <div className='flex h-12 w-12 items-center justify-center rounded-lg bg-gray-200'>
-                            <p className='text-center text-xs text-gray-500'>No Image</p>
+                            <p className='text-center text-xs text-gray-500'>Nema slike</p>
                         </div>
                     )
             })
