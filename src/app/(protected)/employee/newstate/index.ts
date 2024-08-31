@@ -4,7 +4,7 @@ import { devtools, persist } from 'zustand/middleware';
 import { axiosPrivate } from '@/lib/axios';
 import { createBaseUrlQuery, createUrlParams } from '@/utils';
 import { immer } from 'zustand/middleware/immer';
-import { DailyMenuMeal, ReadDailyMenuResponse } from '@/api/daily-menus';
+import { ReadDailyMenuResponse } from '@/api/daily-menus';
 import { ReadMyOrderResponse } from '@/api/order';
 import { ReadALaCardMenuResponse } from '@/api/alacard-menus';
 import { RolesEnum } from '@/api/users';
@@ -34,7 +34,20 @@ export type OrderItem = {
     type: MealType;
 };
 
-export interface OrderDetails {
+export interface ImmediateOrderDetails {
+    id: string;
+    number: string;
+    companyId: string;
+    customerId: string;
+    state: OrderState;
+    type: OrderType;
+    orderDate: DateIso;
+    orderItems: OrderItem[];
+    placedAt?: DateTimeIsoUtc;
+    confirmedAt?: DateTimeIsoUtc;
+}
+
+export interface ScheduledOrderDetails {
     id: string;
     number: string;
     companyId: string;
@@ -60,17 +73,18 @@ export interface CartStore {
     aLaCarteShift?: ALaCarteShift;
     immediateOrders: ReadMyOrderResponse[];
     scheduledOrders: ReadMyOrderResponse[];
-    selectedOrder?: OrderDetails;
+    selectedOrder?: ScheduledOrderDetails | ImmediateOrderDetails;
 
     // State management actions
     setActiveDay: (day: DateIso) => void;
     setActiveShift: (shiftId: string) => void;
     setSelectedOrderById: (orderId: string) => void;
     setMenus: (menu: ReadDailyMenuResponse, aLaCarteMenu?: ReadDailyMenuResponse) => void;
-    addOrder: (order: OrderDetails) => void;
+    addOrder: (order: ScheduledOrderDetails | ImmediateOrderDetails) => void;
     updateOrder: (orderId: string, orderItems: OrderItem[]) => void;
     cancelOrder: (orderId: string) => void;
     confirmOrder: (orderId: string) => void;
+    updateSelectedOrder(): void;
     resetCart: () => void;
 
     // API integration placeholders
@@ -225,19 +239,31 @@ export const useCartStore = create<CartStore>()(
                 },
 
                 updateSelectedOrder: () => {
-                    const { activeDay, activeShift, immediateOrders, scheduledOrders, hasALaCardPermission } = get();
+                    const { activeDay, activeShift, immediateOrders, scheduledOrders } = get();
                     if (!activeShift) return;
 
                     const isALaCarteShift = activeShift.id === get().aLaCarteShift?.id;
-                    const relevantOrders = isALaCarteShift ? immediateOrders : scheduledOrders;
 
-                    const foundOrder = relevantOrders.find(order =>
-                        order.orderDate === activeDay && order.orderedForShiftId === activeShift.id
-                    );
+                    // if is an a la carte shift find an order by order date from the immediate orders
+                    // otherwise find an order by order date and ordered for shift id from the scheduled orders
 
-                    set(state => {
-                        state.selectedOrder = foundOrder || undefined;
-                    });
+                    if (isALaCarteShift) {
+                        const foundOrder = immediateOrders.find(order =>
+                            order.orderDate === activeDay
+                        );
+                        set(state => {
+                            state.selectedOrder = foundOrder || undefined;
+                        });
+                        return;
+                    }
+                    else {
+                        const foundOrder = scheduledOrders.find(order =>
+                            order.orderDate === activeDay && order.orderedForShiftId === activeShift.id
+                        );
+                        set(state => {
+                            state.selectedOrder = foundOrder || undefined;
+                        });
+                    }
                 },
 
                 setSelectedOrderById: (orderId: string) => {
@@ -257,7 +283,7 @@ export const useCartStore = create<CartStore>()(
                     });
                 },
 
-                addOrder: async (order: OrderDetails) => {
+                addOrder: async (order: ScheduledOrderDetails) => {
                     const companyCode = get().companyCode;
                     if (companyCode) {
                         set(state => {
@@ -369,7 +395,7 @@ export const useCartStore = create<CartStore>()(
                 fetchImmediateOrders: async (day: DateIso) => {
                     const companyCode = get().companyCode;
                     if (companyCode) {
-                        const orders = await api.fetchImmediateOrders(companyCode, new Date().toISOString().split('T')[0] as DateIso);
+                        const orders = await api.fetchImmediateOrders(companyCode, day);
                         set(state => {
                             state.immediateOrders = orders;
                         });
@@ -405,7 +431,7 @@ export const useCartStore = create<CartStore>()(
                     // Check if it's an A La Carte shift
                     const isALaCarteShift = activeShift.id === state.aLaCarteShift?.id;
                 
-                    let updatedOrder: OrderDetails | undefined;
+                    let updatedOrder: ScheduledOrderDetails | ImmediateOrderDetails | undefined;
                 
                     if (selectedOrder && selectedOrder.type === (isALaCarteShift ? 'Immediate' : 'Scheduled')) {
                         // If there's a selected order of the correct type, update it

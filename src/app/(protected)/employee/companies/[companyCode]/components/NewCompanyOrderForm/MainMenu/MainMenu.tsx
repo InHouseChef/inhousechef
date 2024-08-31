@@ -13,7 +13,7 @@ const MainMenu: React.FC = () => {
     const [selectedMealType, setSelectedMealType] = useState<'MainCourse' | 'SideDish'>('MainCourse');
     const [selectedMeal, setSelectedMeal] = useState<DailyMenuMeal | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    
+
     const {
         setActiveDay,
         setActiveShift,
@@ -25,13 +25,10 @@ const MainMenu: React.FC = () => {
         regularShifts,
         aLaCarteShift,
         activeShift,
-        immediateOrders,
-        scheduledOrders,
         hasALaCardPermission,
         activeDay,
+        selectedOrder,
     } = useCartStore();
-
-    const [activeOrder, setActiveOrder] = useState<OrderDetails | undefined>(undefined);
 
     useEffect(() => {
         const defaultDay = hasALaCardPermission
@@ -43,15 +40,7 @@ const MainMenu: React.FC = () => {
         fetchImmediateOrders(defaultDay as DateIso);
         fetchScheduledOrders(defaultDay as DateIso);
         setActiveShift(undefined); // Reset selected shift when day changes
-    }, [hasALaCardPermission]);
-
-    useEffect(() => {
-        if (activeShift) {
-            const relevantOrders = [...immediateOrders, ...scheduledOrders];
-            const foundOrder = relevantOrders.find(order => order.orderedForShiftId === activeShift.id);
-            setActiveOrder(foundOrder);
-        }
-    }, [activeShift, immediateOrders, scheduledOrders]);
+    }, [hasALaCardPermission, setActiveDay, setActiveShift, fetchMenus, fetchImmediateOrders, fetchScheduledOrders]);
 
     const handleShiftChange = (shiftId: string) => {
         setActiveShift(shiftId);
@@ -77,7 +66,7 @@ const MainMenu: React.FC = () => {
     const mealsToDisplay = (activeShift?.id === aLaCarteShift?.id && activeALaCarteMenus ? alacardMeals : regularMeals)
         ?.filter(meal => meal.type === selectedMealType) || [];
 
-    const mealsInActiveOrder = activeOrder?.orderItems.filter(meal => meal.type === selectedMealType) || [];
+    const mealsInActiveOrder = selectedOrder?.orderItems.filter(meal => meal.type === selectedMealType) || [];
 
     const isTodaySelected = activeDay === new Date().toISOString().split('T')[0] as DateIso;
 
