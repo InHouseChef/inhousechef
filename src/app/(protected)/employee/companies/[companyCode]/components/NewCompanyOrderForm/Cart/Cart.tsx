@@ -1,6 +1,5 @@
 import React from 'react';
 import { useCartStore } from '@/app/(protected)/employee/newstate';
-import { MealCard } from '../../CompanyOrderForm/components/MealCard/MealCard';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader, SheetClose } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react'; // Icon for the close button
@@ -17,14 +16,20 @@ const Cart = () => {
         message = 
         <>
             <div className="p-4 bg-gray-100 text-center text-sm text-gray-700">
-                Vaša porudžbina će biti dostavljena u naredna <strong>dva sata</strong>.
+                Nakon što se odobri od strane restorana Vaša porudžbina će biti dostavljena u roku od <strong>dva sata</strong>.
                 {/* <br />
                 Porudžbinu možete izmeniti najkasnije do <strong>23:00:00</strong> */}
             </div>
         </>
     }
     else {
-
+        message = <>
+            <div className="p-4 bg-gray-100 text-center text-sm text-gray-700">
+                Vaša porudžbina će biti dostavljena u naredna <strong>dva sata</strong>.
+                {/* <br />
+                Porudžbinu možete izmeniti najkasnije do <strong>23:00:00</strong> */}
+            </div>
+        </>
     }
 
     return (
@@ -46,11 +51,7 @@ const Cart = () => {
                     </SheetClose>
                 </SheetHeader>
 
-                <div className="p-4 bg-gray-100 text-center text-sm text-gray-700">
-                    {message}
-                    <br />
-                    Porudžbinu možete izmeniti najkasnije do <strong>23:00:00</strong>
-                </div>
+                {message}
 
                 <div className="p-4 space-y-4 overflow-auto">
                     {/* Main Courses */}

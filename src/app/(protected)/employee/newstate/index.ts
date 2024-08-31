@@ -425,40 +425,37 @@ export const useCartStore = create<CartStore>()(
                 
                     if (!companyCode || !activeShift) return;
                 
-                    // Prepare the meal item for the API call
-                    const mealItem = { id: mealId, quantity };
-                
-                    // Check if it's an A La Carte shift
                     const isALaCarteShift = activeShift.id === state.aLaCarteShift?.id;
-                
                     let updatedOrder: ScheduledOrderDetails | ImmediateOrderDetails | undefined;
                 
                     if (selectedOrder && selectedOrder.type === (isALaCarteShift ? 'Immediate' : 'Scheduled')) {
-                        // If there's a selected order of the correct type, update it
-                        updatedOrder = await api.addOrderItem(companyCode, selectedOrder.id, mealId, { quantity });
+                        if (quantity > 0) {
+                            updatedOrder = await api.addOrderItem(companyCode, selectedOrder.id, mealId, { quantity });
+                        } else {
+                            updatedOrder = await api.decreaseOrderItemQuantity(companyCode, selectedOrder.id, mealId);
+                        }
                     } else {
-                        // Determine if there is an existing order for this day and shift
                         const existingOrder = (isALaCarteShift ? immediateOrders : scheduledOrders).find(
                             order => order.orderDate === activeDay && order.orderedForShiftId === activeShift.id
                         );
                 
                         if (existingOrder) {
-                            // If an existing order is found, update it
-                            updatedOrder = await api.addOrderItem(companyCode, existingOrder.id, mealId, { quantity });
-                        } else {
-                            // If no order exists, create a new one
+                            if (quantity > 0) {
+                                updatedOrder = await api.addOrderItem(companyCode, existingOrder.id, mealId, { quantity });
+                            } else {
+                                updatedOrder = await api.decreaseOrderItemQuantity(companyCode, existingOrder.id, mealId);
+                            }
+                        } else if (quantity > 0) {
                             if (isALaCarteShift) {
-                                // Create a new immediate order
-                                updatedOrder = await api.createImmediateOrder(companyCode, { meals: [mealItem] });
+                                updatedOrder = await api.createImmediateOrder(companyCode, { meals: [{ id: mealId, quantity }] });
                                 set(state => {
                                     state.immediateOrders.push(updatedOrder);
                                 });
                             } else {
-                                // Create a new scheduled order
                                 updatedOrder = await api.createScheduledOrder(companyCode, {
                                     shiftId: activeShift.id,
                                     orderDate: activeDay,
-                                    meals: [mealItem],
+                                    meals: [{ id: mealId, quantity }],
                                 });
                                 set(state => {
                                     state.scheduledOrders.push(updatedOrder);
@@ -482,7 +479,8 @@ export const useCartStore = create<CartStore>()(
                             }
                         });
                     }
-                },
+                }
+                ,
 
                 loadCartData: async (companyCode: string, userRole: RolesEnum, hasALaCardPermission: boolean) => {
                     set(state => {
