@@ -3,7 +3,6 @@ import { DateIso, DateTimeIsoUtc, OrderState, OrderType } from '@/types'
 
 interface Order {
     shiftId: string
-    number: string
     orderDate: DateIso
     meals: {
         id: string
@@ -13,7 +12,6 @@ interface Order {
 
 interface OrderDetails {
     id: string
-    number: string
     companyId: string
     customerId: string
     state: OrderState
@@ -34,9 +32,12 @@ interface OrderDetails {
 
 interface ScheduledOrderDetails extends OrderDetails {
     orderedForShiftId: string
+    number: string
 }
 
-interface ImmediateOrderDetails extends OrderDetails {}
+interface ImmediateOrderDetails extends OrderDetails {
+    number: string
+}
 
 export interface IncrementOrderItemQuantityResponse extends OrderDetails {}
 
@@ -44,6 +45,7 @@ export interface DecreaseOrderItemQuantityResponse extends OrderDetails {}
 
 export interface ReadOrderResponse extends Order {
     id: string
+    number: string
 }
 
 export interface CreateScheduledOrderRequest extends Order {}
@@ -74,6 +76,7 @@ export interface ReadOrderResponse extends OrderResponse {}
 
 export interface ReadMyOrderResponse extends OrderDetails {
     orderedForShiftId: string
+    number: string
 }
 
 export interface ReadOrderSummaryResponse {

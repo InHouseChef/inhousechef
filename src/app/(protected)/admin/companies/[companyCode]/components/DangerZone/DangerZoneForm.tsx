@@ -1,6 +1,7 @@
 'use client'
 
 import { useDeleteCompany, useReadCompany } from '@/api/companies'
+import { Header, Loader } from '@/components'
 import {
     AlertDialog,
     AlertDialogAction,
@@ -13,7 +14,6 @@ import {
     AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { Header, Loader } from '@/components'
 import { useRouter } from 'next/navigation'
 
 interface DangerZoneProps {
@@ -22,7 +22,7 @@ interface DangerZoneProps {
 
 export const DangerZone = ({ companyCode }: DangerZoneProps) => {
     const { data: company, isLoading } = useReadCompany({ path: { companyCode } })
-    const { mutate: deleteCompany } = useDeleteCompany()
+    const { mutate: deleteCompany, isPending } = useDeleteCompany()
     const router = useRouter()
 
     const handleDeleteCompany = () => {
@@ -50,7 +50,7 @@ export const DangerZone = ({ companyCode }: DangerZoneProps) => {
             <div className='mt-4'>
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
-                        <Button type='button' variant='destructive'>
+                        <Button loading={isPending} type='button' variant='destructive'>
                             Delete Company
                         </Button>
                     </AlertDialogTrigger>

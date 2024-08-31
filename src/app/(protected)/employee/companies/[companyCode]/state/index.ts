@@ -1,7 +1,9 @@
 import { ReadALaCardShiftResponse } from '@/api/alacard-shifts'
 import { MealType } from '@/api/meals'
+import { ReadMyOrderResponse } from '@/api/order'
 import { ReadShiftResponse } from '@/api/shifts'
 import { DateIso } from '@/types'
+import { toDateFromDateIso } from '@/utils/date'
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 import { Time } from '../utils'
@@ -17,40 +19,63 @@ export interface CartItem {
 
 interface CartStore {
     order: { [shiftId: string]: { [date: string]: CartItem[] } }
-    selectedShift?: ReadShiftResponse
+    activeShift?: ReadShiftResponse
     aLaCardShift?: ReadALaCardShiftResponse
-    selectedDate: DateIso
-    selectedMealType: MealType
+    activeDate: DateIso
+    mealType: MealType
     activeOrderId: string
+    activeOrders: { [orderId: string]: ReadMyOrderResponse }
+    setActiveOrder: (orderId: string, order: ReadMyOrderResponse) => void
     setActiveOrderId: (orderId: string) => void
-    setSelectedShift: (shift?: ReadShiftResponse) => void
+    setActiveShift: (shift?: ReadShiftResponse) => void
     setALaCardShift: (shift?: ReadALaCardShiftResponse) => void
-    setSelectedDate: (date: DateIso) => void
-    setSelectedMealType: (type: MealType) => void
+    setActiveDate: (date: DateIso) => void
+    setMealType: (type: MealType) => void
     addToCart: (item: CartItem) => void
     removeFromCart: (itemId: string) => void
     resetCart: () => void
     canScheduleOrder: () => boolean
     canImmediatelyOrder: () => boolean
+    isOpenCart: boolean
+    setIsOpenCart: (open: boolean) => void
 }
 
 export const useCartStore = create<CartStore>()(
     devtools(
         persist(
             (set, get) => ({
+                // Persist these states
                 order: {},
-                selectedShift: {} as ReadShiftResponse,
-                selectedDate: '',
-                selectedMealType: 'MainCourse',
+                activeOrders: {},
+                activeDate: '',
+                mealType: 'MainCourse',
                 activeOrderId: '',
-                setSelectedShift: shift => set(() => ({ selectedShift: shift })),
+
+                // Do not persist dynamic data like shifts
+                activeShift: undefined,
+                aLaCardShift: undefined,
+
+                isOpenCart: false,
+                setIsOpenCart: open => set(() => ({ isOpenCart: open })),
+
+                setActiveShift: shift => set(() => ({ activeShift: shift })),
                 setALaCardShift: shift => set(() => ({ aLaCardShift: shift })),
-                setSelectedDate: date => set(() => ({ selectedDate: date })),
-                setSelectedMealType: (type: MealType) => set(() => ({ selectedMealType: type })),
+
+                setActiveDate: date => set(() => ({ activeDate: date })),
+                setMealType: type => set(() => ({ mealType: type })),
+
                 setActiveOrderId: orderId => set(() => ({ activeOrderId: orderId })),
+                setActiveOrder: (orderId, order) =>
+                    set(state => ({
+                        activeOrders: {
+                            ...state.activeOrders,
+                            [orderId]: order
+                        }
+                    })),
+
                 addToCart: item =>
                     set(state => {
-                        const { selectedShift, selectedDate } = state
+                        const { activeShift: selectedShift, activeDate: selectedDate } = state
                         if (!selectedShift || !selectedDate) return state
 
                         const shiftCart = state.order[selectedShift.id] || {}
@@ -70,66 +95,72 @@ export const useCartStore = create<CartStore>()(
                             }
                         }
                     }),
+
                 removeFromCart: itemId =>
                     set(state => {
-                        const { selectedShift, selectedDate } = state
-                        if (!selectedShift || !selectedDate) return state
+                        const { activeShift, activeDate } = state
+                        if (!activeShift || !activeDate) return state
 
-                        const shiftCart = state.order[selectedShift.id] || {}
-                        const dateCart = shiftCart[selectedDate] || []
+                        const shiftCart = state.order[activeShift.id] || {}
+                        const dateCart = shiftCart[activeDate] || []
                         const updatedCart = dateCart.filter(item => item.id !== itemId)
 
                         return {
                             order: {
                                 ...state.order,
-                                [selectedShift.id]: { ...shiftCart, [selectedDate]: updatedCart }
+                                [activeShift.id]: { ...shiftCart, [activeDate]: updatedCart }
                             }
                         }
                     }),
+
                 clearCart: () =>
                     set(state => {
-                        const { selectedShift, selectedDate } = state
-                        if (!selectedShift || !selectedDate) return state
+                        const { activeShift, activeDate } = state
+                        if (!activeShift || !activeDate) return state
 
-                        const shiftCart = state.order[selectedShift.id] || {}
+                        const shiftCart = state.order[activeShift.id] || {}
                         return {
                             order: {
                                 ...state.order,
-                                [selectedShift.id]: { ...shiftCart, [selectedDate]: [] }
+                                [activeShift.id]: { ...shiftCart, [activeDate]: [] }
                             }
                         }
                     }),
+
                 resetCart: () =>
                     set(() => ({
                         order: {},
-                        selectedShift: undefined,
-                        selectedDate: '',
+                        activeShift: undefined,
+                        activeDate: '',
                         activeOrderId: '',
-                        selectedMealType: 'MainCourse'
+                        mealType: 'MainCourse'
                     })),
+
                 canScheduleOrder: (): boolean => {
-                    // const { selectedShift, selectedDate } = get()
-                    // if (!selectedShift || !selectedDate) return false
+                    const { activeShift, activeDate } = get()
+                    if (!activeShift || !activeDate) return false
 
-                    // const { shiftStartAt, orderingDeadlineBeforeShiftStart } = selectedShift
+                    const { shiftStartAt, orderingDeadlineBeforeShiftStart } = activeShift
 
-                    // const dateFormatted = toDateFromDateIso(selectedDate)
-                    // const shiftStartFormatted = Time.fromString(shiftStartAt)
-                    // const orderingDeadlineBeforeShiftStartFormatted = new Time(orderingDeadlineBeforeShiftStart)
+                    const dateFormatted = toDateFromDateIso(activeDate)
+                    const shiftStartFormatted = Time.fromString(shiftStartAt)
+                    const orderingDeadlineBeforeShiftStartFormatted = new Time(orderingDeadlineBeforeShiftStart)
 
-                    // // Subtract ordering deadline from shift start
-                    // const deadlineTimeFormatted = shiftStartFormatted.subtract(orderingDeadlineBeforeShiftStartFormatted)
-                    // const deadlineTime = deadlineTimeFormatted.toDate(dateFormatted).getTime()
-                    // const currentTime = new Date().getTime()
+                    const deadlineTimeFormatted = shiftStartFormatted.subtract(orderingDeadlineBeforeShiftStartFormatted)
+                    const deadlineTime = deadlineTimeFormatted.toDate(dateFormatted).getTime()
+                    const currentTime = new Date().getTime()
 
-                    return true
+                    console.log(currentTime, deadlineTime)
+                    console.log(currentTime < deadlineTime)
+
+                    return currentTime < deadlineTime
                 },
+
                 canImmediatelyOrder: (): boolean => {
                     const { aLaCardShift } = get()
 
                     if (!aLaCardShift) return false
                     const { shiftStartAt, shiftEndAt } = aLaCardShift
-                    // @ts-ignore
                     const shiftStartFormatted = Time.fromString(shiftStartAt)
                     const shiftEndFormatted = Time.fromString(shiftEndAt)
                     const currentDate = new Date()
@@ -143,7 +174,14 @@ export const useCartStore = create<CartStore>()(
                 }
             }),
             {
-                name: 'cart'
+                name: 'cart',
+                partialize: state => ({
+                    order: state.order,
+                    activeOrders: state.activeOrders,
+                    activeDate: state.activeDate,
+                    mealType: state.mealType,
+                    activeOrderId: state.activeOrderId
+                })
             }
         )
     )

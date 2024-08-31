@@ -1,6 +1,6 @@
 'use client'
 
-import { updateCompanyDetails, useDeleteCompany, useReadCompany } from '@/api/companies'
+import { updateCompanyDetails, useReadCompany } from '@/api/companies'
 import { Header, Loader } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -20,7 +20,6 @@ type CompanyDetailsUpdateFormData = z.infer<typeof updateCompanyDetailsSchema>
 
 export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFormProps) => {
     const { data: company, isLoading } = useReadCompany({ path: { companyCode } })
-    const { mutate: deleteCompany } = useDeleteCompany()
 
     const [hasChanges, setHasChanges] = useState(false)
 
@@ -69,8 +68,6 @@ export const CompanyDetailsUpdateForm = ({ companyCode }: CompanyDetailsUpdateFo
         reset(updateResult)
         setHasChanges(false)
     }
-
-    const handleDeleteCompany = () => deleteCompany({ path: { companyCode } })
 
     if (isLoading) {
         return <Loader />
