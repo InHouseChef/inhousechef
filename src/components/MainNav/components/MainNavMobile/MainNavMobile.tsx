@@ -29,12 +29,12 @@ export const MEAL_RELATED_LINKS: MainNavLink[] = [
     {
         label: 'Moje porudžbine',
         path: 'my-orders',
-        icon: <CartIcon />
+        icon: <CartIcon className='text-primary' />
     },
     {
         label: '7-dnevni jelovnik',
         path: 'menu',
-        icon: <MenuIcon />
+        icon: <MenuIcon className='text-primary' />
     }
 ]
 
@@ -42,7 +42,7 @@ export const USER_RELATED_LINKS: MainNavLink[] = [
     {
         label: 'Moj profil',
         path: 'profile',
-        icon: <UserProfileIcon />
+        icon: <UserProfileIcon className='text-primary' />
     },
     {
         label: 'Upravljanje korisnicima',
@@ -55,7 +55,7 @@ export const TERMS_AND_CONDITIONS = [
     {
         label: 'Uslovi korišćenja',
         path: 'privacy-policy',
-        icon: <TermsAndConditionsIcon />
+        icon: <TermsAndConditionsIcon className='text-primary' />
     }
 ]
 
@@ -155,7 +155,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                                     key={'profile'}>
                                     <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-100'>
                                         {/* Replace with your icon component */}
-                                        {<UserIcon color='#7c3aed' />}
+                                        {<UserIcon className='text-primary' />}
                                     </div>
                                     <span className='text-lg font-medium text-gray-700'>{'Moj profil'}</span>
                                     <ChevronRight className='ml-auto text-gray-400' />
@@ -208,7 +208,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                         className='flex w-full cursor-pointer items-center gap-4 rounded-lg bg-gray-100 px-4 py-10 transition-all hover:bg-gray-200'>
                         <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-100'>
                             {/* Replace with your logout icon component */}
-                            <LogoutIcon />
+                            <LogoutIcon className='text-primary' />
                         </div>
 
                         <div className='text-center text-lg font-medium text-gray-700'>Odjavi se</div>

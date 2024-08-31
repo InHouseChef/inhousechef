@@ -1,7 +1,5 @@
-import { UsersIcon } from "lucide-react"
+import { UsersIcon } from 'lucide-react'
 
 export const UserGroupIcon = () => {
-    return(
-        <UsersIcon color='#7c3aed' height={18} width={18} />
-    )
+    return <UsersIcon className='text-primary' height={18} width={18} />
 }
