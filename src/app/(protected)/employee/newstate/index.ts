@@ -171,10 +171,12 @@ export const useCartStore = create<CartStore>()(
                 regularShifts: [],
                 immediateOrders: [],
                 scheduledOrders: [],
+                selectedOrder: undefined,
 
                 setActiveDay: async (day: DateIso) => {
                     set(state => {
                         state.activeDay = day;
+                        state.selectedOrder = undefined; // Reset selected order when day changes
                     });
 
                     // Refetch menus and orders for the selected day
@@ -184,7 +186,6 @@ export const useCartStore = create<CartStore>()(
                         get().fetchScheduledOrders(day)
                     ]);
 
-                    // Optionally reset the selected shift if the active shift is not compatible with the new day
                     const activeShift = get().activeShift;
                     if (activeShift) {
                         const isShiftStillValid = get().regularShifts.some(shift => shift.id === activeShift.id) ||
@@ -195,13 +196,18 @@ export const useCartStore = create<CartStore>()(
                             });
                         }
                     }
+
+                    // Determine the correct order for the new day and shift
+                    get().updateSelectedOrder();
                 },
 
                 setActiveShift: async (shiftId: string) => {
-                    const shift = get().regularShifts.find(s => s.id === shiftId) || (get().hasALaCardPermission ? get().aLaCarteShift : undefined);
+                    const shift = get().regularShifts.find(s => s.id === shiftId) || 
+                                  (get().hasALaCardPermission ? get().aLaCarteShift : undefined);
                     if (shift) {
                         set(state => {
                             state.activeShift = shift;
+                            state.selectedOrder = undefined; // Reset selected order when shift changes
                         });
 
                         const activeDay = get().activeDay;
@@ -212,7 +218,26 @@ export const useCartStore = create<CartStore>()(
                             get().fetchImmediateOrders(activeDay), 
                             get().fetchScheduledOrders(activeDay)
                         ]);
+
+                        // Determine the correct order for the new shift and day
+                        get().updateSelectedOrder();
                     }
+                },
+
+                updateSelectedOrder: () => {
+                    const { activeDay, activeShift, immediateOrders, scheduledOrders, hasALaCardPermission } = get();
+                    if (!activeShift) return;
+
+                    const isALaCarteShift = activeShift.id === get().aLaCarteShift?.id;
+                    const relevantOrders = isALaCarteShift ? immediateOrders : scheduledOrders;
+
+                    const foundOrder = relevantOrders.find(order =>
+                        order.orderDate === activeDay && order.orderedForShiftId === activeShift.id
+                    );
+
+                    set(state => {
+                        state.selectedOrder = foundOrder || undefined;
+                    });
                 },
 
                 setSelectedOrderById: (orderId: string) => {
@@ -268,7 +293,7 @@ export const useCartStore = create<CartStore>()(
                                 state[orderType][orderIndex].updatedAt = new Date().toISOString() as DateTimeIsoUtc;
                             }
                         });
-                        await api.addOrderItem(companyCode, orderId, { quantity: orderItems[0].quantity });
+                        await api.addOrderItem(companyCode, orderId, orderItems[0].skuId, { quantity: orderItems[0].quantity });
                     }
                 },
 
@@ -384,15 +409,7 @@ export const useCartStore = create<CartStore>()(
                 
                     if (selectedOrder && selectedOrder.type === (isALaCarteShift ? 'Immediate' : 'Scheduled')) {
                         // If there's a selected order of the correct type, update it
-                        const existingItemIndex = selectedOrder.orderItems.findIndex(item => item.skuId === mealId);
-                
-                        if (existingItemIndex > -1) {
-                            // If the item already exists in the order, update the quantity
-                            updatedOrder = await api.addOrderItem(companyCode, selectedOrder.id, mealId, { quantity });
-                        } else {
-                            // If the item is not in the order, add it
-                            updatedOrder = await api.addOrderItem(companyCode, selectedOrder.id, mealId, { quantity });
-                        }
+                        updatedOrder = await api.addOrderItem(companyCode, selectedOrder.id, mealId, { quantity });
                     } else {
                         // Determine if there is an existing order for this day and shift
                         const existingOrder = (isALaCarteShift ? immediateOrders : scheduledOrders).find(
