@@ -38,7 +38,6 @@ export const NewCompanyOrderForm: React.FC = () => {
     return (
         <div>
             <MainMenu />
-            {/* <Cart /> */}
         </div>
     );
 };

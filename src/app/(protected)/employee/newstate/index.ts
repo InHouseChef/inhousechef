@@ -1,4 +1,4 @@
-import { DateIso, DateTimeIsoUtc, OrderState, OrderType } from '@/types';
+import { DateIso, DateTimeIsoUtc, OrderState, OrderType, Time } from '@/types';
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { axiosPrivate } from '@/lib/axios';
@@ -13,15 +13,15 @@ export type MealType = 'MainCourse' | 'SideDish';
 
 export interface Shift {
     id: string;
-    shiftStartAt: string; // Format: 'HH:mm'
-    shiftEndAt: string;   // Format: 'HH:mm'
+    shiftStartAt: Time; // Format: 'HH:mm'
+    shiftEndAt: Time;   // Format: 'HH:mm'
     orderingDeadlineBeforeShiftStart: number; // Number of hours before start time for order deadline (for Regular shifts)
 }
 
 export interface ALaCarteShift {
     id: string;
-    shiftStartAt: string; // Format: 'HH:mm'
-    shiftEndAt: string;   // Format: 'HH:mm'
+    shiftStartAt: Time; // Format: 'HH:mm'
+    shiftEndAt: Time;   // Format: 'HH:mm'
 }
 
 export type OrderItem = {

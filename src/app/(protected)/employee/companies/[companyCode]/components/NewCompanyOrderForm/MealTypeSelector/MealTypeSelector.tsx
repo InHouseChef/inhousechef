@@ -3,7 +3,7 @@ import clsx from 'clsx';
 
 const MealTypeSelectorNav = ({ selectedMealType, onMealTypeChange }) => {
     return (
-        <nav className="mx-2 rounded-md bg-white mt-4">
+        <nav className="rounded-md bg-white mt-4">
             <ul className="flex h-full items-center">
                 <li
                     className={clsx('flex-1 cursor-pointer rounded-lg py-2 text-center', {

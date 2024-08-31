@@ -1,70 +1,159 @@
-import { useCartStore } from '@/app/(protected)/employee/newstate';
 import React from 'react';
+import { useCartStore } from '@/app/(protected)/employee/newstate';
+import { MealCard } from '../../CompanyOrderForm/components/MealCard/MealCard';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader, SheetClose } from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
+import { X } from 'lucide-react'; // Icon for the close button
 
-const Cart: React.FC = () => {
-    const selectedOrder = useCartStore(state => state.selectedOrder);
-    const updateOrder = useCartStore(state => state.updateOrder);
-    const cancelOrder = useCartStore(state => state.cancelOrder);
-    const confirmOrder = useCartStore(state => state.confirmOrder);
+const Cart = () => {
+    const { selectedOrder, addOrUpdateOrder, cancelOrder, placeOrder } = useCartStore();
+    const mainCourses = selectedOrder?.orderItems.filter(item => item.type === 'MainCourse') || [];
+    const sideDishes = selectedOrder?.orderItems.filter(item => item.type === 'SideDish') || [];
+    const totalAmount = selectedOrder?.orderItems.reduce((total, item) => total + item.price * item.quantity, 0) || 0;
+    const isDraft = selectedOrder?.state === 'Draft';
 
-    const handleIncreaseQuantity = (mealId: string) => {
-        if (selectedOrder) {
-            const updatedOrderItems = selectedOrder.orderItems.map(orderItem =>
-                orderItem.skuId === mealId ? { ...orderItem, quantity: orderItem.quantity + 1 } : orderItem
-            );
-            updateOrder(selectedOrder.id, updatedOrderItems);
-        }
-    };
+    let message = <></>;
+    if (selectedOrder?.type === 'Immediate') {
+        message = 
+        <>
+            <div className="p-4 bg-gray-100 text-center text-sm text-gray-700">
+                Vaša porudžbina će biti dostavljena u naredna <strong>dva sata</strong>.
+                {/* <br />
+                Porudžbinu možete izmeniti najkasnije do <strong>23:00:00</strong> */}
+            </div>
+        </>
+    }
+    else {
 
-    const handleDecreaseQuantity = (mealId: string) => {
-        if (selectedOrder) {
-            const updatedMeals = selectedOrder.meals
-                .map(meal =>
-                    meal.id === mealId && meal.quantity > 1 ? { ...meal, quantity: meal.quantity - 1 } : meal
-                )
-                .filter(meal => meal.quantity > 0);
-            updateOrder(selectedOrder.id, updatedMeals);
-        }
-    };
-
-    const handleCancelOrder = () => {
-        if (selectedOrder) {
-            cancelOrder(selectedOrder.id);
-        }
-    };
-
-    const handlePlaceOrder = () => {
-        if (selectedOrder && selectedOrder.state === 'Draft') {
-            confirmOrder(selectedOrder.id);
-        }
-    };
-
-    if (!selectedOrder) {
-        return <div>No active orders.</div>;
     }
 
     return (
-        <div>
-            <h3>Cart</h3>
-            {selectedOrder.meals.map(meal => (
-                <div key={meal.id}>
-                    <img src={meal.imageUrl} alt={meal.name} />
-                    <div>{meal.name}</div>
-                    <div>
-                        <button onClick={() => handleDecreaseQuantity(meal.id)}>-</button>
-                        <span>{meal.quantity}</span>
-                        <button onClick={() => handleIncreaseQuantity(meal.id)}>+</button>
-                    </div>
-                    <div>{meal.price}</div>
+        <Sheet>
+            <SheetTrigger asChild>
+            {selectedOrder && (
+                <Button className="fixed bottom-4 left-4 right-4 py-3 bg-primary text-white font-semibold text-sm text-center rounded-lg z-50">
+                    Pregledaj porudžbinu - {totalAmount} RSD
+                </Button>
+            )}
+            </SheetTrigger>
+            <SheetContent side="bottom" className="w-full h-full bg-white">
+                <SheetHeader className="flex justify-between items-center p-4 border-b">
+                    <SheetTitle className="text-lg font-bold">Vaša porudžbina</SheetTitle>
+                    <SheetClose asChild>
+                        <button className="text-gray-500 hover:text-gray-700 transition">
+                            <X className="h-6 w-6" />
+                        </button>
+                    </SheetClose>
+                </SheetHeader>
+
+                <div className="p-4 bg-gray-100 text-center text-sm text-gray-700">
+                    {message}
+                    <br />
+                    Porudžbinu možete izmeniti najkasnije do <strong>23:00:00</strong>
                 </div>
-            ))}
-            <div>
-                <button onClick={handleCancelOrder}>Cancel Order</button>
-                {selectedOrder.state === 'Draft' && (
-                    <button onClick={handlePlaceOrder}>Place Order</button>
-                )}
-            </div>
-        </div>
+
+                <div className="p-4 space-y-4 overflow-auto">
+                    {/* Main Courses */}
+                    {mainCourses.length > 0 && (
+                        <div>
+                            <h3 className="text-lg font-semibold mb-2">Glavna jela</h3>
+                            <div className="space-y-2">
+                                {mainCourses.map((item, index) => (
+                                    <div key={index} className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm">
+                                        <div className="flex items-center space-x-3">
+                                            <img
+                                                src={item.imageUrl}
+                                                alt={item.name}
+                                                className="w-10 h-10 rounded-lg"
+                                            />
+                                            <div>
+                                                <div className="font-semibold text-sm">{item.name}</div>
+                                                <div className="text-xs text-gray-500">{item.price} RSD</div>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <button
+                                                onClick={() => addOrUpdateOrder(item.skuId, -1)}
+                                                className="px-2 py-1 bg-gray-200 rounded">
+                                                −
+                                            </button>
+                                            <div className="text-sm font-semibold">{item.quantity}</div>
+                                            <button
+                                                onClick={() => addOrUpdateOrder(item.skuId, 1)}
+                                                className="px-2 py-1 bg-gray-200 rounded">
+                                                +
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <Button variant="link" className="mt-2 text-primary">Dodaj još glavnih jela</Button>
+                        </div>
+                    )}
+
+                    {/* Side Dishes */}
+                    {sideDishes.length > 0 && (
+                        <div>
+                            <h3 className="text-lg font-semibold mb-2">Prilozi</h3>
+                            <div className="space-y-2">
+                                {sideDishes.map((item, index) => (
+                                    <div key={index} className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm">
+                                        <div className="flex items-center space-x-3">
+                                            <img
+                                                src={item.imageUrl}
+                                                alt={item.name}
+                                                className="w-10 h-10 rounded-lg"
+                                            />
+                                            <div>
+                                                <div className="font-semibold text-sm">{item.name}</div>
+                                                <div className="text-xs text-gray-500">{item.price} RSD</div>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <button
+                                                onClick={() => addOrUpdateOrder(item.skuId, -1)}
+                                                className="px-2 py-1 bg-gray-200 rounded">
+                                                −
+                                            </button>
+                                            <div className="text-sm font-semibold">{item.quantity}</div>
+                                            <button
+                                                onClick={() => addOrUpdateOrder(item.skuId, 1)}
+                                                className="px-2 py-1 bg-gray-200 rounded">
+                                                +
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <Button variant="link" className="mt-2 text-primary">Dodaj još priloga</Button>
+                        </div>
+                    )}
+                </div>
+
+                <div className="fixed bottom-0 left-0 w-full p-4 bg-white border-t">
+                    {isDraft ? (
+                        <div className="flex flex-col space-y-2">
+                            <Button
+                                onClick={placeOrder}
+                                className="w-full py-3 bg-primary text-white rounded-lg shadow-md hover:bg-primary-dark transition">
+                                Poruči - {totalAmount} RSD
+                            </Button>
+                            <Button
+                                onClick={cancelOrder}
+                                className="w-full py-3 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition">
+                                Otkaži porudžbinu
+                            </Button>
+                        </div>
+                    ) : (
+                        <Button
+                            onClick={cancelOrder}
+                            className="w-full py-3 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition">
+                            Otkaži porudžbinu
+                        </Button>
+                    )}
+                </div>
+            </SheetContent>
+        </Sheet>
     );
 };
 

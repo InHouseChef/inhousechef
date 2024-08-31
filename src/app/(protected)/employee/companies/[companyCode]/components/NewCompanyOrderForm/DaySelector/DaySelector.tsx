@@ -20,7 +20,7 @@ const DaySelector: React.FC = () => {
     };
 
     return (
-        <nav className="topnav-horizontal mx-2 h-14 min-h-14 rounded-md bg-gray-100">
+        <nav className="topnav-horizontal h-14 min-h-14 rounded-md bg-gray-100">
             <ul className="flex h-full items-center">
                 <li
                     className={clsx('ml-2 flex-1 cursor-pointer rounded-lg py-2 text-center', {
