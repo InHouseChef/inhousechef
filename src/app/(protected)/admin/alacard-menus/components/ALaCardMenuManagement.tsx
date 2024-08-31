@@ -62,7 +62,7 @@ export const ALaCardMenuManagement = () => {
             path: '',
             query: { pagination: { ...DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST } }
         })
-        setMeals(mealsResult.results)
+        setMeals(mealsResult.results.flat())
         const firstDay = `${currentYear}-01-01`
         const lastDay = `${currentYear}-12-31`
         const aLaCardMenusResult = await readALaCardMenus({
