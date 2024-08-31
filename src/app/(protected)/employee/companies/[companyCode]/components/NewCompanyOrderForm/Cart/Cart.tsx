@@ -41,6 +41,16 @@ const Cart = () => {
             .catch(() => setIsLoading(false));
     };
 
+    const handlePlaceOrder = () => {
+        setIsLoading(true);
+        placeOrder()
+            .then(() => {
+                setIsLoading(false);
+                setIsOpen(false);
+            })
+            .catch(() => setIsLoading(false));
+    };
+
     return (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
@@ -151,7 +161,7 @@ const Cart = () => {
                     {isDraft ? (
                         <div className="flex flex-col space-y-2">
                             <Button
-                                onClick={placeOrder}
+                                onClick={handlePlaceOrder}
                                 className="w-full py-3 bg-primary text-white rounded-lg shadow-md hover:bg-primary-dark transition">
                                 Poruči - {totalAmount} RSD
                             </Button>
