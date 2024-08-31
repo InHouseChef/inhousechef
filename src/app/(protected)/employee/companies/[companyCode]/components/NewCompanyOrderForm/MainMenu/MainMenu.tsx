@@ -7,9 +7,9 @@ import { ShiftSelector } from '../ShiftSelector/ShiftSelector';
 import MealTypeSelector from '../MealTypeSelector/MealTypeSelector';
 import { MealDrawer } from '../MealDrawer/MealDrawer';
 import { DailyMenuMeal } from '@/api/daily-menus';
+import { DateIso } from '@/types';
 
 const MainMenu: React.FC = () => {
-    const [selectedDay, setSelectedDay] = useState<'today' | 'tomorrow'>('today');
     const [selectedMealType, setSelectedMealType] = useState<'MainCourse' | 'SideDish'>('MainCourse');
     const [selectedMeal, setSelectedMeal] = useState<DailyMenuMeal | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -38,11 +38,10 @@ const MainMenu: React.FC = () => {
             ? new Date().toISOString().split('T')[0]
             : new Date(Date.now() + 86400000).toISOString().split('T')[0];
 
-        setSelectedDay(hasALaCardPermission ? 'today' : 'tomorrow');
-        setActiveDay(defaultDay);
-        fetchMenus(defaultDay);
-        fetchImmediateOrders(defaultDay);
-        fetchScheduledOrders(defaultDay);
+        setActiveDay(defaultDay as DateIso);
+        fetchMenus(defaultDay as DateIso);
+        fetchImmediateOrders(defaultDay as DateIso);
+        fetchScheduledOrders(defaultDay as DateIso);
         setActiveShift(undefined); // Reset selected shift when day changes
     }, [hasALaCardPermission]);
 
@@ -53,10 +52,6 @@ const MainMenu: React.FC = () => {
             setActiveOrder(foundOrder);
         }
     }, [activeShift, immediateOrders, scheduledOrders]);
-
-    const handleDayChange = (day: 'today' | 'tomorrow') => {
-        setSelectedDay(day);
-    };
 
     const handleShiftChange = (shiftId: string) => {
         setActiveShift(shiftId);
@@ -84,6 +79,8 @@ const MainMenu: React.FC = () => {
 
     const mealsInActiveOrder = activeOrder?.orderItems.filter(meal => meal.type === selectedMealType) || [];
 
+    const isTodaySelected = activeDay === new Date().toISOString().split('T')[0] as DateIso;
+
     return (
         <div className="p-4">
             {/* Day Selector */}
@@ -96,8 +93,8 @@ const MainMenu: React.FC = () => {
                 selectedShiftId={activeShift?.id}
                 onShiftChange={handleShiftChange}
                 shifts={regularShifts}
-                aLaCarteShift={hasALaCardPermission ? aLaCarteShift : undefined}
-                hasALaCardPermission={hasALaCardPermission}
+                aLaCarteShift={aLaCarteShift}
+                isTodaySelected={isTodaySelected}
             />
 
             {/* Meal Type Selector */}
