@@ -82,7 +82,7 @@ export interface CartStore {
     setMenus: (menu: ReadDailyMenuResponse, aLaCarteMenu?: ReadDailyMenuResponse) => void;
     addOrder: (order: ScheduledOrderDetails | ImmediateOrderDetails) => void;
     updateOrder: (orderId: string, orderItems: OrderItem[]) => void;
-    cancelOrder: () => void;
+    cancelOrder: () => Promise<void>;
     confirmOrder: (orderId: string) => void;
     updateSelectedOrder(): void;
     resetCart: () => void;

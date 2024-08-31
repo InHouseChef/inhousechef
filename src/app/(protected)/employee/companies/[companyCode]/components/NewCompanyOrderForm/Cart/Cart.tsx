@@ -38,6 +38,7 @@ const Cart = () => {
                 setIsLoading(false);
                 setIsOpen(false);
             })
+            .catch(() => setIsLoading(false));
     };
 
     return (
