@@ -44,7 +44,7 @@ export const ShiftSelectorNav = () => {
     return (
         // TODO: check why there is no horizontal scroll
         <nav className={clsx('topnav-horizontal h-10 min-h-10 border-gray-300')}>
-            <ul className={clsx('flex h-full items-center justify-start gap-2')}>
+            <ul className={clsx('flex h-full items-center justify-center gap-2')}>
                 {myUser?.aLaCardPermission && data?.shiftStartAt ? (
                     <li className={clsx('relative text-center')}>
                         <Button

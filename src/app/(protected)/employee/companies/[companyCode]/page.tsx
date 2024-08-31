@@ -1,7 +1,8 @@
 'use client'
 
 import { RequireCompanyAuthorization } from '@/components'
-import { CompanyOrderForm } from './components/CompanyOrderForm/CompanyOrderForm'
+import { NewCompanyOrderForm } from './components/NewCompanyOrderForm/NewCompanyOrderForm';
+import { CompanyOrderForm } from './components/CompanyOrderForm/CompanyOrderForm';
 
 export default function CompanyPage({ params }: { params: { companyCode: string } }) {
     const { companyCode } = params
@@ -9,10 +10,12 @@ export default function CompanyPage({ params }: { params: { companyCode: string 
     return (
         <>
             <RequireCompanyAuthorization role='Employee'>
-                <CompanyOrderForm />
+                {/* <CompanyOrderForm /> */}
+                <NewCompanyOrderForm />
             </RequireCompanyAuthorization>
             <RequireCompanyAuthorization role='CompanyManager'>
-                <CompanyOrderForm />
+                {/* <CompanyOrderForm /> */}
+                <NewCompanyOrderForm />
             </RequireCompanyAuthorization>
         </>
     )
