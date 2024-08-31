@@ -58,6 +58,7 @@
     },
     "devDependencies": {
         "@hookform/resolvers": "^3.9.0",
+        "@tailwindcss/container-queries": "^0.1.1",
         "@tanstack/eslint-plugin-query": "^5.51.15",
         "@types/negotiator": "^0.6.3",
         "@types/node": "^20.14.14",

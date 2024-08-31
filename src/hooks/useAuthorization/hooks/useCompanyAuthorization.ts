@@ -1,3 +1,5 @@
+'use client'
+
 import { useIdentity } from '@/hooks/useIdentity'
 import { CompanyUserRoles } from '@/types'
 import { isDeepEqualObject } from '@/utils'

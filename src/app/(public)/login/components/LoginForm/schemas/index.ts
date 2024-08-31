@@ -6,6 +6,6 @@ export interface CreateClientCredentialsSchema {
 }
 
 export const createClientCredentialsSchema = object({
-    username: string().trim().min(1, 'Username is required field'),
-    password: string().trim().min(1, "Password can't be blank.")
+    username: string().trim().min(1, 'Korisničko ime ne može biti prazno.'),
+    password: string().trim().min(1, 'Lozinka ne može biti prazna.')
 })
