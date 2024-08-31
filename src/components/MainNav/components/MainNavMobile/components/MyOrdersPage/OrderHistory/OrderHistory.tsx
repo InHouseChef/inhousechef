@@ -32,13 +32,11 @@ export const OrderHistory = () => {
         const forDate = order.orderDate;
         const placedAt = order.placedAt;
         const confirmedAt = order.confirmedAt;
-        const concatDescription = order.orderItems.map(item => item.name).join(', ');
+        const concatDescription = order.orderItems.map(item => `${item.name} x${item.quantity}`).join(', ');
         const description = concatDescription.length > 50 ? `${concatDescription.slice(0, 50)}...` : concatDescription;
         const totalPrice = order.orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
         return { description, totalPrice, forDate, placedAt, confirmedAt, number };
     };
-
-
 
     return (
         <div className="mt-6">
@@ -68,25 +66,28 @@ export const OrderHistory = () => {
                                         />
                                     </div>
                                 ) : (
-                                    <div className="relative grid grid-cols-2 gap-1 w-20 h-20 rounded-lg shadow p-2 mr-4 bg-gray-200">
+                                    <div className="relative grid grid-cols-2 flex-shrink-0 gap-1 w-20 h-20 rounded-lg shadow p-2 bg-gray-200">
                                         {order.orderItems.slice(0, 4).map((item, index) => (
-                                            <img
-                                                key={index}
-                                                src={item.imageUrl}
-                                                alt={item.name}
-                                                className="w-8 h-8 object-cover rounded-md"
-                                            />
+                                            <div key={index} className="w-8 h-8">
+                                                <img
+                                                    src={item.imageUrl}
+                                                    alt={item.name}
+                                                    className="h-full w-full object-cover rounded-md"
+                                                />
+                                            </div>
                                         ))}
                                         {Array.from({ length: 4 - order.orderItems.slice(0, 4).length }).map((_, index) => (
                                             <div key={index} className="w-8 h-8 bg-gray-200 rounded-md"></div>
                                         ))}
                                     </div>
                                 )}
-                                <div className="flex flex-col">
+                                <div className="flex flex-col ml-4">
                                     <div className="flex items-center">
                                         <h4 className="font-semibold">Porudžbina #{number}</h4>
                                     </div>
-                                    <p className="text-sm text-grey-500"><span className="text-sm text-blue-500">{totalPrice.toFixed(2)} RSD</span> | {description}</p>
+                                    <p className="text-sm text-grey-500">
+                                        <span className="text-sm text-blue-500">{totalPrice.toFixed(2)} RSD</span> | {description}
+                                    </p>
                                 </div>
                             </div>
                         </div>
