@@ -80,13 +80,13 @@ export const ShiftSelector: React.FC<ShiftSelectorProps> = ({ selectedShiftId, o
             </nav>
 
             {allShiftsPassed && isTodaySelected && (
-                <div className="absolute inset-0 bg-gray-100 bg-opacity-80 flex flex-col items-center justify-center z-10">
-                    <div className="text-lg font-semibold text-gray-700">
-                        Naručivanje za ovaj dan je završeno.
-                    </div>
-                    <div className="text-md text-gray-600">
-                        Možete napraviti porudžbine za sledeći dan.
-                    </div>
+                <div className="absolute inset-0 bg-gray-100 rounded-md bg-opacity-90 flex flex-col items-center justify-center z-10">
+                    <p className="text-md font-semibold text-gray-700">
+                        Porudžbine za današnji dan su zatvorene.
+                    </p>
+                    <p className="text-sm text-gray-600 text-center">
+                        Možete preći na porudžbine za sutrašnji dan.
+                    </p>
                 </div>
             )}
         </div>
