@@ -27,7 +27,7 @@ export const MealList = () => {
             path: {},
             query: { filter: { type: typeFilter }, pagination: { page: currentPage, size: pageSize } }
         }).then(res => {
-            setMealsData(res.results || [])
+            setMealsData(res.results.flat() || [])
             setTotalCount(res.totalCount || 0)
         })
     }
@@ -89,7 +89,7 @@ export const MealList = () => {
                         />
                     ) : (
                         <div className='flex h-12 w-12 items-center justify-center rounded-lg bg-gray-200'>
-                            <p className='text-center text-xs text-gray-500'>No Image</p>
+                            <p className='text-center text-xs text-gray-500'>Nema slike</p>
                         </div>
                     )
             })

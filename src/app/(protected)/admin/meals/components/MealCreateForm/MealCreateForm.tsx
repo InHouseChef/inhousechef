@@ -5,8 +5,8 @@ import { Header } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
@@ -15,7 +15,7 @@ import { createMealSchema } from '../../schemas'
 
 export const MealCreateForm = () => {
     const router = useRouter()
-    const { mutate: createMeal } = useCreateMeal()
+    const { mutate: createMeal, isPending } = useCreateMeal()
 
     const form = useForm<z.infer<typeof createMealSchema>>({
         resolver: zodResolver(createMealSchema)
@@ -151,7 +151,9 @@ export const MealCreateForm = () => {
                     </div>
                 </div>
                 <div className='mt-8 flex items-center justify-end'>
-                    <Button type='submit'>Create Meal</Button>
+                    <Button loading={isPending} type='submit'>
+                        Create Meal
+                    </Button>
                 </div>
             </form>
         </Form>

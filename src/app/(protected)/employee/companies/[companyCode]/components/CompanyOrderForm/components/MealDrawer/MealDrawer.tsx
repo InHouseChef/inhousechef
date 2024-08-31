@@ -1,5 +1,5 @@
 import { DailyMenuMeal } from '@/api/daily-menus'
-import { useCreateScheduledOrder } from '@/api/order'
+import { useAddIncrementOrderItemQuantity, useCreateScheduledOrder } from '@/api/order'
 import { Button } from '@/components/ui/button'
 import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import { usePathParams } from '@/hooks'
@@ -16,28 +16,52 @@ interface MealDrawerProps {
 
 export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
     const path = usePathParams<CompanyPath>()
-    const { addToCart, selectedDate, selectedShift, setActiveOrderId } = useCartStore()
+    const { addToCart, activeDate, activeShift, setActiveOrderId, activeOrders, setActiveOrder, activeOrderId } =
+        useCartStore()
     const [quantity, setQuantity] = useState(1)
 
     const { id, name, description, price, imageUrl, type } = meal
 
-    const { mutate: createScheduledOrder } = useCreateScheduledOrder()
+    const { mutate: createScheduledOrder, isPending: isPendingCreateScheduledOrder } = useCreateScheduledOrder()
+    const { mutate: increaseItemQuantity, isPending: isPendingIncreaseItemQuantity } = useAddIncrementOrderItemQuantity()
+
+    const activeOrder = activeOrders[activeOrderId]
+
+    console.log(activeOrder)
 
     const handleAddToCart = () => {
-        addToCart({
-            id,
-            name,
-            price,
-            quantity,
-            imageUrl,
-            type
-        })
+        if (activeOrder?.id && activeOrder.state === 'Draft') {
+            return increaseItemQuantity(
+                {
+                    path: {
+                        ...path,
+                        orderId: activeOrder.id,
+                        skuId: id
+                    }
+                },
+                {
+                    onSuccess: data => {
+                        setActiveOrderId(data.id)
+                        // setActiveOrder(data.id, data)
+                        addToCart({
+                            id,
+                            name,
+                            price,
+                            quantity,
+                            imageUrl,
+                            type
+                        })
+                        onClose()
+                    }
+                }
+            )
+        }
         createScheduledOrder(
             {
                 path,
                 body: {
-                    shiftId: selectedShift?.id || '',
-                    orderDate: selectedDate,
+                    shiftId: activeShift?.id || '',
+                    orderDate: activeDate,
                     meals: [
                         {
                             id,
@@ -49,10 +73,18 @@ export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
             {
                 onSuccess: data => {
                     setActiveOrderId(data.id)
+                    addToCart({
+                        id,
+                        name,
+                        price,
+                        quantity,
+                        imageUrl,
+                        type
+                    })
+                    onClose()
                 }
             }
         )
-        onClose()
     }
 
     const handleQuantityChange = (increment: number) => {
@@ -68,7 +100,7 @@ export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
                             <img src={imageUrl} alt={name} className='h-64 w-full rounded-lg object-cover' />
                         ) : (
                             <div className='flex h-64 w-full flex-col items-center justify-center rounded-lg bg-gray-200 text-gray-600'>
-                                No Image
+                                Nema slike
                             </div>
                         )}
                         <DrawerTitle className='mt-2 text-3xl font-bold lowercase'>{name}</DrawerTitle>
@@ -95,7 +127,11 @@ export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
                                 <Plus width={24} height={24} />
                             </Button>
                         </div> */}
-                        <Button type='button' onClick={handleAddToCart} className='flex items-center space-x-2'>
+                        <Button
+                            loading={isPendingCreateScheduledOrder || isPendingIncreaseItemQuantity}
+                            type='button'
+                            onClick={handleAddToCart}
+                            className='flex items-center space-x-2'>
                             <span>Dodaj u porudžbinu</span>
                             <span className='font-semibold'>{(price * quantity).toFixed(2)} RSD</span>
                         </Button>

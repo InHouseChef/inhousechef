@@ -1,4 +1,4 @@
-import { CompanyUserRole } from '@/types'
+import { Branding, CompanyUserRole } from '@/types'
 
 interface UserResponse {
     id: string
@@ -9,7 +9,11 @@ interface UserResponse {
     aLaCardPermission: boolean
 }
 
-export interface ReadMyUserResponse extends UserResponse {}
+export interface ReadMyUserResponse {
+    companyId: string
+    companyCode: string
+    branding?: Branding
+}
 
 export interface ReadUserResponse extends UserResponse {}
 
@@ -48,4 +52,8 @@ export enum RolesEnum {
     CompanyManager = 'CompanyManager',
     Employee = 'Employee',
     RestaurantWorker = 'RestaurantWorker'
+}
+
+export interface UpdateMyPasswordRequest {
+    newPassword: string
 }

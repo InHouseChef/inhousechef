@@ -1,9 +1,15 @@
-import { DailyMenuMeal } from '@/api/daily-menus'
+import { MealType } from '@/api/meals'
 import clsx from 'clsx'
 
-interface MealCardProps extends DailyMenuMeal {
+interface MealCardProps {
+    id: string
+    name: string
+    description?: string
+    price: number
+    type?: MealType
+    imageUrl: string
     quantity?: number
-    onClick: () => void
+    onClick?: () => void
     small?: boolean
 }
 
@@ -28,7 +34,7 @@ export const MealCard = ({ id, name, description, price, imageUrl, onClick, smal
                                 'h-20 w-20': small,
                                 'h-36 w-36': !small
                             })}>
-                            No Image
+                            Nema slike
                         </div>
                     )}
                     {quantity && quantity > 0 ? (

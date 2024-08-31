@@ -4,7 +4,7 @@ import { useCartStore } from '../../../../state'
 import { getMealTypeLabel } from '../../../../utils'
 
 const MealTypeSelectorNav = () => {
-    const { selectedMealType, setSelectedMealType } = useCartStore()
+    const { mealType, setMealType } = useCartStore()
     const mealTypes: MealType[] = ['MainCourse', 'SideDish']
 
     return (
@@ -14,10 +14,10 @@ const MealTypeSelectorNav = () => {
                     <li
                         key={type}
                         className={clsx('flex-1 cursor-pointer rounded-lg py-1 text-center', {
-                            'bg-blue-500 text-white': selectedMealType === type,
-                            'text-black': selectedMealType !== type
+                            'bg-blue-500 text-white': mealType === type,
+                            'text-black': mealType !== type
                         })}
-                        onClick={() => setSelectedMealType(type)}>
+                        onClick={() => setMealType(type)}>
                         {getMealTypeLabel(type)}
                     </li>
                 ))}

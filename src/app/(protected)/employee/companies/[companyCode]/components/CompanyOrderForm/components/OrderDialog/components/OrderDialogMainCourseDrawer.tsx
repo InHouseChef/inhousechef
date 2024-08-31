@@ -4,7 +4,6 @@ import { Loader } from '@/components'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import { usePathParams } from '@/hooks'
 import { CompanyPath } from '@/types'
-import { useState } from 'react'
 import { useCartStore } from '../../../../../state'
 import MealDrawerCard from './MealDrawerCard'
 
@@ -15,14 +14,13 @@ interface OrderDialogMainCourseDrawerProps {
 
 export const OrderDialogMainCourseDrawer = ({ isOpen, onClose }: OrderDialogMainCourseDrawerProps) => {
     const path = usePathParams<CompanyPath>()
-    const { addToCart, selectedDate, selectedShiftId, setActiveOrderId, activeOrderId } = useCartStore()
+    const { addToCart, activeDate, activeOrderId } = useCartStore()
     const { mutate } = useAddIncrementOrderItemQuantity()
-    const [selectedMeal, setSelectedMeal] = useState<DailyMenuMeal | null>(null)
     const { data: dailyMenus, isLoading } = useReadDailyMenus({
         query: {
             filter: {
-                from: selectedDate,
-                to: selectedDate
+                from: activeDate,
+                to: activeDate
             }
         }
     })
@@ -32,7 +30,6 @@ export const OrderDialogMainCourseDrawer = ({ isOpen, onClose }: OrderDialogMain
     const mainCourseMeals = dailyMenus?.flatMap(menu => menu.meals.filter(meal => meal.type === 'MainCourse')) || []
 
     const handleMealClick = (meal: DailyMenuMeal) => {
-        setSelectedMeal(meal)
         mutate(
             {
                 path: {
@@ -47,7 +44,7 @@ export const OrderDialogMainCourseDrawer = ({ isOpen, onClose }: OrderDialogMain
                         id: meal.id,
                         name: meal.name,
                         price: meal.price,
-                        quantity: 1, // Assuming quantity is always 1 when adding directly
+                        quantity: 1,
                         imageUrl: meal.imageUrl,
                         type: 'MainCourse'
                     })

@@ -14,8 +14,8 @@ export type PathParams = { [key: string]: any }
 
 export type DefaultPathParams<T> = T & PathParams
 
-export interface CompanyPath {
-    companyCode?: string
+export type CompanyPath = {
+    companyCode: string
 }
 
 export interface LocationPath {
@@ -55,3 +55,10 @@ export type CompanyUserRoles = Record<CompanyUserRole, boolean>
 export type OrderState = 'Draft' | 'Placed' | 'Confirmed' | 'Cancelled'
 
 export type OrderType = 'Scheduled' | 'Immediate'
+
+export interface Branding {
+    primaryColor?: string
+    secondaryColor?: string
+    logoUrl?: string
+    faviconUrl?: string
+}

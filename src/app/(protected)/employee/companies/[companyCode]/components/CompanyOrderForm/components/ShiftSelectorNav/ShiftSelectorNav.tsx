@@ -13,28 +13,28 @@ import { sortShiftsByStartAt } from '../../../../utils'
 
 export const ShiftSelectorNav = () => {
     const path = usePathParams<CompanyPath>()
-    const { selectedShift, setSelectedShift, canImmediatelyOrder, aLaCardShift, setALaCardShift, canScheduleOrder } =
+    const { activeShift, setActiveShift, canImmediatelyOrder, aLaCardShift, setALaCardShift, canScheduleOrder } =
         useCartStore()
     const { data: shifts, isLoading } = useReadShifts()
+    const { data, isLoading: isLoadingALaCardShift } = useReadALaCardShift({ path })
     const { data: myUser, isLoading: isLoadingMyUser } = useReadMyUser({
         path
     })
-
-    const { data, isLoading: isLoadingALaCardShift } = useReadALaCardShift({ path })
 
     useEffect(() => {
         if (!data) return
         setALaCardShift(data)
     }, [data])
 
-    useEffect(() => {
-        if (!shifts) return
+    // TODO: default settings shift logic
+    // useEffect(() => {
+    //     if (!shifts) return
 
-        const firstAvailableShift = shifts.find(() => canScheduleOrder())
-        if (firstAvailableShift) {
-            setSelectedShift(firstAvailableShift)
-        }
-    }, [shifts, canScheduleOrder, setSelectedShift])
+    //     const firstAvailableShift = shifts.find(() => canScheduleOrder())
+    //     if (firstAvailableShift) {
+    //         setActiveShift(firstAvailableShift)
+    //     }
+    // }, [shifts, canScheduleOrder, setActiveShift])
 
     if (isLoading || isLoadingALaCardShift || isLoadingMyUser) return <Loader />
 
@@ -50,7 +50,7 @@ export const ShiftSelectorNav = () => {
                             type='button'
                             disabled={!canImmediatelyOrder()}
                             onClick={() => {
-                                setSelectedShift({
+                                setActiveShift({
                                     companyId: data.companyId,
                                     shiftStartAt: data.shiftStartAt,
                                     id: data.id,
@@ -61,7 +61,7 @@ export const ShiftSelectorNav = () => {
                                 setALaCardShift(data)
                             }}
                             className={clsx('relative bg-green-500', {
-                                'bg-green-500 hover:text-secondary': selectedShift?.id === data.id,
+                                'bg-green-500 hover:text-secondary': activeShift?.id === data.id,
                                 // 'bg-gray-300 text-black': selectedShift?.id !== data.id,
                                 'cursor-not-allowed': !canImmediatelyOrder()
                             })}>
@@ -74,12 +74,12 @@ export const ShiftSelectorNav = () => {
                     <li className={clsx('relative text-center')} key={id}>
                         <Button
                             type='button'
-                            disabled={!canScheduleOrder()}
-                            onClick={() => setSelectedShift({ ...rest, shiftStartAt, shiftEndAt, id })}
+                            // disabled={!canScheduleOrder()}
+                            onClick={() => setActiveShift({ ...rest, shiftStartAt, shiftEndAt, id })}
                             // TODO: make shifts take full width
                             className={clsx('relative', {
-                                'bg-primary hover:text-secondary': selectedShift?.id === id,
-                                'bg-gray-300 text-black': selectedShift?.id !== id,
+                                'bg-primary hover:text-secondary': activeShift?.id === id,
+                                'bg-gray-300 text-black': activeShift?.id !== id,
                                 'cursor-not-allowed': !canScheduleOrder()
                             })}>
                             {formatTimeWithoutSeconds(shiftStartAt)} - {formatTimeWithoutSeconds(shiftEndAt)}

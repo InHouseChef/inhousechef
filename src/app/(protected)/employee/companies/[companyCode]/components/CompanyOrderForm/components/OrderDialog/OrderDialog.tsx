@@ -7,6 +7,7 @@ import { CompanyPath, DateIso } from '@/types'
 import { formatDateIso, formatEuropeanDate, formatTimeWithoutSeconds } from '@/utils/date'
 import { Minus, Plus } from 'lucide-react'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { CartItem, useCartStore } from '../../../../state'
 import { Time } from '../../../../utils'
 import { OrderDialogMainCourseDrawer } from './components/OrderDialogMainCourseDrawer'
@@ -16,44 +17,64 @@ export const OrderDialog = () => {
     const path = usePathParams<CompanyPath>()
     const {
         order,
-        selectedShift,
+        activeShift,
+        activeOrders,
         canImmediatelyOrder,
         canScheduleOrder,
-        selectedDate,
+        activeDate,
         addToCart,
         removeFromCart,
-        activeOrderId
+        activeOrderId,
+        setActiveOrderId,
+        setActiveOrder,
+        setIsOpenCart
     } = useCartStore()
-    const { data: shift } = useReadShift({ path: { ...path, shiftId: selectedShift?.id || '' } })
-    const [orderDate, setOrderDate] = useState<DateIso>(selectedDate)
+    const { data: shift } = useReadShift({ path: { ...path, shiftId: activeShift?.id || '' } })
+    const [orderDate, setOrderDate] = useState<DateIso>(activeDate)
     const [isOpenMainCourseDrawer, setIsOpenMainCourseDrawer] = useState(false)
     const [isOpenSideDishDrawer, setIsOpenSideDishDrawer] = useState(false)
 
-    const { mutate: placeOrder } = usePlaceOrder()
-    const { mutate: deleteOrder } = useDeleteOrder()
-    const { mutate: increaseItemQuantity } = useAddIncrementOrderItemQuantity()
-    const { mutate: decreaseItemQuantity } = useDecreaseOrderItemQuantity()
+    const { mutate: placeOrder, isPending: isPendingPlaceOrder } = usePlaceOrder()
+    const { mutate: deleteOrder, isPending: isPendingDeleteOrder } = useDeleteOrder()
+    const { mutate: increaseItemQuantity, isPending: isPendingIncrementOrderItemQuantity } =
+        useAddIncrementOrderItemQuantity()
+    const { mutate: decreaseItemQuantity, isPending: isPendingDecreaseOrderItemQuantity } = useDecreaseOrderItemQuantity()
 
-    const cart = selectedShift?.id && selectedDate ? order[selectedShift?.id]?.[selectedDate] || [] : []
+    const cart = activeShift?.id && activeDate ? order[activeShift?.id]?.[activeDate] || [] : []
     const totalPrice = cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
+    const activeOrder = activeOrders[activeOrderId]
+
+    // TODO: check this
+
+    const canOrderState = activeOrder?.state !== 'Draft'
 
     const handleIncreaseQuantity = (item: CartItem) => {
-        addToCart({ ...item, quantity: 1 })
-        increaseItemQuantity({
-            path: {
-                ...path,
-                orderId: activeOrderId,
-                skuId: item.id
+        increaseItemQuantity(
+            {
+                path: {
+                    ...path,
+                    orderId: activeOrderId,
+                    skuId: item.id
+                }
+            },
+            {
+                onSuccess: () => {
+                    addToCart({ ...item, quantity: 1 })
+                }
             }
-        })
+        )
     }
 
     const handleDecreaseQuantity = (item: CartItem) => {
         if (item.quantity > 1) {
-            addToCart({ ...item, quantity: -1 })
-            decreaseItemQuantity({
-                path: { ...path, orderId: activeOrderId, skuId: item.id }
-            })
+            decreaseItemQuantity(
+                {
+                    path: { ...path, orderId: activeOrderId, skuId: item.id }
+                },
+                {
+                    onSuccess: () => addToCart({ ...item, quantity: -1 })
+                }
+            )
         } else {
             removeFromCart(item.id)
         }
@@ -66,7 +87,41 @@ export const OrderDialog = () => {
             },
             {
                 onSuccess: data => {
+                    toast.success('Uspešno ste poručili')
                     setOrderDate(data.orderDate)
+                    // setActiveOrder(data.id, data)
+                    handleCloseCart()
+                },
+                onError: error => {
+                    toast.error(error.message)
+                }
+            }
+        )
+
+    const handleCloseCart = () => setIsOpenCart(false)
+
+    const handleDeleteOrder = () =>
+        deleteOrder(
+            { path: { ...path, orderId: activeOrderId } },
+            {
+                onSuccess: () => {
+                    handleCloseCart()
+                    setActiveOrderId('')
+                    setActiveOrder('', {
+                        companyId: path.companyCode,
+                        customerId: '',
+                        id: '',
+                        number: '',
+                        orderDate: '',
+                        orderedForShiftId: '',
+                        orderItems: [],
+                        state: 'Cancelled',
+                        type: 'Scheduled'
+                    })
+                    toast.success('Uspešno ste otkazali porudžbinu')
+                },
+                onError: error => {
+                    toast.error(error.message)
                 }
             }
         )
@@ -79,8 +134,6 @@ export const OrderDialog = () => {
     const deadLine = new Time(orderingDeadlineBeforeShiftStart)
 
     const timeLeft = time1.subtract(deadLine)
-
-    const handleDeleteOrder = () => deleteOrder({ path: { ...path, orderId: activeOrderId } })
 
     if (!canScheduleOrder() && !canImmediatelyOrder()) return
 
@@ -109,46 +162,52 @@ export const OrderDialog = () => {
                         <div>
                             {/* Filter meals by type: Main Courses */}
                             {cart.filter(item => item.type === 'MainCourse').length > 0 && (
-                                <div className='flex flex-col gap-2 rounded-lg bg-slate-500 px-4 py-2'>
-                                    <h3 className='text-lg font-semibold'>Glavna jela</h3>
+                                <div className='flex flex-col gap-2 rounded-lg'>
+                                    <h3 className='text-xl font-semibold'>Glavna jela</h3>
                                     <div className='flex flex-col gap-4'>
                                         {cart
                                             .filter(item => item.type === 'MainCourse')
-                                            .map(item => {
+                                            .map((item, index, array) => {
                                                 return (
-                                                    <div
-                                                        key={item.id}
-                                                        className='flex items-center justify-between rounded-lg bg-slate-200 p-2'>
-                                                        <div className='flex items-center gap-4'>
-                                                            <img
-                                                                src={item.imageUrl}
-                                                                alt={item.name}
-                                                                className='h-16 w-16 rounded-lg object-cover'
-                                                            />
-                                                            <div>
-                                                                <h4 className='font-semibold'>{item.name}</h4>
-                                                                <p className='text-sm text-gray-600'>
-                                                                    {item.price.toFixed(2)} RSD
-                                                                </p>
+                                                    <>
+                                                        <div
+                                                            key={item.id}
+                                                            className='flex items-center justify-between rounded-lg p-2'>
+                                                            <div className='flex items-center gap-4'>
+                                                                <img
+                                                                    src={item.imageUrl}
+                                                                    alt={item.name}
+                                                                    className='h-16 w-16 rounded-lg object-cover'
+                                                                />
+                                                                <div>
+                                                                    <h4 className='font-semibold'>{item.name}</h4>
+                                                                    <p className='text-sm text-gray-600'>
+                                                                        {item.price.toFixed(2)} RSD
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <div className='flex items-center gap-1'>
+                                                                <Button
+                                                                    size='icon'
+                                                                    variant='secondary'
+                                                                    className='bg-transparent'
+                                                                    onClick={() => handleDecreaseQuantity(item)}>
+                                                                    <Minus />
+                                                                </Button>
+                                                                <span className='w-4 text-center text-lg'>
+                                                                    {item.quantity}
+                                                                </span>
+                                                                <Button
+                                                                    size='icon'
+                                                                    variant='secondary'
+                                                                    className='bg-transparent'
+                                                                    onClick={() => handleIncreaseQuantity(item)}>
+                                                                    <Plus />
+                                                                </Button>
                                                             </div>
                                                         </div>
-                                                        <div className='flex items-center gap-1'>
-                                                            <Button
-                                                                size='icon'
-                                                                variant='secondary'
-                                                                className=''
-                                                                onClick={() => handleDecreaseQuantity(item)}>
-                                                                <Minus />
-                                                            </Button>
-                                                            <span className='w-4 text-center'>{item.quantity}</span>
-                                                            <Button
-                                                                size='icon'
-                                                                variant='secondary'
-                                                                onClick={() => handleIncreaseQuantity(item)}>
-                                                                <Plus />
-                                                            </Button>
-                                                        </div>
-                                                    </div>
+                                                        {index < array.length - 1 && <hr className='my-1' />}
+                                                    </>
                                                 )
                                             })}
                                     </div>
@@ -169,40 +228,47 @@ export const OrderDialog = () => {
                                 )}
 
                             {cart.filter(item => item.type === 'SideDish').length > 0 && (
-                                <div className='flex flex-col gap-2 rounded-lg bg-slate-500 px-4'>
-                                    <h3 className='text-lg font-semibold'>Dodaci</h3>
+                                <div className='flex flex-col gap-2 rounded-lg px-4'>
+                                    <h3 className='text-xl font-semibold'>Dodaci</h3>
                                     <div className='flex flex-col gap-4'>
                                         {cart
                                             .filter(item => item.type === 'SideDish')
-                                            .map(item => (
-                                                <div
-                                                    key={item.id}
-                                                    className='flex items-center justify-between rounded-lg bg-slate-200 p-2'>
-                                                    <div className='flex items-center gap-4'>
-                                                        <img
-                                                            src={item.imageUrl}
-                                                            alt={item.name}
-                                                            className='h-16 w-16 rounded-lg object-cover'
-                                                        />
-                                                        <h4 className='font-semibold'>{item.name}</h4>
-                                                        <p className='text-sm text-gray-600'>{item.price.toFixed(2)} RSD</p>
+                                            .map((item, index, array) => (
+                                                <>
+                                                    <div
+                                                        key={item.id}
+                                                        className='flex items-center justify-between rounded-lg p-2'>
+                                                        <div className='flex items-center gap-4'>
+                                                            <img
+                                                                src={item.imageUrl}
+                                                                alt={item.name}
+                                                                className='h-16 w-16 rounded-lg object-cover'
+                                                            />
+                                                            <h4 className='font-semibold'>{item.name}</h4>
+                                                            <p className='text-sm text-gray-600'>
+                                                                {item.price.toFixed(2)} RSD
+                                                            </p>
+                                                        </div>
+                                                        <div className='flex items-center gap-1'>
+                                                            <Button
+                                                                size='icon'
+                                                                variant='secondary'
+                                                                className='bg-transparent'
+                                                                onClick={() => handleDecreaseQuantity(item)}>
+                                                                <Minus />
+                                                            </Button>
+                                                            <span className='w-4 text-center text-lg'>{item.quantity}</span>
+                                                            <Button
+                                                                size='icon'
+                                                                variant='secondary'
+                                                                className='bg-transparent'
+                                                                onClick={() => handleIncreaseQuantity(item)}>
+                                                                <Plus />
+                                                            </Button>
+                                                        </div>
                                                     </div>
-                                                    <div className='flex items-center gap-1'>
-                                                        <Button
-                                                            size='icon'
-                                                            variant='secondary'
-                                                            onClick={() => handleDecreaseQuantity(item)}>
-                                                            <Minus />
-                                                        </Button>
-                                                        <span className='w-4 text-center'>{item.quantity}</span>
-                                                        <Button
-                                                            size='icon'
-                                                            variant='secondary'
-                                                            onClick={() => handleIncreaseQuantity(item)}>
-                                                            <Plus />
-                                                        </Button>
-                                                    </div>
-                                                </div>
+                                                    {index < array.length - 1 && <hr className='my-1' />}
+                                                </>
                                             ))}
                                     </div>
                                     <Button
@@ -219,12 +285,19 @@ export const OrderDialog = () => {
                     )}
                 </div>
                 <DialogFooter className='gap-4'>
-                    <Button onClick={handlePlaceOrder} type='button' className='flex w-full items-center justify-between'>
-                        <span>Poruči </span>
-                        <span>{totalPrice.toFixed(2)} RSD</span>
-                    </Button>
+                    {canOrderState ? (
+                        <Button
+                            loading={isPendingPlaceOrder}
+                            onClick={handlePlaceOrder}
+                            type='button'
+                            className='flex w-full items-center justify-between'>
+                            <span>Poruči </span>
+                            <span>{totalPrice.toFixed(2)} RSD</span>
+                        </Button>
+                    ) : undefined}
+
                     {activeOrderId ? (
-                        <Button variant='destructive' onClick={handleDeleteOrder}>
+                        <Button loading={isPendingDeleteOrder} variant='destructive' onClick={handleDeleteOrder}>
                             Otkaži porudžbinu
                         </Button>
                     ) : undefined}

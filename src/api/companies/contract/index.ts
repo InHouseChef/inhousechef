@@ -1,11 +1,9 @@
+import { Branding } from '@/types'
+
 export interface Company {
     name: string
     code: string
-    branding?: {
-        primaryColor?: string
-        secondaryColor?: string
-        logoUrl?: string
-    }
+    branding?: Branding
     address?: {
         street?: string
         city?: string
