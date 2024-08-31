@@ -26,7 +26,7 @@ const getFormattedTime = (date: Date) => {
 export const ShiftCreateForm = ({ params }: { params: { companyCode: string } }) => {
     const { companyCode } = params
     const router = useRouter()
-    const { mutate: createShift } = useCreateShift()
+    const { mutate: createShift, isPending } = useCreateShift()
     const [startDate, setStartDate] = useState<Date>(new Date(new Date().setHours(0, 0, 0, 0)))
     const [endDate, setEndDate] = useState<Date>(new Date(new Date().setHours(0, 0, 0, 0)))
 
@@ -135,7 +135,9 @@ export const ShiftCreateForm = ({ params }: { params: { companyCode: string } })
                     </div>
                 </div>
                 <div className='mt-8 flex items-center justify-end'>
-                    <Button type='submit'>Create</Button>
+                    <Button loading={isPending} type='submit'>
+                        Create
+                    </Button>
                 </div>
             </form>
         </Form>

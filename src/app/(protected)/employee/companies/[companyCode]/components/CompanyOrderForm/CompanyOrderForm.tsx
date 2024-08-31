@@ -26,15 +26,19 @@ const getFirstAndLastDayOfMonth = (date: Date) => {
 export const CompanyOrderForm = () => {
     const cart = useCartStore()
     const {
-        selectedDate,
-        setSelectedDate,
-        setSelectedShift,
+        order,
+        activeDate,
+        setActiveDate,
+        setActiveShift,
         addToCart,
         resetCart,
         setActiveOrderId,
-        selectedMealType,
-        selectedShift,
-        aLaCardShift
+        mealType,
+        activeShift,
+        aLaCardShift,
+        setActiveOrder,
+        isOpenCart,
+        setIsOpenCart
     } = cart
     const { getAppDate, getAppDateTime } = useAppDate()
     const today = getAppDate()
@@ -74,13 +78,13 @@ export const CompanyOrderForm = () => {
     //     if (!myOrder || myOrder.length === 0) return
 
     //     myOrder.forEach(order => {
-    //         const { id, orderDate, orderedForShiftId, orderItems } = order
+    //         const { id, orderedForShiftId, orderItems } = order
     //         const orderShift = shifts?.find(({ id }) => id === orderedForShiftId)
 
     //         resetCart()
     //         setActiveOrderId(id)
-    //         setSelectedShift(orderShift)
-    //         setSelectedDate(orderDate)
+    //         setActiveOrder(id, order)
+    //         setActiveShift(orderShift)
     //         orderItems.forEach(({ skuId, name, quantity, price, imageUrl, type }) => {
     //             addToCart({
     //                 id: skuId,
@@ -107,15 +111,15 @@ export const CompanyOrderForm = () => {
     }
 
     useEffect(() => {
-        if (!selectedDate) return setSelectedDate(today)
-        setSelectedDate(selectedDate)
-    }, [selectedDate])
+        if (!activeDate) return setActiveDate(today)
+        setActiveDate(activeDate)
+    }, [activeDate])
 
     useEffect(() => {
-        if (!selectedDate) return
-        const meals = dailyMenus?.find(({ date }) => date === selectedDate)?.meals || []
+        if (!activeDate) return
+        const meals = dailyMenus?.find(({ date }) => date === activeDate)?.meals || []
         setMeals(meals)
-    }, [selectedDate, dailyMenus])
+    }, [activeDate, dailyMenus])
 
     useEffect(() => {
         setIsLoading(true)
@@ -123,16 +127,16 @@ export const CompanyOrderForm = () => {
     }, [currentMonth])
 
     useEffect(() => {
-        const filtered = meals.filter(({ type }) => type === selectedMealType)
+        const filtered = meals.filter(({ type }) => type === mealType)
         setFilteredMeals(filtered)
-    }, [selectedMealType, meals])
+    }, [mealType, meals])
 
     useEffect(() => {
-        if (selectedShift?.id === aLaCardShift?.id) {
-            const aLaCardMeals = aLaCardMenus?.find(({ date }) => date === selectedDate)?.meals || []
+        if (activeShift?.id === aLaCardShift?.id) {
+            const aLaCardMeals = aLaCardMenus?.find(({ date }) => date === activeDate)?.meals || []
             setALaCardMeals(aLaCardMeals)
         }
-    }, [selectedShift, selectedDate, aLaCardShift])
+    }, [activeShift, activeDate, aLaCardShift])
 
     const handleMealClick = (meal: DailyMenuMeal) => {
         setSelectedMeal(meal)
@@ -144,7 +148,7 @@ export const CompanyOrderForm = () => {
     if (isLoading || isLoadingMyOrder || isLoadingMyUser || isLoadingALaCardMenus) return <Loader />
 
     return (
-        <>
+        <div className='relative'>
             <div className='mt-4'></div>
             <DaySelectorNav />
             <div>
@@ -160,30 +164,34 @@ export const CompanyOrderForm = () => {
                 <ShiftSelectorNav />
                 <div className='mt-2'></div>
                 <MealTypeSelectorNav />
-                <div className='relative'>
+                <div>
                     <div className='mx-4 mt-4 grid grid-cols-1 gap-6'>
                         {filteredMeals.map(meal => (
-                            <MealCard 
-                                key={meal.id} 
-                                {...meal} 
+                            <MealCard
+                                key={meal.id}
+                                {...meal}
                                 onClick={() => handleMealClick(meal)}
-                                quantity={(selectedShift && order[selectedShift?.id]?.[selectedDate]?.find(item => item.id === meal.id)?.quantity) ?? 0}
-                                />
+                                quantity={
+                                    (activeShift &&
+                                        order[activeShift?.id]?.[activeDate]?.find(item => item.id === meal.id)?.quantity) ??
+                                    0
+                                }
+                            />
                         ))}
                     </div>
-                    {selectedShift?.id === aLaCardShift?.id && (
+                    {activeShift?.id === aLaCardShift?.id && (
                         <div className='mx-4 mt-4 grid grid-cols-1 gap-6'>
                             {aLaCardMeals.map(meal => (
                                 <MealCard key={meal.id} {...meal} onClick={() => handleMealClick(meal)} />
                             ))}
                         </div>
                     )}
-                    <OrderDialogButton />
                 </div>
                 {selectedMeal ? (
                     <MealDrawer meal={selectedMeal} isOpen={isDrawerOpen} onClose={handleCloseDrawer} />
                 ) : undefined}
             </div>
-        </>
+            <OrderDialogButton />
+        </div>
     )
 }

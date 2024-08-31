@@ -6,12 +6,12 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Checkbox } from '@/packages/components'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { createUserSchema } from '../../schemas'
-import { Checkbox } from '@/packages/components'
 
 // Extend the schema to include confirmPassword
 const enhancedCreateUserSchema = createUserSchema
@@ -32,7 +32,7 @@ const enhancedCreateUserSchema = createUserSchema
 export const UserCreateForm = ({ params }: { params: { companyCode: string } }) => {
     const { companyCode } = params
     const router = useRouter()
-    const { mutate: createUser } = useCreateUser()
+    const { mutate: createUser, isPending } = useCreateUser()
 
     const form = useForm<z.infer<typeof enhancedCreateUserSchema>>({
         resolver: zodResolver(enhancedCreateUserSchema),
@@ -139,7 +139,9 @@ export const UserCreateForm = ({ params }: { params: { companyCode: string } }) 
                                             <SelectContent>
                                                 <SelectItem value={RolesEnum.CompanyManager}>Menadžer</SelectItem>
                                                 <SelectItem value={RolesEnum.Employee}>Radnik</SelectItem>
-                                                <SelectItem value={RolesEnum.RestaurantWorker}>Restoranski radnik</SelectItem>
+                                                <SelectItem value={RolesEnum.RestaurantWorker}>
+                                                    Restoranski radnik
+                                                </SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </FormControl>
@@ -168,7 +170,9 @@ export const UserCreateForm = ({ params }: { params: { companyCode: string } }) 
                     </div>
                 </div>
                 <div className='mt-8 flex items-center justify-end'>
-                    <Button type='submit'>Create</Button>
+                    <Button loading={isPending} type='submit'>
+                        Create
+                    </Button>
                 </div>
             </form>
         </Form>
