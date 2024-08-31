@@ -83,6 +83,7 @@ export interface CartStore {
     addOrder: (order: ScheduledOrderDetails | ImmediateOrderDetails) => void;
     updateOrder: (orderId: string, orderItems: OrderItem[]) => void;
     cancelOrder: () => Promise<void>;
+    placeOrder: () => Promise<void>;
     confirmOrder: (orderId: string) => void;
     updateSelectedOrder(): void;
     resetCart: () => void;
@@ -425,10 +426,32 @@ export const useCartStore = create<CartStore>()(
                     }
                 },
 
-                placeOrder: async (orderId: string) => {
-                    const companyCode = get().companyCode;
-                    if (companyCode) {
-                        await api.placeOrder(companyCode, orderId);
+                placeOrder: async () => {
+                    const state = get();
+                    const { selectedOrder, companyCode } = state;
+                
+                    if (!companyCode || !selectedOrder) return;
+                
+                    const orderId = selectedOrder.id;
+                
+                    try {
+                        // Call the API to place the order and get the updated order back
+                        const updatedOrder = await api.placeOrder(companyCode, orderId);
+                
+                        // Update the state with the returned order
+                        set(state => {
+                            const orderType = selectedOrder.type === 'Immediate' ? 'immediateOrders' : 'scheduledOrders';
+                            const orderIndex = state[orderType].findIndex(order => order.id === orderId);
+                            if (orderIndex !== -1) {
+                                state[orderType][orderIndex] = updatedOrder;
+                            } else {
+                                state[orderType].push(updatedOrder);
+                            }
+                            state.selectedOrder = updatedOrder; // Update the selected order with the placed order
+                        });
+                    } catch (error) {
+                        console.error('Failed to place the order:', error);
+                        // Handle error accordingly, maybe set an error state or show a notification
                     }
                 },
 
