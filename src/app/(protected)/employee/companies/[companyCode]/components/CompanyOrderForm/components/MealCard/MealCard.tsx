@@ -1,9 +1,15 @@
-import { DailyMenuMeal } from '@/api/daily-menus'
+import { MealType } from '@/api/meals'
 import clsx from 'clsx'
 
-interface MealCardProps extends DailyMenuMeal {
+interface MealCardProps {
+    id: string
+    name: string
+    description?: string
+    price: number
+    type?: MealType
+    imageUrl: string
     quantity?: number
-    onClick: () => void
+    onClick?: () => void
     small?: boolean
 }
 

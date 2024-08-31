@@ -27,7 +27,7 @@ export const MealList = () => {
             path: {},
             query: { filter: { type: typeFilter }, pagination: { page: currentPage, size: pageSize } }
         }).then(res => {
-            setMealsData(res.results || [])
+            setMealsData(res.results.flat() || [])
             setTotalCount(res.totalCount || 0)
         })
     }

@@ -30,7 +30,7 @@ export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
     console.log(activeOrder)
 
     const handleAddToCart = () => {
-        if (activeOrder.id && activeOrder.state === 'Draft') {
+        if (activeOrder?.id && activeOrder.state === 'Draft') {
             return increaseItemQuantity(
                 {
                     path: {
@@ -42,7 +42,7 @@ export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
                 {
                     onSuccess: data => {
                         setActiveOrderId(data.id)
-                        setActiveOrder(data.id, data)
+                        // setActiveOrder(data.id, data)
                         addToCart({
                             id,
                             name,
@@ -100,7 +100,7 @@ export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
                             <img src={imageUrl} alt={name} className='h-64 w-full rounded-lg object-cover' />
                         ) : (
                             <div className='flex h-64 w-full flex-col items-center justify-center rounded-lg bg-gray-200 text-gray-600'>
-                                No Image
+                                Nema slike
                             </div>
                         )}
                         <DrawerTitle className='mt-2 text-3xl font-bold lowercase'>{name}</DrawerTitle>

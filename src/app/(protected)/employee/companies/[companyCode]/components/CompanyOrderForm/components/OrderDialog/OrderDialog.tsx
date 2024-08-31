@@ -7,6 +7,7 @@ import { CompanyPath, DateIso } from '@/types'
 import { formatDateIso, formatEuropeanDate, formatTimeWithoutSeconds } from '@/utils/date'
 import { Minus, Plus } from 'lucide-react'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { CartItem, useCartStore } from '../../../../state'
 import { Time } from '../../../../utils'
 import { OrderDialogMainCourseDrawer } from './components/OrderDialogMainCourseDrawer'
@@ -86,9 +87,13 @@ export const OrderDialog = () => {
             },
             {
                 onSuccess: data => {
+                    toast.success('Uspešno ste poručili')
                     setOrderDate(data.orderDate)
-                    setActiveOrder(data.id, data)
+                    // setActiveOrder(data.id, data)
                     handleCloseCart()
+                },
+                onError: error => {
+                    toast.error(error.message)
                 }
             }
         )
@@ -113,6 +118,10 @@ export const OrderDialog = () => {
                         state: 'Cancelled',
                         type: 'Scheduled'
                     })
+                    toast.success('Uspešno ste otkazali porudžbinu')
+                },
+                onError: error => {
+                    toast.error(error.message)
                 }
             }
         )

@@ -6,19 +6,14 @@ import {
     useDefaultQueryParams
 } from '@/hooks/useDefaultQueryParams'
 import { axiosPrivate } from '@/lib/axios'
-import { CompanyPath, DateIso, OrderState, OrderType } from '@/types'
+import { CompanyPath } from '@/types'
 import { createBaseUrlQuery } from '@/utils'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { ReadMyOrderResponse } from '../../contract'
 import { MY_ORDER_KEYS } from '../keys'
 
 interface ReadMyOrderPath extends CompanyPath {}
-interface ReadMyOrderParams extends QueryParams<ReadMyOrderPath> {
-    fromDate: DateIso
-    toDate: DateIso
-    orderTypes: OrderType[]
-    orderStates: OrderState[]
-}
+interface ReadMyOrderParams extends QueryParams<ReadMyOrderPath> {}
 
 const readMyOrders = ({ path: { companyCode }, query }: ReadMyOrderParams): Promise<ReadMyOrderResponse[]> =>
     axiosPrivate.get(`/companies/${companyCode}/orders/me?${createBaseUrlQuery(query)}`)
