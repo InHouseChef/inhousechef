@@ -14,7 +14,7 @@ import { ReadUserResponse } from '../../contract'
 interface ReadMyUserPath extends CompanyPath {}
 interface ReadMyUserParams extends QueryParams<ReadMyUserPath> {}
 
-const readMyUser = ({ path: { companyCode } }: ReadMyUserParams): Promise<ReadUserResponse> =>
+export const readMyUser = ({ path: { companyCode } }: ReadMyUserParams): Promise<ReadUserResponse> =>
     axiosPrivate.get(`/companies/${companyCode}/users/me`)
 
 interface UseReadMyUserParams<T> extends DefaultQueryParams<ReadMyUserPath>, QueryOptions {
