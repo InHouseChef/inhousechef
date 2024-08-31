@@ -28,7 +28,7 @@ export const MealCard = ({ id, name, description, price, imageUrl, onClick, smal
                                 'h-20 w-20': small,
                                 'h-36 w-36': !small
                             })}>
-                            No Image
+                            Nema slike
                         </div>
                     )}
                     {quantity && quantity > 0 ? (

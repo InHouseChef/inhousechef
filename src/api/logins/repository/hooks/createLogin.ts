@@ -4,7 +4,6 @@ import { MutationParams } from '@/types'
 import { useMutation } from '@tanstack/react-query'
 
 interface CreateLoginPath {}
-
 interface CreateEndUserBasicParams extends MutationParams<CreateLoginPath, CreateLoginRequest> {}
 
 export const createLogin = ({ body }: CreateEndUserBasicParams): Promise<CreateLoginResponse> =>

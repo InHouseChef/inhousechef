@@ -31,6 +31,7 @@ export const LoginForm = () => {
     const onSubmit = async (formData: z.infer<typeof createClientCredentialsSchema>) => {
         setIsPending(true)
         createLogin({
+            path: {},
             body: { username: formData.username, password: formData.password, grantType: 'password_credentials' }
         })
             .then(data => {

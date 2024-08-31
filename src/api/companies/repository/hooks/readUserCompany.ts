@@ -1,31 +1,26 @@
-import {
-    DefaultQueryParams,
-    QueryOptions,
-    QueryParams,
-    getDefaultBooleanValue,
-    useDefaultQueryParams
-} from '@/hooks/useDefaultQueryParams'
+import { ReadMyUserResponse } from '@/api/users'
+import { useIdentity } from '@/hooks'
+import { DefaultQueryParams, QueryOptions, getDefaultBooleanValue } from '@/hooks/useDefaultQueryParams'
 import { axiosPrivate } from '@/lib/axios'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { ReadUserCompanyResponse } from '../../contract'
 import { COMPANY_USER_KEYS } from '../keys'
 
 interface ReadUserCompanyPath {}
-interface ReadUserCompanyParams extends QueryParams<ReadUserCompanyPath> {}
 
-export const readUserCompany = (): Promise<ReadUserCompanyResponse> => axiosPrivate.get('/companies/me')
+export const readUserCompany = (): Promise<ReadMyUserResponse> => axiosPrivate.get('/companies/me')
+interface UseReadUserCompanyParams extends DefaultQueryParams<ReadUserCompanyPath>, QueryOptions {}
 
-interface UseReadUserCompanyParams<T> extends DefaultQueryParams<ReadUserCompanyPath>, QueryOptions {
-    select?: (response: ReadUserCompanyResponse) => T
+export const useReadUserCompany = (params?: UseReadUserCompanyParams) => {
+    const { identity, jwt } = useIdentity()
+
+    return useQuery({
+        gcTime: 0,
+        queryKey: COMPANY_USER_KEYS.base,
+        queryFn: () => readUserCompany(),
+        enabled:
+            Boolean(identity?.accessToken) &&
+            Boolean(!jwt?.['cognito:groups'].includes('Admin')) &&
+            getDefaultBooleanValue(params?.options?.enabled),
+        placeholderData: getDefaultBooleanValue(params?.options?.keepPreviousData) ? keepPreviousData : undefined
+    })
 }
-
-// export const useReadUserCompany = <T = ReadUserCompanyResponse>(params?: UseReadUserCompanyParams<T>) => {
-//     const defaultParams = useDefaultQueryParams(params)
-//     return useQuery({ gcTime: 0,
-//         queryKey: COMPANY_USER_KEYS.base,
-//         queryFn: () => readUserCompany(defaultParams),
-//         select: params?.select,
-//         enabled: getDefaultBooleanValue(params?.options?.enabled),
-//         placeholderData: getDefaultBooleanValue(params?.options?.keepPreviousData) ? keepPreviousData : undefined
-//     })
-// }

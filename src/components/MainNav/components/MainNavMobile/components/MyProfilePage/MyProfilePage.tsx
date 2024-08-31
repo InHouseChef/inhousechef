@@ -1,71 +1,66 @@
-import { Building, Building2Icon, HashIcon, UserIcon } from 'lucide-react';
-import clsx from 'clsx';
-import { ReadUserResponse, RolesEnum } from '@/api/users';
-import { UserProfileIcon } from '../../icons';
+import { ReadUserResponse, RolesEnum } from '@/api/users'
+import clsx from 'clsx'
+import { Building, HashIcon, UserIcon } from 'lucide-react'
 
-export const MyProfilePage = ({ user }: { user: ReadUserResponse}) => {
+export const MyProfilePage = ({ user }: { user?: ReadUserResponse }) => {
     return (
-        <div className="max-w-lg mx-auto mt-8">
+        <div className='mx-auto mt-8 max-w-lg'>
             {/* User Profile Icon */}
-            <div className="flex justify-center mb-4">
-                <div className="h-24 w-24 bg-primary rounded-full flex items-center justify-center">
-                    <span className="text-3xl text-white font-semibold">
-                        {user.fullName.split(' ').map((name, index) => index < 2 ? name.charAt(0) : '').join(' ')}
+            <div className='mb-4 flex justify-center'>
+                <div className='flex h-24 w-24 items-center justify-center rounded-full bg-primary'>
+                    <span className='text-3xl font-semibold text-white'>
+                        {user?.fullName
+                            .split(' ')
+                            .map((name, index) => (index < 2 ? name.charAt(0) : ''))
+                            .join(' ')}
                     </span>
                 </div>
             </div>
 
             {/* User Name */}
-            <div className="text-center mb-8">
-                <h1 className="text-2xl font-semibold">{user.fullName}</h1>
+            <div className='mb-8 text-center'>
+                <h1 className='text-2xl font-semibold'>{user?.fullName}</h1>
             </div>
 
             {/* User Info List */}
             <ul>
                 <li
                     className={clsx(
-                        "flex items-center bg-gray-100 py-6 px-4 gap-4 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all rounded-t-lg"
+                        'flex cursor-pointer items-center gap-4 rounded-t-lg border-b bg-gray-100 px-4 py-6 transition-all last:border-b-0 hover:bg-gray-200'
                     )}
-                    key={'fullName'}
-                >
-                    <div className="flex items-center justify-center h-10 w-10 bg-gray-100 rounded-full">
+                    key={'fullName'}>
+                    <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-100'>
                         {/* User Icon */}
-                        <UserIcon className="h-6 w-6" color='#7c3aed' />
+                        <UserIcon className='h-6 w-6' color='#7c3aed' />
                     </div>
-                    <span className="text-lg font-medium text-gray-700">
-                        {user.fullName}
-                    </span>
+                    <span className='text-lg font-medium text-gray-700'>{user?.fullName}</span>
                 </li>
                 <li
                     className={clsx(
-                        "flex items-center bg-gray-100 py-6 px-4 gap-4 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all rounded-b-lg"
+                        'flex cursor-pointer items-center gap-4 border-b bg-gray-100 px-4 py-6 transition-all last:border-b-0 hover:bg-gray-200'
                     )}
-                    key={'username'}
-                >
-                    <div className="flex items-center justify-center h-10 w-10 bg-gray-100 rounded-full">
+                    key={'username'}>
+                    <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-100'>
                         {/* Username Icon */}
-                        <HashIcon className="h-6 w-6" color='#7c3aed' />
+                        <HashIcon className='h-6 w-6' color='#7c3aed' />
                     </div>
-                    <span className="text-lg font-medium text-gray-700">
-                        {user.username}
-                    </span>
+                    <span className='text-lg font-medium text-gray-700'>{user?.username}</span>
                 </li>
                 <li
                     className={clsx(
-                        "flex items-center bg-gray-100 py-6 px-4 gap-4 border-b last:border-b-0 hover:bg-gray-200 cursor-pointer transition-all rounded-b-lg"
+                        'flex cursor-pointer items-center gap-4 border-b bg-gray-100 px-4 py-6 transition-all last:border-b-0 hover:bg-gray-200'
                     )}
-                    key={'username'}
-                >
-                    <div className="flex items-center justify-center h-10 w-10 bg-gray-100 rounded-full">
+                    key={'username'}>
+                    <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-100'>
                         {/* Username Icon */}
-                        <Building className="h-6 w-6" color='#7c3aed' />
+                        <Building className='h-6 w-6' color='#7c3aed' />
                     </div>
-                    <span className="text-lg font-medium text-gray-700">
-                        {user.role === RolesEnum.Employee && 'Radnik'}
-                        {user.role === RolesEnum.CompanyManager && 'Menadžer'}
+                    <span className='text-lg font-medium text-gray-700'>
+                        {user?.role === RolesEnum.Employee && 'Radnik'}
+                        {user?.role === RolesEnum.CompanyManager && 'Menadžer'}
                     </span>
                 </li>
             </ul>
         </div>
-    );
+    )
 }

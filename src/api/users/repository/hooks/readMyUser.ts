@@ -9,19 +9,19 @@ import { MY_USER_KEYS } from '@/keys'
 import { axiosPrivate } from '@/lib/axios'
 import { CompanyPath } from '@/types'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { ReadMyUserResponse } from '../../contract'
+import { ReadUserResponse } from '../../contract'
 
 interface ReadMyUserPath extends CompanyPath {}
 interface ReadMyUserParams extends QueryParams<ReadMyUserPath> {}
 
-const readMyUser = ({ path: { companyCode } }: ReadMyUserParams): Promise<ReadMyUserResponse> =>
+const readMyUser = ({ path: { companyCode } }: ReadMyUserParams): Promise<ReadUserResponse> =>
     axiosPrivate.get(`/companies/${companyCode}/users/me`)
 
 interface UseReadMyUserParams<T> extends DefaultQueryParams<ReadMyUserPath>, QueryOptions {
-    select?: (response: ReadMyUserResponse) => T
+    select?: (response: ReadUserResponse) => T
 }
 
-export const useReadMyUser = <T = ReadMyUserResponse>(params?: UseReadMyUserParams<T>) => {
+export const useReadMyUser = <T = ReadUserResponse>(params?: UseReadMyUserParams<T>) => {
     const defaultParams = useDefaultQueryParams(params)
     return useQuery({
         queryKey: MY_USER_KEYS.base,
