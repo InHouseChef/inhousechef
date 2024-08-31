@@ -15,7 +15,6 @@ export const axiosPublic = axios.create({
 axiosPublic.interceptors.response.use(returnData, error => {
     Promise.reject(error.response.data)
     console.log('error', error)
-    return error
 })
 
 // Protected

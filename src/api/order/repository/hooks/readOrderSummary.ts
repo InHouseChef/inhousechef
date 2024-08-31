@@ -15,7 +15,7 @@ interface ReadOrderSummaryPath extends CompanyPath {}
 interface ReadOrderSummaryParams extends QueryParams<ReadOrderSummaryPath> {}
 
 const readOrderSummary = ({ path: { companyCode } }: ReadOrderSummaryParams): Promise<ReadOrderSummaryResponse> =>
-    axiosPrivate.get(`/companies/${companyCode}/orders/ummary`)
+    axiosPrivate.get(`/companies/${companyCode}/orders/summary`)
 
 interface UseReadOrderSummaryParams<T> extends DefaultQueryParams<ReadOrderSummaryPath>, QueryOptions {
     select?: (response: ReadOrderSummaryResponse) => T

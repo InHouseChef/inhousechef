@@ -9,10 +9,10 @@ const Cart: React.FC = () => {
 
     const handleIncreaseQuantity = (mealId: string) => {
         if (selectedOrder) {
-            const updatedMeals = selectedOrder.meals.map(meal =>
-                meal.id === mealId ? { ...meal, quantity: meal.quantity + 1 } : meal
+            const updatedOrderItems = selectedOrder.orderItems.map(orderItem =>
+                orderItem.skuId === mealId ? { ...orderItem, quantity: orderItem.quantity + 1 } : orderItem
             );
-            updateOrder(selectedOrder.id, updatedMeals);
+            updateOrder(selectedOrder.id, updatedOrderItems);
         }
     };
 

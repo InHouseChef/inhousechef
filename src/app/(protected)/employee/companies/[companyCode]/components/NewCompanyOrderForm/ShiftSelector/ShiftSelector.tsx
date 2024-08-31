@@ -3,18 +3,19 @@ import clsx from 'clsx';
 import { ALaCarteShift, Shift } from '@/app/(protected)/employee/newstate';
 import { formatTimeWithoutSeconds } from '@/utils/date';
 
-interface ShiftSelectorNavProps {
+interface ShiftSelectorProps {
     selectedShiftId?: string;
     onShiftChange: (shiftId: string) => void;
     shifts: Shift[];
     aLaCarteShift?: ALaCarteShift;
+    hasALaCardPermission: boolean;
 }
 
-export const ShiftSelectorNav: React.FC<ShiftSelectorNavProps> = ({ selectedShiftId, onShiftChange, shifts, aLaCarteShift }) => {
+export const ShiftSelector: React.FC<ShiftSelectorProps> = ({ selectedShiftId, onShiftChange, shifts, aLaCarteShift, hasALaCardPermission }) => {
     return (
         <nav className="topnav-horizontal mx-2 h-14 min-h-14 rounded-md bg-gray-100 mt-4">
             <ul className="flex h-full items-center gap-2">
-                {aLaCarteShift && (
+                {hasALaCardPermission && aLaCarteShift && (
                     <li
                         className={clsx('flex-1 cursor-pointer rounded-lg py-2 text-sm text-center', {
                             'bg-primary text-white': selectedShiftId === aLaCarteShift.id,

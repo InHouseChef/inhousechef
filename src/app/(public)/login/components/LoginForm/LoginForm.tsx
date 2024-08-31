@@ -32,7 +32,7 @@ export const LoginForm = () => {
         setIsPending(true)
         createLogin({ body: {username: formData.username, password: formData.password, grantType: 'password_credentials'} })
             .then(data => {
-                console.log('set identity', data)
+                console.log('setting identity to', data)
                 setIdentity(data)
             })
             .catch((error: AxiosError) => {
