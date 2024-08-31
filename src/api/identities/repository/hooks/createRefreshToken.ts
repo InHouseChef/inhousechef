@@ -6,4 +6,4 @@ interface CreateRefreshTokenParams {
 }
 
 export const createRefreshToken = ({ body }: CreateRefreshTokenParams): Promise<CreateLoginResponse> =>
-    axiosPublic.post('login', body)
+    axiosPublic.post('/login', body)
