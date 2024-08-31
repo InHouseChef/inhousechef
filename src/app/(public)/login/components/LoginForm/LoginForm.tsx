@@ -5,10 +5,12 @@ import { Loader } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { useBaseUrl } from '@/hooks'
 import { useIdentity } from '@/hooks/useIdentity'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AxiosError } from 'axios'
-import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { createClientCredentialsSchema } from './schemas'
@@ -17,6 +19,13 @@ export const LoginForm = () => {
     const { setIdentity } = useIdentity()
     const [isPending, setIsPending] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string | null>(null) // State for custom error message
+    const router = useRouter()
+    const { adminUrl, employeeUrl } = useBaseUrl()
+
+    useEffect(() => {
+        router.prefetch(`${adminUrl}/companies/`)
+        router.prefetch(`${employeeUrl}/companies/`)
+    }, [router, adminUrl, employeeUrl])
 
     const form = useForm<z.infer<typeof createClientCredentialsSchema>>({
         resolver: zodResolver(createClientCredentialsSchema),
@@ -54,7 +63,9 @@ export const LoginForm = () => {
                     )
                 }
             })
-            .finally(() => setIsPending(false))
+            .finally(() => {
+                setIsPending(false)
+            })
     }
 
     return (
@@ -96,8 +107,12 @@ export const LoginForm = () => {
                             <p className='text-sm'>{errorMessage}</p>
                         </div>
                     )}
-                    <Button type='submit' className='w-full rounded-md bg-primary py-2 text-white' disabled={isPending}>
-                        {!isPending ? 'PRIJAVI SE' : 'Učitavanje...'}
+                    <Button
+                        loading={isPending}
+                        type='submit'
+                        className='w-full rounded-md bg-primary py-2 text-white'
+                        disabled={isPending}>
+                        PRIJAVI SE
                     </Button>
                 </form>
             </Form>

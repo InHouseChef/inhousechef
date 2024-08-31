@@ -9,12 +9,9 @@ export const TopNavHamburger = ({ isNavOpen, onToggle }: TopNavHamburgerProps) =
     return (
         <button
             onClick={onToggle}
-            className={clsx(
-                'relative h-8 w-8 translate-x-0 transform cursor-pointer transition-transform duration-300 ',
-                {
-                    'translate-x-14': isNavOpen
-                }
-            )}>
+            className={clsx('relative h-8 w-8 translate-x-0 transform cursor-pointer transition-transform duration-300', {
+                'translate-x-14': isNavOpen
+            })}>
             <span
                 className={clsx(
                     'absolute block transform rounded-lg bg-[#160042] opacity-100 transition-all duration-300',

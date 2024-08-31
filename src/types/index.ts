@@ -60,4 +60,5 @@ export interface Branding {
     primaryColor?: string
     secondaryColor?: string
     logoUrl?: string
+    faviconUrl?: string
 }

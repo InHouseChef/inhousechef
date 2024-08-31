@@ -1,11 +1,24 @@
-'use client'
-
 import { TopNav } from '@/components'
-import { ClientProtectedLayout } from '../layouts/ProtectedLayout'
+import { getCompanyMetadataIcons } from '@/utils/metadata'
+import { Metadata } from 'next'
 import { ReactNode } from 'react'
+import { ClientProtectedLayout } from '../layouts/ProtectedLayout'
 
 interface ProtectedLayoutProps {
     children?: ReactNode
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+    const icons = await getCompanyMetadataIcons()
+
+    const title = 'Kristal Kettering'
+    const description = 'Kristal Kettering'
+
+    return {
+        title,
+        description,
+        icons
+    }
 }
 
 export default function Layout({ children }: ProtectedLayoutProps) {
