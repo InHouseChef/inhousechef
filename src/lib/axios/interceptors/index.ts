@@ -26,13 +26,14 @@ export const refreshToken = async (error: any) => {
 
         try {
             const refreshCredentials = await createRefreshToken({
-                // path: pathCodes,
                 body: {
                     grantType: 'refresh_token',
                     refreshToken: passwordCredentials ? passwordCredentials.refreshToken : ''
                 }
             })
-            identityStore.setState({ identity: refreshCredentials })
+            identityStore.setState({
+                identity: { ...refreshCredentials, refreshToken: passwordCredentials?.refreshToken || '' }
+            })
             queryClient.invalidateQueries({ queryKey: ['identity'] })
             config.headers.Authorization = `Bearer ${refreshCredentials.accessToken}`
             return axiosPrivate(config)
