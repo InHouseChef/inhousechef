@@ -107,17 +107,7 @@ export const OrderDialog = () => {
                 onSuccess: () => {
                     handleCloseCart()
                     setActiveOrderId('')
-                    setActiveOrder('', {
-                        companyId: path.companyCode,
-                        customerId: '',
-                        id: '',
-                        number: '',
-                        orderDate: '',
-                        orderedForShiftId: '',
-                        orderItems: [],
-                        state: 'Cancelled',
-                        type: 'Scheduled'
-                    })
+
                     toast.success('Uspešno ste otkazali porudžbinu')
                 },
                 onError: error => {

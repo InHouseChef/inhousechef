@@ -31,7 +31,7 @@ export const MyProfilePage = ({ user }: { user?: ReadUserResponse }) => {
                     key={'fullName'}>
                     <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-100'>
                         {/* User Icon */}
-                        <UserIcon className='h-6 w-6' color='#7c3aed' />
+                        <UserIcon className='h-6 w-6 text-primary' />
                     </div>
                     <span className='text-lg font-medium text-gray-700'>{user?.fullName}</span>
                 </li>
@@ -42,7 +42,7 @@ export const MyProfilePage = ({ user }: { user?: ReadUserResponse }) => {
                     key={'username'}>
                     <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-100'>
                         {/* Username Icon */}
-                        <HashIcon className='h-6 w-6' color='#7c3aed' />
+                        <HashIcon className='h-6 w-6 text-primary' />
                     </div>
                     <span className='text-lg font-medium text-gray-700'>{user?.username}</span>
                 </li>
@@ -53,7 +53,7 @@ export const MyProfilePage = ({ user }: { user?: ReadUserResponse }) => {
                     key={'username'}>
                     <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-100'>
                         {/* Username Icon */}
-                        <Building className='h-6 w-6' color='#7c3aed' />
+                        <Building className='h-6 w-6 text-primary' />
                     </div>
                     <span className='text-lg font-medium text-gray-700'>
                         {user?.role === RolesEnum.Employee && 'Radnik'}
