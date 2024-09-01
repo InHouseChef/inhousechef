@@ -1,6 +1,6 @@
 'use client'
 
-import { useCreateLogin } from '@/api/logins'
+import { useCreateLogin } from '@/apis/logins'
 import { Error } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'

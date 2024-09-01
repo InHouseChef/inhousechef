@@ -1,6 +1,6 @@
 'use client'
 
-import { readCompany, updateCompanyBrandingLogo } from '@/api/companies'
+import { readCompany, updateCompanyBrandingLogo } from '@/apis/companies'
 import { updateCompanyBrandingLogoSchema } from '@/app/(protected)/admin/schemas'
 import { Header } from '@/components'
 import { FileUploader } from '@/components/FileUploader'

@@ -1,6 +1,6 @@
 'use client'
 
-import { createCompany } from '@/api/companies'
+import { createCompany } from '@/apis/companies'
 import { Header } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'

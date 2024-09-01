@@ -1,4 +1,4 @@
-import { Identity } from '@/api/identities'
+import { Identity } from '@/apis/identities'
 import { jwtDecode } from 'jwt-decode'
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'

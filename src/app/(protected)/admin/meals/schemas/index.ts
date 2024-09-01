@@ -1,4 +1,4 @@
-import { MealTypeEnum } from '@/api/meals/contract'
+import { MealTypeEnum } from '@/apis/meals/contract'
 import { nameSchema } from '@/schemas'
 import { coerce, object, string, z } from 'zod'
 

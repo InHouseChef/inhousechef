@@ -1,5 +1,5 @@
 'use client'
-import { useReadUserCompany } from '@/api/companies'
+import { useReadUserCompany } from '@/apis/companies'
 import { Branding, CompanyPath } from '@/types'
 import { useParams } from 'next/navigation'
 import { useEffect } from 'react'

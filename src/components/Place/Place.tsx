@@ -1,4 +1,4 @@
-import { Address } from '@/api/common'
+import { Address } from '@/apis/common'
 
 interface PlaceProps {
     address?: Address

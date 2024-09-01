@@ -1,4 +1,4 @@
-import { useUpdateTermsAccept } from '@/api/users'
+import { useUpdateTermsAccept } from '@/apis/users'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useLogout, usePathParams } from '@/hooks'
 import { Button } from '@/packages/components'

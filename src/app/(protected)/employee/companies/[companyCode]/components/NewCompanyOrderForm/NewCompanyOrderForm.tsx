@@ -1,6 +1,6 @@
 'use client'
 
-import { RolesEnum, useReadMyUser } from '@/api/users'
+import { RolesEnum, useReadMyUser } from '@/apis/users'
 import { useCartStore } from '@/app/(protected)/employee/newstate'
 import { Loader } from '@/components'
 import { useRoles } from '@/providers/RoleProvider/RoleProvider'

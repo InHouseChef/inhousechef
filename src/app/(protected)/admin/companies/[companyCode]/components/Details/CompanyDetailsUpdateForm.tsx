@@ -1,6 +1,6 @@
 'use client'
 
-import { updateCompanyDetails, useReadCompany } from '@/api/companies'
+import { updateCompanyDetails, useReadCompany } from '@/apis/companies'
 import { Header, Loader } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'

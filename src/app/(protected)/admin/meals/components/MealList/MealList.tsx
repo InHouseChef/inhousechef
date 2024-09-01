@@ -1,7 +1,7 @@
 'use client'
 
-import { ReadMealResponse } from '@/api/meals'
-import { readMeals } from '@/api/meals/repository/hooks/readMeals'
+import { ReadMealResponse } from '@/apis/meals'
+import { readMeals } from '@/apis/meals/repository/hooks/readMeals'
 import { DataTable, Header } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'

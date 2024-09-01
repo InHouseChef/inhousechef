@@ -1,6 +1,6 @@
 'use client'
 
-import { useReadShift } from '@/api/shifts/repository/hooks/readShift'
+import { useReadShift } from '@/apis/shifts/repository/hooks/readShift'
 import { Header, Loader } from '@/components'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'

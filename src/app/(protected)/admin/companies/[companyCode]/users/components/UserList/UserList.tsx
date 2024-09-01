@@ -1,7 +1,7 @@
 'use client'
 
-import { ReadUserResponse, RolesEnum } from '@/api/users'
-import { readUsers } from '@/api/users/repository/hooks/readUsers'
+import { ReadUserResponse, RolesEnum } from '@/apis/users'
+import { readUsers } from '@/apis/users/repository/hooks/readUsers'
 import { DataTable, Loader } from '@/components'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import Link from 'next/link'

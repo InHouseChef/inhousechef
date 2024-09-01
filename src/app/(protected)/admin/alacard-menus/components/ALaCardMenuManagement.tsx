@@ -1,8 +1,8 @@
 'use client'
 
-import { createALaCardMenu, ReadALaCardMenuResponse, readALaCardMenus, removeMealFromALaCardMenu } from '@/api/alacard-menus'
-import { deleteALaCardMenu } from '@/api/alacard-menus/repository/hooks/deleteALaCardMenu'
-import { ReadMealResponse, readMeals } from '@/api/meals'
+import { createALaCardMenu, ReadALaCardMenuResponse, readALaCardMenus, removeMealFromALaCardMenu } from '@/apis/alacard-menus'
+import { deleteALaCardMenu } from '@/apis/alacard-menus/repository/hooks/deleteALaCardMenu'
+import { ReadMealResponse, readMeals } from '@/apis/meals'
 import { Header, Loader } from '@/components'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'

@@ -1,4 +1,4 @@
-import { MealType } from '@/api/meals'
+import { MealType } from '@/apis/meals'
 import { DateLocalIso, DateTimeIsoUtc, OrderState, OrderType } from '@/types'
 
 interface Order {

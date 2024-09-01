@@ -1,4 +1,4 @@
-import { ReadUserResponse, RolesEnum } from '@/api/users'
+import { ReadUserResponse, RolesEnum } from '@/apis/users'
 import clsx from 'clsx'
 import { Building, HashIcon, UserIcon } from 'lucide-react'
 

@@ -1,4 +1,4 @@
-import { MealType } from '@/api/meals'
+import { MealType } from '@/apis/meals'
 import { OrderState } from '@/types'
 
 export const MEAL_TYPE_LABELS: Record<MealType, string> = {

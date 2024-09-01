@@ -1,4 +1,4 @@
-import { MealType } from '@/api/meals'
+import { MealType } from '@/apis/meals'
 import clsx from 'clsx'
 
 interface MealCardProps {

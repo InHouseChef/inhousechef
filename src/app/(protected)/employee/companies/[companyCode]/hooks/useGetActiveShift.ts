@@ -1,4 +1,4 @@
-import { ReadShiftResponse } from '@/api/shifts'
+import { ReadShiftResponse } from '@/apis/shifts'
 import { useAppDate } from '@/hooks'
 import { getActiveShift } from '../utils'
 

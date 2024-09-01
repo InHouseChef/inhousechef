@@ -1,7 +1,7 @@
 'use client'
 
-import { ReadCompanyResponse } from '@/api/companies'
-import { readCompanies } from '@/api/companies/repository/hooks/readCompanies'
+import { ReadCompanyResponse } from '@/apis/companies'
+import { readCompanies } from '@/apis/companies/repository/hooks/readCompanies'
 import { DataTable, Header, Place } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'

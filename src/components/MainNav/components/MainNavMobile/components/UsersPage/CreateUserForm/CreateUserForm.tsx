@@ -1,4 +1,4 @@
-import { RolesEnum, useCreateUser } from '@/api/users'
+import { RolesEnum, useCreateUser } from '@/apis/users'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'

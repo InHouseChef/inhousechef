@@ -1,6 +1,6 @@
 'use client'
 
-import { useCreateShift } from '@/api/shifts'
+import { useCreateShift } from '@/apis/shifts'
 import { Header } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'

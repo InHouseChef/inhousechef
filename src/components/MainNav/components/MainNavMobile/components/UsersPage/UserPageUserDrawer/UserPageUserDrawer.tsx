@@ -1,4 +1,4 @@
-import { ReadUserResponse } from '@/api/users'
+import { ReadUserResponse } from '@/apis/users'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import { CreateUserForm } from '../CreateUserForm/CreateUserForm'
 import { UpdateUserForm } from '../UpdateUserForm/UpdateUserForm'

@@ -1,4 +1,4 @@
-import { DailyMenuMeal } from '@/api/daily-menus'
+import { DailyMenuMeal } from '@/apis/daily-menus'
 import { useCartStore } from '@/app/(protected)/employee/newstate'
 import { DateLocalIso } from '@/types'
 import { getToLocalISOString } from '@/utils/date'
