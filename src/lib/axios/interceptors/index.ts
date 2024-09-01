@@ -31,13 +31,12 @@ export const refreshToken = async (error: any) => {
                     refreshToken: passwordCredentials ? passwordCredentials.refreshToken : ''
                 }
             })
-            identityStore.setState({
-                identity: { ...refreshCredentials, refreshToken: passwordCredentials?.refreshToken || '' }
-            })
+            identityStore.setState({ identity: refreshCredentials })
             queryClient.invalidateQueries({ queryKey: ['identity'] })
             config.headers.Authorization = `Bearer ${refreshCredentials.accessToken}`
             return axiosPrivate(config)
         } catch (error) {
+            localStorage.clear()
             identityStore.setState({ identity: null })
         }
     }
