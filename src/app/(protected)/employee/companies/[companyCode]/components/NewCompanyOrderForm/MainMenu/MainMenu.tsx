@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useCartStore } from '@/app/(protected)/employee/newstate';
 import DaySelector from '../DaySelector/DaySelector';
 import { ShiftSelector } from '../ShiftSelector/ShiftSelector';
@@ -8,7 +8,7 @@ import { DailyMenuMeal } from '@/api/daily-menus';
 import { DateTimeLocalIso } from '@/types';
 import Cart from '../Cart/Cart';
 import { getToLocalISOString } from '@/utils/date';
-import { MealCard } from '../../MealCard/MealCard';
+import { MealCard } from '../MealCard/MealCard';
 
 const MainMenu: React.FC = () => {
     const [selectedMealType, setSelectedMealType] = useState<'MainCourse' | 'SideDish'>('MainCourse');
