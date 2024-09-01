@@ -7,7 +7,7 @@ const nextConfig = {
         return [
             {
                 source: '/', // The old URL path
-                destination: '/home', // The new URL path
+                destination: '/login', // The new URL path
                 permanent: true, // This is a permanent redirect (status code 308)
             },
             // Add more redirects as needed
