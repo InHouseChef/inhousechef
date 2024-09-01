@@ -69,8 +69,8 @@ export const ActiveOrders = () => {
                                     'text-[#27AE60]': order.state === "Confirmed", 
                                     'text-[#EB5757]': order.state === "Cancelled" 
                                 })}>{order.state}</p>
-                            {type === "Immediate" && (<p className='text-sm text-black-900 font-medium'>Za odmah</p>)}
-                            {type === "Scheduled" && (<p className='text-sm text-black-900 font-medium'>Za {forDate}</p>)}
+                            {type === "Immediate" && (<p className='text-md text-black-900 font-medium'>Za odmah</p>)}
+                            {type === "Scheduled" && (<p className='text-md text-black-900 font-medium'>Za {forDate}</p>)}
                         </div>
                         <div className="flex justify-between items-center border-t border-grey-300 py-4">
                             <div className="flex items-center gap-4">
