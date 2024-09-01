@@ -79,7 +79,7 @@ export interface CartStore {
     // State management actions
     setActiveDay: (day: DateLocalIso) => void;
     setActiveShift: (shiftId: string | undefined) => void;
-    setSelectedOrderById: (orderId: string, orderedForShiftId?: string) => void;
+    setSelectedOrderById: (orderId: string, orderedForShiftId?: string) => Promise<void>;
     setMenus: (menu: ReadDailyMenuResponse, aLaCarteMenu?: ReadDailyMenuResponse) => void;
     addOrder: (order: ScheduledOrderDetails | ImmediateOrderDetails) => void;
     updateOrder: (orderId: string, orderItems: OrderItem[]) => void;

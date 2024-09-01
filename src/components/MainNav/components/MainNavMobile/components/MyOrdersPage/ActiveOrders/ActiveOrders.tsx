@@ -3,7 +3,7 @@ import { useReadMyOrders } from "@/api/order/repository/hooks/readMyOrder";
 import { ReadMyOrderResponse } from "@/api/order";
 import { calculateDateRange } from "@/app/(protected)/employee/companies/[companyCode]/utils";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Loader } from "@/components/Loader";
 import clsx from "clsx";
 import { getToLocalISOString } from "@/utils/date";
@@ -25,11 +25,15 @@ export const ActiveOrders = () => {
         options: { enabled: false }
     });
 
-    const { setSelectedOrderById, setIsOpen } = useCartStore();
+    const { setSelectedOrderById, isOpen, setIsOpen } = useCartStore();
 
     useEffect(() => {
         refetch();
     }, [refetch]);
+
+    useEffect(() => {
+        if (!isOpen) refetch();
+    }, [isOpen]);
 
     const getOrderSummary = (order: ReadMyOrderResponse) => {
         const number = order.number;
@@ -42,7 +46,7 @@ export const ActiveOrders = () => {
     };
 
     const handleViewOrder = (orderId: string, orderedForShiftId?: string) => {
-        setSelectedOrderById(orderId, orderedForShiftId); // Set the specific order by its ID
+        setSelectedOrderById(orderId, orderedForShiftId); // Set the selected order
         setIsOpen(true); // Open the cart with the selected order
     };
 
