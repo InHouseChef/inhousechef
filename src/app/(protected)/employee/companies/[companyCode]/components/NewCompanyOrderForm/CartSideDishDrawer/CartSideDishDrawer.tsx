@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useState } from 'react';
 import MealDrawerCard from '../MealDrawerCard/MealDrawerCard';
+import { set } from 'react-hook-form';
 
 interface CartSideDishDrawerProps {
     isOpen: boolean;
@@ -25,6 +26,8 @@ export const CartSideDishDrawer = ({ isOpen, onClose }: CartSideDishDrawerProps)
     const handleAddToOrder = () => {
         if (selectedMeal) {
             addOrUpdateOrder(selectedMeal.id, quantity);
+            setSelectedMeal(null);
+            setQuantity(1);
             onClose();
         }
     };
