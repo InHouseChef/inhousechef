@@ -7,6 +7,7 @@ import { useSafeReplace } from '@/hooks'
 import { useReadIdentity } from '@/hooks/useIdentity'
 import { useRoles } from '@/providers/RoleProvider/RoleProvider'
 import { useCompanyStore } from '@/state'
+import { useRouter } from 'next/navigation'
 import { ReactNode, useEffect, useState } from 'react'
 
 interface MainLayoutProps {
@@ -14,7 +15,7 @@ interface MainLayoutProps {
 }
 
 export const MainLayout = ({ children }: MainLayoutProps) => {
-    const { safeReplace } = useSafeReplace()
+    const router = useRouter()
     const [userCompany, setUserCompany] = useState<ReadUserCompanyResponse>()
     const { data: identity, isFetched, isFetching: isFetchingIdentity } = useReadIdentity()
     const { roles } = useRoles()
@@ -25,13 +26,13 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
     useEffect(() => {
         if (!isFetched) return
 
-        if (!identity) return safeReplace('/login')
+        if (!identity) return router.push('/login')
 
         console.log('identity', identity)
 
         if (identity && roles.Admin) {
             console.log('admin')
-            return safeReplace('/admin/companies')
+            return router.push('/admin/companies')
         }
 
         if (identity && (roles.Employee || roles.CompanyManager)) {
@@ -39,7 +40,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
             const company = getCompany()
 
             if (company.companyCode && company.companyId) {
-                return safeReplace(`/employee/companies/${company.companyCode}`)
+                return router.push(`/employee/companies/${company.companyCode}`)
             } else {
                 setIsFetchingCompany(true)
                 readUserCompany().then(company => {
