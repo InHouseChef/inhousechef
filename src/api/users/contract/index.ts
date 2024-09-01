@@ -7,6 +7,7 @@ interface UserResponse {
     role: RolesEnum.Admin | RolesEnum.CompanyManager | RolesEnum.Employee | RolesEnum.RestaurantWorker
     fullName: string
     aLaCardPermission: boolean
+    acceptedTerms: boolean
 }
 
 export interface ReadMyUserResponse {
@@ -57,3 +58,5 @@ export enum RolesEnum {
 export interface UpdateMyPasswordRequest {
     newPassword: string
 }
+
+export interface UpdateTermsAcceptRequest {}
