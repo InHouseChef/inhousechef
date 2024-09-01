@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { useCartStore } from '@/app/(protected)/employee/newstate';
-import DaySelector from '../DaySelector/DaySelector';
-import { ShiftSelector } from '../ShiftSelector/ShiftSelector';
-import MealTypeSelector from '../MealTypeSelector/MealTypeSelector';
-import { MealDrawer } from '../MealDrawer/MealDrawer';
-import { DailyMenuMeal } from '@/api/daily-menus';
-import { DateLocalIso } from '@/types';
-import Cart from '../Cart/Cart';
-import { getToLocalISOString } from '@/utils/date';
-import { MealCard } from '../MealCard/MealCard';
+import { DailyMenuMeal } from '@/api/daily-menus'
+import { useCartStore } from '@/app/(protected)/employee/newstate'
+import { DateLocalIso } from '@/types'
+import { getToLocalISOString } from '@/utils/date'
+import React, { useState } from 'react'
+import Cart from '../Cart/Cart'
+import DaySelector from '../DaySelector/DaySelector'
+import { MealCard } from '../MealCard/MealCard'
+import { MealDrawer } from '../MealDrawer/MealDrawer'
+import MealTypeSelector from '../MealTypeSelector/MealTypeSelector'
+import { ShiftSelector } from '../ShiftSelector/ShiftSelector'
 
 const MainMenu: React.FC = () => {
-    const [selectedMealType, setSelectedMealType] = useState<'MainCourse' | 'SideDish'>('MainCourse');
-    const [selectedMeal, setSelectedMeal] = useState<DailyMenuMeal | null>(null);
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [selectedMealType, setSelectedMealType] = useState<'MainCourse' | 'SideDish'>('MainCourse')
+    const [selectedMeal, setSelectedMeal] = useState<DailyMenuMeal | null>(null)
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
     const {
         setActiveShift,
@@ -24,43 +24,43 @@ const MainMenu: React.FC = () => {
         activeShift,
         hasALaCardPermission,
         activeDay,
-        selectedOrder,
-    } = useCartStore();
+        selectedOrder
+    } = useCartStore()
 
     const handleShiftChange = (shiftId: string) => {
-        setActiveShift(shiftId);
-    };
+        setActiveShift(shiftId)
+    }
 
     const handleMealTypeChange = (mealType: 'MainCourse' | 'SideDish') => {
-        setSelectedMealType(mealType);
-    };
+        setSelectedMealType(mealType)
+    }
 
     const handleMealClick = (meal: DailyMenuMeal) => {
-        setSelectedMeal(meal);
-        setIsDrawerOpen(true);
-    };
+        setSelectedMeal(meal)
+        setIsDrawerOpen(true)
+    }
 
     const closeDrawer = () => {
-        setIsDrawerOpen(false);
-        setSelectedMeal(null);
-    };
+        setIsDrawerOpen(false)
+        setSelectedMeal(null)
+    }
 
-    const alacardMeals = activeShift?.id === aLaCarteShift?.id && activeALaCarteMenus ? activeALaCarteMenus[0].meals : [];
-    const regularMeals = activeMenus ? activeMenus[0].meals : [];
+    const alacardMeals = activeShift?.id === aLaCarteShift?.id && activeALaCarteMenus ? activeALaCarteMenus[0]?.meals : []
+    const regularMeals = activeMenus ? activeMenus[0].meals : []
 
-    const mealsToDisplay = (activeShift?.id === aLaCarteShift?.id && activeALaCarteMenus ? alacardMeals : regularMeals)
-        ?.filter(meal => meal.type === selectedMealType) || [];
+    const mealsToDisplay =
+        (activeShift?.id === aLaCarteShift?.id && activeALaCarteMenus ? alacardMeals : regularMeals)?.filter(
+            meal => meal.type === selectedMealType
+        ) || []
 
-    const mealsInActiveOrder = selectedOrder?.orderItems.filter(meal => meal.type === selectedMealType) || [];
+    const mealsInActiveOrder = selectedOrder?.orderItems.filter(meal => meal.type === selectedMealType) || []
 
-    const isTodaySelected = activeDay === getToLocalISOString(new Date()).split('T')[0] as DateLocalIso;
+    const isTodaySelected = activeDay === (getToLocalISOString(new Date()).split('T')[0] as DateLocalIso)
 
     return (
-        <div className="relative p-4">
+        <div className='relative p-4'>
             {/* Day Selector */}
-            {hasALaCardPermission && (
-                <DaySelector />
-            )}
+            {hasALaCardPermission && <DaySelector />}
 
             {/* Shift Selector */}
             <ShiftSelector
@@ -75,7 +75,7 @@ const MainMenu: React.FC = () => {
             <MealTypeSelector selectedMealType={selectedMealType} onMealTypeChange={handleMealTypeChange} />
 
             {/* Meal List */}
-            <div className="grid grid-cols-1 gap-6 mt-4">
+            <div className='mt-4 grid grid-cols-1 gap-6'>
                 {mealsToDisplay.map(meal => (
                     <MealCard
                         key={meal.id}
@@ -87,14 +87,12 @@ const MainMenu: React.FC = () => {
             </div>
 
             {/* Meal Drawer */}
-            {selectedMeal && (
-                <MealDrawer meal={selectedMeal} isOpen={isDrawerOpen} onClose={closeDrawer} />
-            )}
+            {selectedMeal && <MealDrawer meal={selectedMeal} isOpen={isDrawerOpen} onClose={closeDrawer} />}
 
             {/* Cart */}
             <Cart />
         </div>
-    );
-};
+    )
+}
 
-export default MainMenu;
+export default MainMenu

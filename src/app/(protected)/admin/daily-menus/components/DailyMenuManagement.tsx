@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Form } from '@/components/ui/form'
 import { DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST } from '@/constants'
-import { getToLocalISOString } from '@/utils/date'
+import { toDateIso } from '@/utils/date'
 import { useEffect, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 
@@ -19,8 +19,8 @@ interface MenuScheduleFormData {
 
 // Calculate the first and last day of the month based on the selected month
 const getFirstAndLastDayOfMonth = (date: Date) => {
-    const firstDay = getToLocalISOString(new Date(date.getFullYear(), date.getMonth(), 1))
-    const lastDay = getToLocalISOString(new Date(date.getFullYear(), date.getMonth() + 1, 0))
+    const firstDay = toDateIso(new Date(date.getFullYear(), date.getMonth(), 1))
+    const lastDay = toDateIso(new Date(date.getFullYear(), date.getMonth() + 1, 0))
     return { firstDay, lastDay }
 }
 
@@ -91,7 +91,7 @@ export const DailyMenuManagement = () => {
 
     const confirmDeleteDailyMenu = () => {
         const dailyMenuId = dailyMenus.find(
-            menu => getToLocalISOString(new Date(menu.date)) === getToLocalISOString(selectedDates[0])
+            menu => new Date(menu.date).toDateString() === selectedDates[0].toDateString()
         )!.id
         deleteDailyMenu({ path: { dailyMenuId } })
             .then(() => {
@@ -117,7 +117,7 @@ export const DailyMenuManagement = () => {
         setSelectedDates(dates)
         if (!isAssignmentMode && dates.length === 1) {
             const selectedDailyMenu = dailyMenus?.find(
-                menu => getToLocalISOString(new Date(menu.date)) === getToLocalISOString(dates[0])
+                menu => new Date(menu.date).toDateString() === dates[0].toDateString()
             )
             const selectedMeals = []
             if (selectedDailyMenu) {
@@ -145,7 +145,7 @@ export const DailyMenuManagement = () => {
     const handleDeleteMeal = (event: any, mealId: string) => {
         event.preventDefault() // Prevent the form from submitting
         const selectedDate = selectedDates[0]
-        const dailyMenuId = dailyMenus.find(menu => getToLocalISOString(new Date(menu.date)) === getToLocalISOString(selectedDate))!.id
+        const dailyMenuId = dailyMenus.find(menu => new Date(menu.date).toDateString() === selectedDate.toDateString())!.id
         removeMealFromDailyMenu({ path: { dailyMenuId, mealId } })
             .then(() => {
                 initialFetch()
@@ -159,7 +159,7 @@ export const DailyMenuManagement = () => {
     }
 
     const onSubmit = () => {
-        const dates = selectedDates.map(date => getToLocalISOString(date))
+        const dates = selectedDates.map(date => toDateIso(date))
         const mealIds = fields.map(meal => meal.id)
         createDailyMenu({ path: '', body: { dates, mealIds } }).then(_ => {
             setSelectedDates([])
@@ -199,7 +199,7 @@ export const DailyMenuManagement = () => {
                             <h3 className='text-lg font-semibold'>
                                 {isAssignmentMode
                                     ? 'Assign Meals to Dates'
-                                    : `Meals for ${selectedDates.length === 1 ? getToLocalISOString(selectedDates[0]) : 'Selected Dates'}`}
+                                    : `Meals for ${selectedDates.length === 1 ? selectedDates[0].toDateString() : 'Selected Dates'}`}
                             </h3>
                             {!isAssignmentMode && selectedDates.length === 1 && selectedMeals.length > 0 && (
                                 <Button type='button' variant='destructive' onClick={toggleDeleteConfirmation}>

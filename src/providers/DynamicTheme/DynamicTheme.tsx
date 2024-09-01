@@ -1,11 +1,11 @@
 'use client'
 
 import { Loader } from '@/components'
+import { NotificationPopper } from '@/components/NotificationPopper/NotificationPopper'
 import { useBaseUrl, useSettings, useTheme } from '@/hooks'
 import localFont from 'next/font/local'
 import { useRouter } from 'next/navigation'
 import { ReactNode, useEffect, useState } from 'react'
-import { Toaster } from 'sonner'
 
 interface DynamicTheme {
     colors: Record<string, string>
@@ -44,10 +44,10 @@ export const DynamicTheme = ({ children }: DynamicThemeProps) => {
             <style jsx>{`
                 ${style}
             `}</style>
-            <body className={`${satoshi.variable} font-satoshi flex min-h-dvh w-full overflow-hidden`}>
+            <body className={`${satoshi.variable} flex min-h-dvh w-full overflow-hidden font-satoshi`}>
                 {isLoading ? <Loader /> : children}
             </body>
-            <Toaster position='top-right' richColors />
+            <NotificationPopper />
         </>
     )
 }
