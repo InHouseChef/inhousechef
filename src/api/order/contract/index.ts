@@ -1,9 +1,9 @@
 import { MealType } from '@/api/meals'
-import { DateTimeLocalIso, DateTimeIsoUtc, OrderState, OrderType } from '@/types'
+import { DateLocalIso, DateTimeIsoUtc, OrderState, OrderType } from '@/types'
 
 interface Order {
     shiftId: string
-    orderDate: DateTimeLocalIso
+    orderDate: DateLocalIso
     meals: {
         id: string
         quantity: number
@@ -16,7 +16,7 @@ interface OrderDetails {
     customerId: string
     state: OrderState
     type: OrderType
-    orderDate: DateTimeLocalIso
+    orderDate: DateLocalIso
     orderItems: {
         skuId: string
         name: string

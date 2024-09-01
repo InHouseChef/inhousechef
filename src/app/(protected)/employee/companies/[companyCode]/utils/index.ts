@@ -2,7 +2,7 @@ import { ReadALaCardShiftResponse } from '@/api/alacard-shifts'
 import { ReadDailyMenuResponse } from '@/api/daily-menus'
 import { MealType } from '@/api/meals'
 import { ReadShiftResponse } from '@/api/shifts'
-import { DateTimeLocalIso } from '@/types'
+import { DateLocalIso } from '@/types'
 import { MEAL_TYPE_LABELS } from '../constants'
 import { addDaysToDate, addDaysToDateTimeLocalIso, getToLocalISOString, toDateFromDateIsoLocal, toStringFromTime } from '@/utils/date'
 
@@ -11,7 +11,7 @@ export const getDayName = (dateString: string) => {
     return date.toLocaleDateString('sr-Latn-RS', { weekday: 'short' }).toUpperCase()
 }
 
-export const calculateDateRange = (today: DateTimeLocalIso, numberOfDays: number) => {
+export const calculateDateRange = (today: DateLocalIso, numberOfDays: number) => {
     const formattedToday = toDateFromDateIsoLocal(today)
     const toDate = addDaysToDate(numberOfDays - 1, formattedToday)
 
@@ -24,12 +24,12 @@ export const calculateDateRange = (today: DateTimeLocalIso, numberOfDays: number
 export interface UpcomingDailyMenuDate {
     day: string
     name: string
-    date: DateTimeLocalIso
+    date: DateLocalIso
     available: boolean
     disabled: boolean
 }
 
-export const generateUpcomingDates = (today: DateTimeLocalIso, dailyMenus?: ReadDailyMenuResponse[]) => {
+export const generateUpcomingDates = (today: DateLocalIso, dailyMenus?: ReadDailyMenuResponse[]) => {
     const formattedToday = toDateFromDateIsoLocal(today)
     const upcomingDates: UpcomingDailyMenuDate[] = []
 

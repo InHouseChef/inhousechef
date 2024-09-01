@@ -57,9 +57,9 @@ export const OrderHistory = () => {
                                 })}>{order.state}</p>
                         </div>
                         <div className="flex justify-between items-center border-t border-grey-300 py-4">
-                            <div className="flex items-center">
+                            <div className="flex items-center gap-4">
                                 {order.orderItems.length === 1 ? (
-                                    <div className="relative mr-4 flex-shrink-0 rounded-lg bg-gray-200 h-20 w-20 shadow">
+                                    <div className="relative flex-shrink-0 rounded-lg bg-gray-200 h-20 w-20 shadow">
                                         <img
                                             src={order.orderItems[0].imageUrl}
                                             alt={order.orderItems[0].name}
@@ -82,7 +82,7 @@ export const OrderHistory = () => {
                                         ))}
                                     </div>
                                 )}
-                                <div className="flex flex-col ml-4">
+                                <div className="flex flex-col">
                                     <div className="flex items-center">
                                         <h4 className="font-semibold">Porudžbina #{number}</h4>
                                     </div>

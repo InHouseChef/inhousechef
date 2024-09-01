@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCartStore } from '@/app/(protected)/employee/newstate';
 import { Button } from '@/components/ui/button';
 import { Loader } from '@/components';
@@ -8,11 +8,46 @@ import { CartSideDishDrawer } from '../CartSideDishDrawer/CartSideDishDrawer';
 import { X } from 'lucide-react'; // Icon for the close button
 
 const Cart = () => {
-    const { selectedOrder, addOrUpdateOrder, cancelOrder, placeOrder } = useCartStore();
-    const [isOpen, setIsOpen] = useState(false);
+    const { selectedOrder, addOrUpdateOrder, cancelOrder, placeOrder, isOpen, setIsOpen, regularShifts, aLaCarteShift, activeDay } = useCartStore();
     const [isMainCourseDrawerOpen, setIsMainCourseDrawerOpen] = useState(false);
     const [isSideDishDrawerOpen, setIsSideDishDrawerOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [isShiftValid, setIsShiftValid] = useState(true);
+
+    useEffect(() => {
+        if (selectedOrder) {
+            validateShift();
+        }
+    }, [selectedOrder]);
+
+    const validateShift = () => {
+        const currentDate = new Date();
+        const activeDayDate = new Date(activeDay);
+        const isSameDay = (date1: Date, date2: Date) =>
+            date1.getFullYear() === date2.getFullYear() &&
+            date1.getMonth() === date2.getMonth() &&
+            date1.getDate() === date2.getDate();
+        const isToday = isSameDay(currentDate, activeDayDate);
+
+        if (selectedOrder?.type === 'Scheduled') {
+            const shift = regularShifts.find(shift => shift.id === selectedOrder?.orderedForShiftId);
+            if (shift) {
+                const shiftStartTime = new Date(`${activeDay}T${shift.shiftStartAt}`);
+                const orderDeadlineTime = new Date(
+                    shiftStartTime.getTime() - shift.orderingDeadlineBeforeShiftStart * 60 * 60 * 1000
+                );
+                setIsShiftValid(!(isToday && currentDate > orderDeadlineTime));
+            }
+        } else if (selectedOrder?.type === 'Immediate') {
+            if (aLaCarteShift && isToday) {
+                const shiftStartTime = new Date(`${activeDay}T${aLaCarteShift.shiftStartAt}`);
+                const shiftEndTime = new Date(`${activeDay}T${aLaCarteShift.shiftEndAt}`);
+                setIsShiftValid(currentDate >= shiftStartTime && currentDate <= shiftEndTime);
+            } else {
+                setIsShiftValid(false);
+            }
+        }
+    };
 
     const mainCourses = selectedOrder?.orderItems
         .filter(item => item.type === 'MainCourse')
@@ -110,33 +145,42 @@ const Cart = () => {
                                                 </div>
                                             </div>
                                             <div className="flex items-center space-x-2 w-26">
-                                                <button
-                                                    onClick={() => addOrUpdateOrder(item.skuId, -1)}
-                                                    className="flex-1 px-2 py-1 bg-gray-200 rounded text-center">
-                                                    −
-                                                </button>
+                                                {isShiftValid && (
+                                                    <button
+                                                        onClick={() => addOrUpdateOrder(item.skuId, -1)}
+                                                        className="flex-1 px-2 py-1 bg-gray-200 rounded text-center"
+                                                        disabled={!isShiftValid}>
+                                                        −
+                                                    </button>
+                                                )}
                                                 <div className="flex-1 text-sm font-semibold text-center font-mono">
                                                     {item.quantity.toString().padStart(2, '0')}
                                                 </div>
-                                                <button
-                                                    onClick={() => addOrUpdateOrder(item.skuId, 1)}
-                                                    className="flex-1 px-2 py-1 bg-gray-200 rounded text-center">
-                                                    +
-                                                </button>
+                                                {isShiftValid && (
+                                                    <button
+                                                        onClick={() => addOrUpdateOrder(item.skuId, 1)}
+                                                        className="flex-1 px-2 py-1 bg-gray-200 rounded text-center"
+                                                        disabled={!isShiftValid}>
+                                                        +
+                                                    </button>
+                                                )}
                                             </div>
                                         </div>
                                     ))}
                                 </div>
                             ) : (
-                                <p className="text-sm text-gray-500">Trenutno nema glavnih jela u vašoj porudžbini.</p>
+                                <p className="text-sm text-gray-500">{isShiftValid ? 'Trenutno n' : 'N'}ema glavnih jela u vašoj porudžbini.</p>
                             )}
-                            <Button
-                                variant="link"
-                                className="mt-2 text-primary"
-                                onClick={() => setIsMainCourseDrawerOpen(true)}
-                            >
-                                Dodaj još glavnih jela
-                            </Button>
+                            {isShiftValid && (
+                                <Button
+                                    variant="link"
+                                    className="mt-2 text-primary"
+                                    onClick={() => setIsMainCourseDrawerOpen(true)}
+                                    disabled={!isShiftValid}
+                                >
+                                    Dodaj još glavnih jela
+                                </Button>
+                            )}
                         </div>
 
                         {/* Side Dishes Section */}
@@ -158,58 +202,77 @@ const Cart = () => {
                                                 </div>
                                             </div>
                                             <div className="flex items-center space-x-2 w-26">
-                                                <button
-                                                    onClick={() => addOrUpdateOrder(item.skuId, -1)}
-                                                    className="flex-1 px-2 py-1 bg-gray-200 rounded text-center">
-                                                    −
-                                                </button>
+                                                {isShiftValid && (
+                                                    <button
+                                                        onClick={() => addOrUpdateOrder(item.skuId, -1)}
+                                                        className="flex-1 px-2 py-1 bg-gray-200 rounded text-center"
+                                                        disabled={!isShiftValid}>
+                                                        −
+                                                    </button>
+                                                )}
                                                 <div className="flex-1 text-sm font-semibold text-center font-mono">
                                                     {item.quantity.toString().padStart(2, '0')}
                                                 </div>
-                                                <button
-                                                    onClick={() => addOrUpdateOrder(item.skuId, 1)}
-                                                    className="flex-1 px-2 py-1 bg-gray-200 rounded text-center">
-                                                    +
-                                                </button>
+                                                {isShiftValid && (
+                                                    <button
+                                                        onClick={() => addOrUpdateOrder(item.skuId, 1)}
+                                                        className="flex-1 px-2 py-1 bg-gray-200 rounded text-center"
+                                                        disabled={!isShiftValid}>
+                                                        +
+                                                    </button>
+                                                )}
                                             </div>
                                         </div>
                                     ))}
                                 </div>
                             ) : (
-                                <p className="text-sm text-gray-500">Trenutno nema priloga u vašoj porudžbini.</p>
+                                <p className="text-sm text-gray-500">{isShiftValid ? 'Trenutno n' : 'N'}ema priloga u vašoj porudžbini.</p>
                             )}
-                            <Button
-                                variant="link"
-                                className="mt-2 text-primary"
-                                onClick={() => setIsSideDishDrawerOpen(true)}
-                            >
-                                Dodaj još priloga
-                            </Button>
+                            {isShiftValid && (
+                                <Button
+                                    variant="link"
+                                    className="mt-2 text-primary"
+                                    onClick={() => setIsSideDishDrawerOpen(true)}
+                                    disabled={!isShiftValid}
+                                >
+                                    Dodaj još priloga
+                                </Button>
+                            )}  
                         </div>
                     </div>
 
                     <div className="bg-white border-t">
-                        {isDraft ? (
+                        {isShiftValid ? (
                             <div className="flex flex-col space-y-2">
-                                <Button
-                                    onClick={handlePlaceOrder}
-                                    className="w-full py-3 bg-primary text-white rounded-lg shadow-md hover:bg-primary-dark transition">
-                                    Poruči - {totalAmount} RSD
-                                </Button>
-                                <Button
-                                    onClick={handleCancelOrder}
-                                    className="w-full py-3 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition">
-                                    Otkaži porudžbinu
-                                </Button>
+                                {isDraft ? (
+                                    <>
+                                        <Button
+                                            onClick={handlePlaceOrder}
+                                            className="w-full py-3 bg-primary text-white rounded-lg shadow-md hover:bg-primary-dark transition">
+                                            Poruči - {totalAmount} RSD
+                                        </Button>
+                                        <Button
+                                            onClick={handleCancelOrder}
+                                            className="w-full py-3 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition">
+                                            Otkaži porudžbinu
+                                        </Button>
+                                    </>
+                                ) : (
+                                    selectedOrder?.type === 'Scheduled' && (
+                                        <Button
+                                            onClick={handleCancelOrder}
+                                            className="w-full py-3 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition">
+                                            Otkaži porudžbinu
+                                        </Button>
+                                    )
+                                )}
                             </div>
                         ) : (
-                            <Button
-                                onClick={handleCancelOrder}
-                                className="w-full py-3 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition">
-                                Otkaži porudžbinu
-                            </Button>
+                            <p className="text-center text-gray-500 py-4">Ova porudžbina je samo za čitanje.</p>
                         )}
                     </div>
+
+
                 </SheetContent>
             </Sheet>
 

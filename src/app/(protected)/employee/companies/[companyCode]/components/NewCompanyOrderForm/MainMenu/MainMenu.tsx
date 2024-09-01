@@ -5,7 +5,7 @@ import { ShiftSelector } from '../ShiftSelector/ShiftSelector';
 import MealTypeSelector from '../MealTypeSelector/MealTypeSelector';
 import { MealDrawer } from '../MealDrawer/MealDrawer';
 import { DailyMenuMeal } from '@/api/daily-menus';
-import { DateTimeLocalIso } from '@/types';
+import { DateLocalIso } from '@/types';
 import Cart from '../Cart/Cart';
 import { getToLocalISOString } from '@/utils/date';
 import { MealCard } from '../MealCard/MealCard';
@@ -53,7 +53,7 @@ const MainMenu: React.FC = () => {
 
     const mealsInActiveOrder = selectedOrder?.orderItems.filter(meal => meal.type === selectedMealType) || [];
 
-    const isTodaySelected = activeDay === getToLocalISOString(new Date()).split('T')[0] as DateTimeLocalIso;
+    const isTodaySelected = activeDay === getToLocalISOString(new Date()).split('T')[0] as DateLocalIso;
 
     return (
         <div className="relative p-4">
