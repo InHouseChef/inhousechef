@@ -25,7 +25,7 @@ export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
 
     return (
         <Drawer open={isOpen} onClose={onClose}>
-            <DrawerContent>
+            <DrawerContent onPointerDownOutside={e => e.target === e.currentTarget && onClose()}>
                 <div className='mx-auto w-full max-w-sm'>
                     <DrawerHeader className='text-left'>
                         {meal.imageUrl ? (

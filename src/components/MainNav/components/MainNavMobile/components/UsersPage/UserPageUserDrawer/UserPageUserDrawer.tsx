@@ -12,7 +12,6 @@ export type UserPageUserDrawerProps = {
 }
 
 export const UserPageUserDrawer = ({ companyCode, isOpen, onClose, user, onSave }: UserPageUserDrawerProps) => {
-
     const handleSaveUser = async () => {
         onSave()
         onClose()
@@ -20,7 +19,7 @@ export const UserPageUserDrawer = ({ companyCode, isOpen, onClose, user, onSave 
 
     return (
         <Drawer open={isOpen} onClose={onClose}>
-            <DrawerContent>
+            <DrawerContent onPointerDownOutside={e => e.target === e.currentTarget && onClose()}>
                 <div className='mx-auto w-full max-w-sm'>
                     <DrawerHeader className='text-left'>
                         <DrawerTitle className='mt-2 text-3xl font-bold'>
