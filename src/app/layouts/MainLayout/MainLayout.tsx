@@ -31,7 +31,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
 
         if (identity && roles.Admin) {
             console.log('admin')
-            return safeReplace('/admin/companies')
+            // return safeReplace('/admin/companies')
         }
 
         if (identity && (roles.Employee || roles.CompanyManager)) {
