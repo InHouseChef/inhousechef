@@ -3,7 +3,7 @@ export const TermsAndConditionsPage = () => {
         <div className='h-full w-full text-center'>
             <h2 className='mb-4 text-2xl font-semibold'>Terms and Conditions</h2>
 
-            <div className='h-screen overflow-y-auto'>
+            <div className='h-full'>
                 <p className='mb-4'>Please read these terms and conditions carefully before using our service.</p>
                 <p className='mb-4'>
                     By accessing or using the service, you agree to be bound by these terms. If you disagree with any part of

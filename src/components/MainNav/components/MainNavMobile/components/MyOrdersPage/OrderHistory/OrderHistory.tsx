@@ -54,8 +54,8 @@ export const OrderHistory = () => {
     };
 
     return (
-        <div className="mt-6">
-            {(isFetching || isRefetching) && <Loader />}
+        <div className="relative mt-6">
+            {(isFetching || isRefetching) && <Loader className="flex items-center justify-center min-h-[50vh]" />}
             {(!isFetching && !isRefetching) && orderHistory?.map((order) => {
                 const { description, totalPrice, forDate, placedAt, confirmedAt, number } = getOrderSummary(order);
                 return (

@@ -6,6 +6,7 @@ import { axiosPrivate } from '@/lib/axios'
 import { DateLocalIso, DateTimeIsoUtc, OrderState, OrderType, Time } from '@/types'
 import { createBaseUrlQuery, createUrlParams } from '@/utils'
 import { getToLocalISOString } from '@/utils/date'
+import { ReactNode } from 'react'
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
@@ -103,14 +104,14 @@ export interface CartStore {
 
     // Error handling
     message?: {
-        text?: string
-        description?: string
+        text?: string | ReactNode
+        description?: string | ReactNode
     }
     messageType?: 'error' | 'success'
     setMessage: (
         message?: {
-            text?: string
-            description?: string
+            text?: string | ReactNode
+            description?: string | ReactNode
         },
         type?: 'error' | 'success'
     ) => void
@@ -384,7 +385,7 @@ export const useCartStore = create<CartStore>()(
                         get().setMessage(
                             {
                                 text: 'Porudžbina je uspešno otkazana.',
-                                description: 'Vašu porudžbinu možete pogledati u istoriji porudžbina.'
+                                description: "Vašu porudžbinu možete videti u sekciji 'Moje porudžbine -> Istorija'."
                             },
                             'success'
                         )
@@ -392,7 +393,7 @@ export const useCartStore = create<CartStore>()(
                         get().setMessage(
                             {
                                 text: 'Otkazivanje porudžbine nije uspelo.',
-                                description: 'Molimo pokušajte ponovo.'
+                                description: 'Molimo pokušajte ponovo. Ukoliko se greška ponovi, kontaktirajte podršku.'
                             },
                             'error'
                         )
@@ -490,15 +491,15 @@ export const useCartStore = create<CartStore>()(
                         })
                         get().setMessage(
                             {
-                                text: 'Porudžbina je uspešno poslata.',
-                                description: 'Vašu porudžbinu možete pogledati u mojim porudžbinama.'
+                                text: 'Porudžbina je uspešno poručena.',
+                                description: "Vašu porudžbinu možete pogledati u sekciji 'Moje porudžbine -> Aktivne'."
                             },
                             'success'
                         )
                     } catch (error) {
                         get().setMessage({
-                            text: 'Slanje porudžbine nije uspelo.',
-                            description: 'Molimo pokušajte ponovo.'
+                            text: 'Poručivanje nije uspelo.',
+                            description: 'Molimo pokušajte ponovo. Ukoliko se greška ponovi, kontaktirajte podršku.'
                         })
                     }
                 },
@@ -637,8 +638,8 @@ export const useCartStore = create<CartStore>()(
                 },
                 setMessage: (
                     message?: {
-                        text?: string
-                        description?: string
+                        text?: string | ReactNode
+                        description?: string | ReactNode
                     },
                     type?: 'error' | 'success'
                 ) => {
