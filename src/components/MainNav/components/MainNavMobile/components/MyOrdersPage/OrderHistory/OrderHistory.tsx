@@ -2,14 +2,18 @@ import { useReadMyOrders } from "@/api/order/repository/hooks/readMyOrder";
 import { ReadMyOrderResponse } from "@/api/order";
 import { calculateDateRange } from "@/app/(protected)/employee/companies/[companyCode]/utils";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Loader } from "@/components/Loader";
 import clsx from "clsx";
 import { getToLocalISOString } from "@/utils/date";
+import ReadOnlyCart from "../../ReadOnlyCart/ReadOnlyCart";
 
 export const OrderHistory = () => {
-    const {from, to} = calculateDateRange(getToLocalISOString(new Date()), -30);
+    const { from, to } = calculateDateRange(getToLocalISOString(new Date()), -30);
     const { companyCode } = useParams<{ companyCode: string }>();
+    
+    const [selectedOrder, setSelectedOrder] = useState<ReadMyOrderResponse | null>(null);
+    const [isCartOpen, setIsCartOpen] = useState(false);
 
     const { data: orderHistory, isFetching, refetch, isRefetching } = useReadMyOrders({
         path: { companyCode },
@@ -21,12 +25,12 @@ export const OrderHistory = () => {
                 orderTypes: ["Scheduled", "Immediate"].join(',') 
             }
         },
-        options: {enabled: false}
+        options: { enabled: false }
     });
 
     useEffect(() => {
         refetch();
-    }, [refetch])
+    }, [refetch]);
 
     const getOrderSummary = (order: ReadMyOrderResponse) => {
         const number = order.number;
@@ -39,13 +43,27 @@ export const OrderHistory = () => {
         return { description, totalPrice, forDate, placedAt, confirmedAt, number };
     };
 
+    const handleSelectOrder = (order: ReadMyOrderResponse) => {
+        setSelectedOrder(order); // Set the selected order
+        setIsCartOpen(true); // Open the cart
+    };
+
+    const handleCloseCart = () => {
+        setIsCartOpen(false); // Close the cart
+        setSelectedOrder(null); // Clear the selected order
+    };
+
     return (
         <div className="mt-6">
             {(isFetching || isRefetching) && <Loader />}
             {(!isFetching && !isRefetching) && orderHistory?.map((order) => {
                 const { description, totalPrice, forDate, placedAt, confirmedAt, number } = getOrderSummary(order);
                 return (
-                    <div key={order.id} className="mb-4 bg-white">
+                    <div 
+                        key={order.id} 
+                        className="mb-4 bg-white cursor-pointer" 
+                        onClick={() => handleSelectOrder(order)} // Pass the entire order to ReadOnlyCart
+                    >
                         <div className='flex flex-row gap-8 mb-2'>
                             <p className="text-md text-black-900 font-medium">Status:</p>
                             <p className={clsx('text-md font-bold', 
@@ -95,6 +113,14 @@ export const OrderHistory = () => {
                     </div>
                 );
             })}
+
+            {isCartOpen && (
+                <ReadOnlyCart 
+                    order={selectedOrder} // Pass the selected order as a prop
+                    isOpen={isCartOpen}
+                    onClose={handleCloseCart} // Pass the onClose handler to close the cart
+                />
+            )}
         </div>
     );
 };

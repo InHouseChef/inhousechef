@@ -154,7 +154,7 @@ const Cart = () => {
                                                     </button>
                                                 )}
                                                 <div className="flex-1 text-sm font-semibold text-center font-mono">
-                                                    {item.quantity.toString().padStart(2, '0')}
+                                                    x{item.quantity.toString().padStart(2, '0')}
                                                 </div>
                                                 {isShiftValid && (
                                                     <button
@@ -211,7 +211,7 @@ const Cart = () => {
                                                     </button>
                                                 )}
                                                 <div className="flex-1 text-sm font-semibold text-center font-mono">
-                                                    {item.quantity.toString().padStart(2, '0')}
+                                                    x{item.quantity.toString().padStart(2, '0')}
                                                 </div>
                                                 {isShiftValid && (
                                                     <button
@@ -268,7 +268,7 @@ const Cart = () => {
                                 )}
                             </div>
                         ) : (
-                            <p className="text-center text-gray-500 py-4">Ova porudžbina je samo za čitanje.</p>
+                            <p className="text-center text-gray-500 py-4">Ovu porudžbinu ne možete menjati jer je isteklo vreme za izmene.</p>
                         )}
                     </div>
 
