@@ -103,9 +103,12 @@ export const ShiftSelector: React.FC<ShiftSelectorProps> = ({
                                         'border-l-2 border-primary': selectedShiftId === shift.id && !isShiftDisabled,
                                     }
                                 )}
-                                onClick={() => {
+                                onClick={(e) => {
                                     if (!isShiftDisabled) {
                                         onShiftChange(shift.id);
+                                    }
+                                    else {
+                                        e.preventDefault();
                                     }
                                 }}
                             >

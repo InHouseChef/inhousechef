@@ -8,7 +8,7 @@ import { CartSideDishDrawer } from '../CartSideDishDrawer/CartSideDishDrawer';
 import { X } from 'lucide-react'; // Icon for the close button
 
 const Cart = () => {
-    const { selectedOrder, addOrUpdateOrder, cancelOrder, placeOrder, isOpen, setIsOpen, regularShifts, aLaCarteShift, activeDay } = useCartStore();
+    const { selectedOrder, addOrUpdateOrder, cancelOrder, placeOrder, isOpen, setIsOpen, regularShifts, aLaCarteShift, activeDay, shouldDisableOrder } = useCartStore();
     const [isMainCourseDrawerOpen, setIsMainCourseDrawerOpen] = useState(false);
     const [isSideDishDrawerOpen, setIsSideDishDrawerOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -95,11 +95,13 @@ const Cart = () => {
             .catch(() => setIsLoading(false));
     };
 
+    const isOrderDisabled = shouldDisableOrder(selectedOrder);
+
     return (
         <>
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
                 <SheetTrigger asChild>
-                    {selectedOrder && (
+                    {selectedOrder && !isOrderDisabled && (
                         <Button
                             className="fixed bottom-4 left-8 right-8 py-3 bg-primary text-white font-semibold text-sm text-center rounded-lg z-50"
                             onClick={() => setIsOpen(true)}

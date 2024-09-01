@@ -2,7 +2,7 @@ import { DailyMenuMeal } from '@/api/daily-menus'
 import { useCartStore } from '@/app/(protected)/employee/newstate'
 import { DateLocalIso } from '@/types'
 import { getToLocalISOString } from '@/utils/date'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Cart from '../Cart/Cart'
 import DaySelector from '../DaySelector/DaySelector'
 import { MealCard } from '../MealCard/MealCard'
@@ -24,8 +24,11 @@ const MainMenu: React.FC = () => {
         activeShift,
         hasALaCardPermission,
         activeDay,
-        selectedOrder
+        selectedOrder,
+        shouldDisableOrder
     } = useCartStore()
+
+    const isOrderDisabled = shouldDisableOrder(selectedOrder);
 
     const handleShiftChange = (shiftId: string) => {
         setActiveShift(shiftId)
@@ -53,7 +56,7 @@ const MainMenu: React.FC = () => {
             meal => meal.type === selectedMealType
         ) || []
 
-    const mealsInActiveOrder = selectedOrder?.orderItems.filter(meal => meal.type === selectedMealType) || []
+    const mealsInActiveOrder = !isOrderDisabled && selectedOrder?.orderItems.filter(meal => meal.type === selectedMealType) || []
 
     const isTodaySelected = activeDay === (getToLocalISOString(new Date()).split('T')[0] as DateLocalIso)
 

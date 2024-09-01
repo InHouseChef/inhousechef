@@ -76,6 +76,7 @@ export interface CartStore {
     immediateOrders: ReadMyOrderResponse[]
     scheduledOrders: ReadMyOrderResponse[]
     selectedOrder?: ScheduledOrderDetails | ImmediateOrderDetails
+    isOpen: boolean
 
     // State management actions
     setActiveDay: (day: DateLocalIso) => void
@@ -90,8 +91,8 @@ export interface CartStore {
     updateSelectedOrder(): void
     clearSelectedOrder: () => void
     resetCart: () => void
-    isOpen: boolean
     setIsOpen: (isOpen: boolean) => void
+    shouldDisableOrder: (order: ScheduledOrderDetails | ImmediateOrderDetails | undefined) => boolean;
 
     // API integration placeholders
     fetchShifts: () => Promise<void>
@@ -200,6 +201,41 @@ export const useCartStore = create<CartStore>()(
                     description: ''
                 },
                 messageType: undefined,
+
+                shouldDisableOrder: (order) => {
+                    if (!order) return true;
+
+                    const currentDate = new Date();
+                    const activeDay = get().activeDay;
+                    const aLaCarteShift = get().aLaCarteShift;
+                    const shifts = get().regularShifts;
+                    const activeDayDate = new Date(activeDay);
+
+                    const isSameDay = (date1: Date, date2: Date) =>
+                        date1.getFullYear() === date2.getFullYear() &&
+                        date1.getMonth() === date2.getMonth() &&
+                        date1.getDate() === date2.getDate();
+                    const isToday = isSameDay(currentDate, activeDayDate);
+
+                    if (order.type === 'Immediate' && aLaCarteShift) {
+                        const shiftStartTime = new Date(`${activeDay}T${aLaCarteShift.shiftStartAt}`);
+                        const shiftEndTime = new Date(`${activeDay}T${aLaCarteShift.shiftEndAt}`);
+                        return !(isToday && currentDate >= shiftStartTime && currentDate <= shiftEndTime);
+                    }
+
+                    if (order.type === 'Scheduled' && shifts) {
+                        const shift = shifts.find(shift => shift.id === order.orderedForShiftId);
+                        if (shift) {
+                            const shiftStartTime = new Date(`${activeDay}T${shift.shiftStartAt}`);
+                            const orderDeadlineTime = new Date(
+                                shiftStartTime.getTime() - shift.orderingDeadlineBeforeShiftStart * 60 * 60 * 1000
+                            );
+                            return isToday && currentDate > orderDeadlineTime;
+                        }
+                    }
+
+                    return true;
+                },
 
                 clearSelectedOrder: () => {
                     set(state => {
