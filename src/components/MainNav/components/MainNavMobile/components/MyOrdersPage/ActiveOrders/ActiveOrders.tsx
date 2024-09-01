@@ -54,8 +54,8 @@ export const ActiveOrders = () => {
     };
 
     return (
-        <div className="mt-6">
-            {(isFetching || isRefetching) && <Loader />}
+        <div className="relative mt-6">
+            {(isFetching || isRefetching) && <Loader className='flex items-center justify-center min-h-[50vh]' />}
             {(!isFetching && !isRefetching) && activeOrders?.sort((a, b) => b - a).map((order) => {
                 const { description, totalPrice, number, type, forDate } = getOrderSummary(order);
                 return (
