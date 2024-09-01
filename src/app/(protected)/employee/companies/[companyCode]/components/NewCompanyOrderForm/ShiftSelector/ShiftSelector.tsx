@@ -56,7 +56,7 @@ export const ShiftSelector: React.FC<ShiftSelectorProps> = ({ selectedShiftId, o
                             <li
                                 key={shift.id}
                                 className={clsx(
-                                    'flex-1 cursor-pointer rounded-lg p-2 h-full text-xs flex items-center justify-center text-center',
+                                    'flex-1 cursor-pointer rounded-lg p-2 h-full text-xs flex flex-col items-center justify-center text-center',
                                     {
                                         'bg-primary text-white': selectedShiftId === shift.id && !isShiftDisabled,
                                         'text-black': selectedShiftId !== shift.id && !isShiftDisabled,
@@ -72,7 +72,12 @@ export const ShiftSelector: React.FC<ShiftSelectorProps> = ({ selectedShiftId, o
                                     }
                                 }}
                             >
-                                {`${formatTimeWithoutSeconds(shift.shiftStartAt)} - ${formatTimeWithoutSeconds(shift.shiftEndAt)}`}
+                                <div>
+                                    {`${formatTimeWithoutSeconds(shift.shiftStartAt)}`}
+                                </div>
+                                <div>
+                                    {`${formatTimeWithoutSeconds(shift.shiftEndAt)}`}
+                                </div>
                             </li>
                         );
                     })}
