@@ -22,9 +22,9 @@ export const TopNavLogo = () => {
 
     return (
         <Link href={`${baseUrl}/companies/${companyPath}`}>
-            <div className='relative h-[50px] w-52'>
+            <div className='relative h-[50px] w-[50px]'>
                 {logo ? (
-                    <Image fill src={logo} className='object-scale-down object-[left_center]' alt='logo' />
+                    <Image fill src={logo} className='aspect-square rounded-full object-cover' alt='logo' />
                 ) : (
                     <Logo width={50} height={50} className='text-[#3B1A44]' />
                 )}
