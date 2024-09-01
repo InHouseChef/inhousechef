@@ -77,6 +77,7 @@ export interface ReadOrderResponse extends OrderResponse {}
 export interface ReadMyOrderResponse extends OrderDetails {
     orderedForShiftId: string
     number: string
+    updatedAt: DateTimeIsoUtc
 }
 
 export interface ReadOrderSummaryResponse {
