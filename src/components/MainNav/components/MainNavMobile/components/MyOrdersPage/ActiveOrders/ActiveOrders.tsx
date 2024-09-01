@@ -9,7 +9,7 @@ import clsx from "clsx";
 import { getToLocalISOString } from "@/utils/date";
 
 export const ActiveOrders = () => {
-    const { from, to } = calculateDateRange(getToLocalISOString(new Date()), 3);
+    const { from, to } = calculateDateRange(getToLocalISOString(new Date()), 2);
     const { companyCode } = useParams<{ companyCode: string }>();
 
     const { data: activeOrders, refetch, isFetching, isRefetching } = useReadMyOrders({
@@ -25,14 +25,17 @@ export const ActiveOrders = () => {
         options: { enabled: false }
     });
 
-    const { setSelectedOrderById, isOpen, setIsOpen } = useCartStore();
+    const { setSelectedOrderById, clearSelectedOrder, isOpen, setIsOpen } = useCartStore();
 
     useEffect(() => {
         refetch();
     }, [refetch]);
 
     useEffect(() => {
-        if (!isOpen) refetch();
+        if (!isOpen) {
+            refetch();
+            clearSelectedOrder();
+        }
     }, [isOpen]);
 
     const getOrderSummary = (order: ReadMyOrderResponse) => {
@@ -45,8 +48,8 @@ export const ActiveOrders = () => {
         return { description, totalPrice, number, type, forDate };
     };
 
-    const handleViewOrder = (orderId: string, orderedForShiftId?: string) => {
-        setSelectedOrderById(orderId, orderedForShiftId); // Set the selected order
+    const handleViewOrder = (orderId: string) => {
+        setSelectedOrderById(orderId); // Set the selected order
         setIsOpen(true); // Open the cart with the selected order
     };
 
@@ -104,11 +107,11 @@ export const ActiveOrders = () => {
                             </div>
                         </div>
                         <div className="mt-4 flex justify-between items-center">
-                            <button onClick={() => handleViewOrder(order.id, order.orderedForShiftId)} className="bg-primary text-white px-4 py-2 rounded">
+                            <button onClick={() => handleViewOrder(order.id)} className="bg-primary text-white px-4 py-2 rounded">
                                 Idi na porudžbinu
                             </button>
                             {order.type === "Scheduled" && (order.state === "Draft" || order.state === "Placed") && (
-                                <button onClick={() => handleViewOrder(order.id, order.orderedForShiftId)} className="border border-primary text-primary px-4 py-2 rounded">
+                                <button onClick={() => handleViewOrder(order.id)} className="border border-primary text-primary px-4 py-2 rounded">
                                     Otkaži
                                 </button>
                             )}
