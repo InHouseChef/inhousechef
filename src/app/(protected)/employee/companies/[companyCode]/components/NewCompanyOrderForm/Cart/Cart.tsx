@@ -8,8 +8,7 @@ import { CartSideDishDrawer } from '../CartSideDishDrawer/CartSideDishDrawer';
 import { X } from 'lucide-react'; // Icon for the close button
 
 const Cart = () => {
-    const { selectedOrder, addOrUpdateOrder, cancelOrder, placeOrder } = useCartStore();
-    const [isOpen, setIsOpen] = useState(false);
+    const { selectedOrder, addOrUpdateOrder, cancelOrder, placeOrder, isOpen, setIsOpen } = useCartStore();
     const [isMainCourseDrawerOpen, setIsMainCourseDrawerOpen] = useState(false);
     const [isSideDishDrawerOpen, setIsSideDishDrawerOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);

@@ -1,3 +1,4 @@
+import { useCartStore } from '@/app/(protected)/employee/newstate';
 import { useReadMyOrders } from "@/api/order/repository/hooks/readMyOrder";
 import { ReadMyOrderResponse } from "@/api/order";
 import { calculateDateRange } from "@/app/(protected)/employee/companies/[companyCode]/utils";
@@ -8,42 +9,46 @@ import clsx from "clsx";
 import { getToLocalISOString } from "@/utils/date";
 
 export const ActiveOrders = () => {
-    const {from, to} = calculateDateRange(getToLocalISOString(new Date()), 3)
+    const { from, to } = calculateDateRange(getToLocalISOString(new Date()), 3);
     const { companyCode } = useParams<{ companyCode: string }>();
-    
+
     const { data: activeOrders, refetch, isFetching, isRefetching } = useReadMyOrders({
         path: { companyCode },
-        query: { 
-            filter: { 
-                fromDate: from, 
-                toDate: to, 
-                orderStates: ["Draft", "Placed"].join(','), 
-                orderTypes: ["Scheduled", "Immediate"].join(',') 
+        query: {
+            filter: {
+                fromDate: from,
+                toDate: to,
+                orderStates: ["Draft", "Placed"].join(','),
+                orderTypes: ["Scheduled", "Immediate"].join(',')
             }
         },
-        options: {enabled: false}
-    })
+        options: { enabled: false }
+    });
+
+    const { setSelectedOrderById, setIsOpen } = useCartStore();
 
     useEffect(() => {
         refetch();
-    }, [refetch])
+    }, [refetch]);
 
     const getOrderSummary = (order: ReadMyOrderResponse) => {
         const number = order.number;
-        const forDate = order.orderDate;
-        const placedAt = order.placedAt;
-        const confirmedAt = order.confirmedAt;
         const concatDescription = order.orderItems.map(item => `${item.name} x${item.quantity}`).join(', ');
         const description = concatDescription.length > 50 ? `${concatDescription.slice(0, 50)}...` : concatDescription;
         const totalPrice = order.orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        return { description, totalPrice, forDate, placedAt, confirmedAt, number };
+        return { description, totalPrice, number };
+    };
+
+    const handleViewOrder = (orderId: string, orderedForShiftId?: string) => {
+        setSelectedOrderById(orderId, orderedForShiftId); // Set the specific order by its ID
+        setIsOpen(true); // Open the cart with the selected order
     };
 
     return (
         <div className="mt-6">
             {(isFetching || isRefetching) && <Loader />}
             {(!isFetching && !isRefetching) && activeOrders?.map((order) => {
-                const { description, totalPrice, forDate, placedAt, confirmedAt, number } = getOrderSummary(order);
+                const { description, totalPrice, number } = getOrderSummary(order);
                 return (
                     <div key={order.id} className="mb-4 bg-white">
                         <div className='flex flex-row gap-8 mb-2'>
@@ -91,10 +96,10 @@ export const ActiveOrders = () => {
                             </div>
                         </div>
                         <div className="mt-4 flex justify-between items-center">
-                            <button onClick={() => console.log('Track Order')} className="bg-primary text-white px-4 py-2 rounded">
+                            <button onClick={() => handleViewOrder(order.id, order.orderedForShiftId)} className="bg-primary text-white px-4 py-2 rounded">
                                 Idi na porudžbinu
                             </button>
-                            <button onClick={() => console.log('Cancel Order')} className="border border-primary text-primary px-4 py-2 rounded">
+                            <button onClick={() => handleViewOrder(order.id, order.orderedForShiftId)} className="border border-primary text-primary px-4 py-2 rounded">
                                 Otkaži
                             </button>
                         </div>

@@ -79,7 +79,7 @@ export interface CartStore {
     // State management actions
     setActiveDay: (day: DateTimeLocalIso) => void;
     setActiveShift: (shiftId: string | undefined) => void;
-    setSelectedOrderById: (orderId: string) => void;
+    setSelectedOrderById: (orderId: string, orderedForShiftId?: string) => void;
     setMenus: (menu: ReadDailyMenuResponse, aLaCarteMenu?: ReadDailyMenuResponse) => void;
     addOrder: (order: ScheduledOrderDetails | ImmediateOrderDetails) => void;
     updateOrder: (orderId: string, orderItems: OrderItem[]) => void;
@@ -88,6 +88,8 @@ export interface CartStore {
     confirmOrder: (orderId: string) => void;
     updateSelectedOrder(): void;
     resetCart: () => void;
+    isOpen: boolean;
+    setIsOpen: (isOpen: boolean) => void;
 
     // API integration placeholders
     fetchShifts: () => Promise<void>;
@@ -188,6 +190,13 @@ export const useCartStore = create<CartStore>()(
                 immediateOrders: [],
                 scheduledOrders: [],
                 selectedOrder: undefined,
+                isOpen: false,
+
+                setIsOpen: (isOpen: boolean) => {
+                    set(state => {
+                        state.isOpen = isOpen;
+                    });
+                },
 
                 setActiveDay: async (day: DateTimeLocalIso) => {
                     set(state => {
@@ -268,13 +277,29 @@ export const useCartStore = create<CartStore>()(
                     }
                 },
 
-                setSelectedOrderById: (orderId: string) => {
-                    const immediateOrder = get().immediateOrders.find(order => order.id === orderId);
-                    const scheduledOrder = get().scheduledOrders.find(order => order.id === orderId);
+                setSelectedOrderById: async (orderId: string, shiftId?: string) => {
+                    let immediateOrder = get().immediateOrders.find(order => order.id === orderId);
+                    let scheduledOrder = get().scheduledOrders.find(order => order.id === orderId);
+                
+                    // If the order is not found, try to fetch the data by setting the active shift
+                    if (!immediateOrder && !scheduledOrder) {
+                        console.log('Order not found, fetching shift data...');
+                
+                        // Call setActiveShift to fetch the shift's data
+                        console.log('Setting active shift:', shiftId);
+                        await get().setActiveShift(shiftId);
+                
+                        // Try to find the order again after fetching data
+                        immediateOrder = get().immediateOrders.find(order => order.id === orderId);
+                        scheduledOrder = get().scheduledOrders.find(order => order.id === orderId);
+                    }
+                
+                    // Set the found order or keep it undefined if still not found
                     set(state => {
                         state.selectedOrder = immediateOrder || scheduledOrder;
                     });
                 },
+                
 
                 setMenus: (menu: ReadDailyMenuResponse, aLaCarteMenu?: ReadDailyMenuResponse) => {
                     set(state => {
