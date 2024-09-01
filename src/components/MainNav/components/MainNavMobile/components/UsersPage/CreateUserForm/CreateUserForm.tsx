@@ -172,7 +172,7 @@ export const CreateUserForm = ({ companyCode, onSubmit, onClose }: CreateUserFor
                             name='aLaCardPermission'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>A la carte permisija</FormLabel>
+                                    <FormLabel>A la carte dozvola</FormLabel>
                                     <FormControl>
                                         <Checkbox
                                             checked={field.value} // Bind checked state to form value

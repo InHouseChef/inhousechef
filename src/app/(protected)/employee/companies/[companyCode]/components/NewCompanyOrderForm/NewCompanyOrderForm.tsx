@@ -6,7 +6,7 @@ import { Loader } from '@/components'
 import { useRoles } from '@/providers/RoleProvider/RoleProvider'
 import { CompanyUserRole, CompanyUserRoles } from '@/types'
 import { useParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import MainMenu from './MainMenu/MainMenu'
 import { TermsAndConditionsDialog } from './TermsAndConditionsDialog/TermsAndConditionsDialog'
 
@@ -30,7 +30,7 @@ export const NewCompanyOrderForm = () => {
     }
 
     useEffect(() => {
-        if (myUser && myUser.acceptedTerms) {
+        if (myUser) {
             const role = getActiveRole(roles)
             loadCartData(companyCode, role, myUser.aLaCardPermission) // Load all cart data after login
         }

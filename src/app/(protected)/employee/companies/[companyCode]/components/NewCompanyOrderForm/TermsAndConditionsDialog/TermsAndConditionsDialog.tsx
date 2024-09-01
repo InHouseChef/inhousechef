@@ -20,7 +20,9 @@ export const TermsAndConditionsDialog = ({ acceptedTerms }: TermsAndConditionsDi
         mutate(
             { path, body: {} },
             {
-                onSuccess: () => setIsOpen(false)
+                onSuccess: () => {
+                    setIsOpen(false)
+                }
             }
         )
 
