@@ -28,29 +28,20 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
 
         if (!identity) return router.push('/login')
 
-        console.log('identity', identity)
-
         if (identity && roles.Admin) {
-            console.log('admin')
             return router.push('/admin/companies')
         }
 
         if (identity && (roles.Employee || roles.CompanyManager)) {
-            console.log('employee or company manager')
             const company = getCompany()
-            console.log('company', company)
             if (company.companyCode && company.companyId) {
-                console.log('company.companyCode', company.companyCode)
                 return router.push(`/employee/companies/${company.companyCode}`)
             } else {
-                console.log('no company code or id')
                 setIsFetchingCompany(true)
                 readUserCompany().then(company => {
                     setIsFetchingCompany(false)
                     setCompany(company.companyCode, company.companyId)
                     setUserCompany(company)
-                    console.log('company', company)
-                    console.log('company.companyCode', company.companyCode)
                 })
             }
         }
