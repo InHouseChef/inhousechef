@@ -179,6 +179,12 @@ export const addDaysToDate = (daysToAdd: number, date: Date = new Date()): DateI
     return toDateIso(newDate)
 }
 
+export const addDaysToDateTimeLocalIso = (daysToAdd: number, date: Date = new Date()): DateTimeLocalIso => {
+    const newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + daysToAdd);
+    return toLocalIso(newDate);
+};
+
 export const subtractDaysFromDate = (daysToSubtract: number, date: Date = new Date()): DateIso => {
     const newDate = new Date(date)
     newDate.setDate(newDate.getDate() - daysToSubtract)

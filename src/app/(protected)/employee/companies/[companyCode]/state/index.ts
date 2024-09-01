@@ -3,10 +3,10 @@ import { MealType } from '@/api/meals'
 import { ReadMyOrderResponse } from '@/api/order'
 import { ReadShiftResponse } from '@/api/shifts'
 import { DateTimeLocalIso } from '@/types'
-import { toDateFromDateTimeLocalIso } from '@/utils/date'
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 import { Time } from '../utils'
+import { toDateFromDateIsoLocal } from '@/utils/date'
 
 export interface CartItem {
     id: string
@@ -142,7 +142,7 @@ export const useCartStore = create<CartStore>()(
 
                     const { shiftStartAt, orderingDeadlineBeforeShiftStart } = activeShift
 
-                    const dateFormatted = toDateFromDateTimeLocalIso(activeDate)
+                    const dateFormatted = toDateFromDateIsoLocal(activeDate)
                     const shiftStartFormatted = Time.fromString(shiftStartAt)
                     const orderingDeadlineBeforeShiftStartFormatted = new Time(orderingDeadlineBeforeShiftStart)
 
