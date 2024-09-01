@@ -1,4 +1,4 @@
-import { RolesEnum } from '@/apis/users'
+import { RolesEnum } from '@/api/users'
 import { nameSchema } from '@/schemas'
 import { z, object, string, boolean } from 'zod'
 

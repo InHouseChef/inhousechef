@@ -1,4 +1,4 @@
-import { CreateLoginRequest, CreateLoginResponse } from '@/apis/identities'
+import { CreateLoginRequest, CreateLoginResponse } from '@/api/identities'
 import { axiosPublic } from '@/lib/axios'
 import { MutationParams } from '@/types'
 import { useMutation } from '@tanstack/react-query'

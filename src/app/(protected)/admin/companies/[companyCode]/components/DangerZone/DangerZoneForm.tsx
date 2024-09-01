@@ -1,6 +1,6 @@
 'use client'
 
-import { useDeleteCompany, useReadCompany } from '@/apis/companies'
+import { useDeleteCompany, useReadCompany } from '@/api/companies'
 import { Header, Loader } from '@/components'
 import {
     AlertDialog,

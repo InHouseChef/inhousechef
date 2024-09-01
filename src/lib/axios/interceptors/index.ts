@@ -1,4 +1,4 @@
-import { createRefreshToken } from '@/apis/identities'
+import { createRefreshToken } from '@/api/identities'
 import { identityStore } from '@/hooks'
 import { axiosPrivate } from '@/lib/axios'
 import { queryClient } from '@/lib/react-query'

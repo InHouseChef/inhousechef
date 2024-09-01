@@ -1,6 +1,6 @@
 'use client'
 
-import { createALaCardShift, useReadALaCardShift } from '@/apis/alacard-shifts'
+import { createALaCardShift, useReadALaCardShift } from '@/api/alacard-shifts'
 import { Header, Loader } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'

@@ -1,5 +1,5 @@
-import { ReadMyOrderResponse } from '@/apis/order'
-import { useReadMyOrders } from '@/apis/order/repository/hooks/readMyOrder'
+import { ReadMyOrderResponse } from '@/api/order'
+import { useReadMyOrders } from '@/api/order/repository/hooks/readMyOrder'
 import { calculateDateRange, getOrderStateLabel } from '@/app/(protected)/employee/companies/[companyCode]/utils'
 import { useCartStore } from '@/app/(protected)/employee/newstate'
 import { Loader } from '@/components/Loader'

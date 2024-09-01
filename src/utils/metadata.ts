@@ -1,4 +1,4 @@
-import { readUserCompany } from '@/apis/companies'
+import { readUserCompany } from '@/api/companies'
 
 export const getCompanyMetadataIcons = async () => {
     const userCompany = await readUserCompany()

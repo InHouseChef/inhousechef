@@ -1,4 +1,4 @@
-import { ReadMyUserResponse } from '@/apis/users'
+import { ReadMyUserResponse } from '@/api/users'
 import { useIdentity } from '@/hooks'
 import { QueryOptions, getDefaultBooleanValue } from '@/hooks/useDefaultQueryParams'
 import { axiosPrivate } from '@/lib/axios'

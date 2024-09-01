@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReadMyOrderResponse } from '@/apis/order';
+import { ReadMyOrderResponse } from '@/api/order';
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { X } from 'lucide-react'; // Icon for the close button
 

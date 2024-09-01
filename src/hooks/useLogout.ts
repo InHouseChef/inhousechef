@@ -1,6 +1,6 @@
 'use client'
 
-import { useCreateLogout } from '@/apis/logins'
+import { useCreateLogout } from '@/api/logins'
 import { useCartStore } from '@/app/(protected)/employee/companies/[companyCode]/state'
 import { queryClient } from '@/lib/react-query'
 import { useRoles } from '@/providers/RoleProvider/RoleProvider'

@@ -1,5 +1,5 @@
-import { ReadUserResponse, useUpdateUserALaCardPermission } from '@/apis/users'
-import { readUsers } from '@/apis/users/repository/hooks/readUsers'
+import { ReadUserResponse, useUpdateUserALaCardPermission } from '@/api/users'
+import { readUsers } from '@/api/users/repository/hooks/readUsers'
 import { Loader } from '@/components'
 import { DEFAULT_OFFSET_PAGINATION_REQUEST } from '@/constants'
 import { CheckCircle2Icon } from 'lucide-react'

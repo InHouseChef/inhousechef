@@ -1,7 +1,7 @@
 'use client'
 
-import { RolesEnum, useReadUser } from '@/apis/users'
-import { updateUserProfile } from '@/apis/users/repository/hooks/updateUserProfile'
+import { RolesEnum, useReadUser } from '@/api/users'
+import { updateUserProfile } from '@/api/users/repository/hooks/updateUserProfile'
 import { Header, Loader } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'

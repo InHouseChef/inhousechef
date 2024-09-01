@@ -1,6 +1,6 @@
 'use client'
 
-import { readCompany, updateCompanyBrandingColors } from '@/apis/companies'
+import { readCompany, updateCompanyBrandingColors } from '@/api/companies'
 import { updateCompanyBrandingColorsSchema } from '@/app/(protected)/admin/companies/schemas'
 import { Header } from '@/components'
 import { Button } from '@/components/ui/button'

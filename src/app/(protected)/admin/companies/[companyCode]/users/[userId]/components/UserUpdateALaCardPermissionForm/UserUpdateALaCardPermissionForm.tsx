@@ -1,6 +1,6 @@
 'use client'
 
-import { useReadUser } from '@/apis/users'
+import { useReadUser } from '@/api/users'
 import { Header, Loader } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -9,7 +9,7 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { updateUserALaCardPermissionSchema } from '../../../schemas'
-import { updateUserALaCardPermission } from '@/apis/users/repository/hooks/updateUserALaCardPermission'
+import { updateUserALaCardPermission } from '@/api/users/repository/hooks/updateUserALaCardPermission'
 import { Checkbox } from '@/packages/components'
 
 interface UserUpdateALaCardPermissionFormProps {

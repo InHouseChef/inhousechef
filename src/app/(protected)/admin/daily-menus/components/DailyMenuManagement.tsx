@@ -1,8 +1,8 @@
 'use client'
 
-import { createDailyMenu, ReadDailyMenuResponse, readDailyMenus, removeMealFromDailyMenu } from '@/apis/daily-menus'
-import { deleteDailyMenu } from '@/apis/daily-menus/repository/hooks/deleteDailyMenu'
-import { ReadMealResponse, readMeals } from '@/apis/meals'
+import { createDailyMenu, ReadDailyMenuResponse, readDailyMenus, removeMealFromDailyMenu } from '@/api/daily-menus'
+import { deleteDailyMenu } from '@/api/daily-menus/repository/hooks/deleteDailyMenu'
+import { ReadMealResponse, readMeals } from '@/api/meals'
 import { Header, Loader } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'

@@ -1,6 +1,6 @@
 'use client'
 
-import { useCreateMeal } from '@/apis/meals'
+import { useCreateMeal } from '@/api/meals'
 import { Header } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'

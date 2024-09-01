@@ -1,6 +1,6 @@
 'use client'
 
-import { ReadUserResponse, RolesEnum, useUpdateUserALaCardPermission } from '@/apis/users'
+import { ReadUserResponse, RolesEnum, useUpdateUserALaCardPermission } from '@/api/users'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'

@@ -1,4 +1,4 @@
-import { DailyMenuMeal } from '@/apis/daily-menus'
+import { DailyMenuMeal } from '@/api/daily-menus'
 import { Button } from '@/components/ui/button'
 
 interface MealDrawerCardProps {

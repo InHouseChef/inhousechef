@@ -1,8 +1,8 @@
 'use client'
 
-import { MealTypeEnum, ReadMealResponse, updateMealDetails, updateMealImage } from '@/apis/meals'
-import { deleteMeal } from '@/apis/meals/repository/hooks/deleteMeal'
-import { readMeal } from '@/apis/meals/repository/hooks/readMeal'
+import { MealTypeEnum, ReadMealResponse, updateMealDetails, updateMealImage } from '@/api/meals'
+import { deleteMeal } from '@/api/meals/repository/hooks/deleteMeal'
+import { readMeal } from '@/api/meals/repository/hooks/readMeal'
 import { Header, Loader } from '@/components'
 import { FileUploader } from '@/components/FileUploader'
 import { FileInput, FileSvgDraw, FileUploaderContent, FileUploaderItem } from '@/components/FileUploader/FileUploader'

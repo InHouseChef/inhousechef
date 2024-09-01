@@ -1,7 +1,7 @@
-import { ReadALaCardShiftResponse } from '@/apis/alacard-shifts'
-import { ReadDailyMenuResponse } from '@/apis/daily-menus'
-import { MealType } from '@/apis/meals'
-import { ReadShiftResponse } from '@/apis/shifts'
+import { ReadALaCardShiftResponse } from '@/api/alacard-shifts'
+import { ReadDailyMenuResponse } from '@/api/daily-menus'
+import { MealType } from '@/api/meals'
+import { ReadShiftResponse } from '@/api/shifts'
 import { DateLocalIso, OrderState } from '@/types'
 import {
     addDaysToDate,

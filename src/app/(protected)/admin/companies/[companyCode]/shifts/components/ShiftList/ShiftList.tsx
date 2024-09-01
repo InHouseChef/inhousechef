@@ -1,6 +1,6 @@
 'use client'
 
-import { readShifts } from '@/apis/shifts/repository/hooks/readShifts'
+import { readShifts } from '@/api/shifts/repository/hooks/readShifts'
 import { DataTable, Loader } from '@/components'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import Link from 'next/link'

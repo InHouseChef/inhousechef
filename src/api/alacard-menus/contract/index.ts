@@ -1,4 +1,4 @@
-import { MealType } from '@/apis/meals'
+import { MealType } from '@/api/meals'
 import { DateLocalIso } from '@/types'
 
 export interface ALaCardMenuMeal {

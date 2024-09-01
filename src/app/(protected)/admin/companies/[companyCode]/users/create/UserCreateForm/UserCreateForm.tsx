@@ -1,6 +1,6 @@
 'use client'
 
-import { RolesEnum, useCreateUser } from '@/apis/users'
+import { RolesEnum, useCreateUser } from '@/api/users'
 import { Header } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'

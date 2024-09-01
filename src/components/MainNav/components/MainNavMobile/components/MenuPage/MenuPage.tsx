@@ -1,5 +1,5 @@
-import { DailyMenuMeal, ReadDailyMenuResponse } from '@/apis/daily-menus'
-import { MealTypeEnum } from '@/apis/meals'
+import { DailyMenuMeal, ReadDailyMenuResponse } from '@/api/daily-menus'
+import { MealTypeEnum } from '@/api/meals'
 import { MealCard } from '@/app/(protected)/employee/companies/[companyCode]/components/NewCompanyOrderForm/MealCard/MealCard';
 import { formatDateSerbianLatin } from '@/utils/date'
 

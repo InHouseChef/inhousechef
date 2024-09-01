@@ -1,7 +1,7 @@
 'use client'
 
-import { useReadDailyMenus } from '@/apis/daily-menus'
-import { useReadMyUser } from '@/apis/users'
+import { useReadDailyMenus } from '@/api/daily-menus'
+import { useReadMyUser } from '@/api/users'
 import { calculateDateRange } from '@/app/(protected)/employee/companies/[companyCode]/utils'
 import { RequireCompanyAuthorization } from '@/components/RequireAuthorization/RequireAuthorization'
 import { Button } from '@/components/ui/button'

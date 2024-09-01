@@ -1,4 +1,4 @@
-import { DailyMenuMeal } from '@/apis/daily-menus'
+import { DailyMenuMeal } from '@/api/daily-menus'
 import { useCartStore } from '@/app/(protected)/employee/newstate'
 import { Button } from '@/components/ui/button'
 import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
