@@ -26,6 +26,7 @@ interface OrderDetails {
         imageUrl: string
         type: MealType
     }[]
+    created: DateTimeIsoUtc
     placedAt?: DateTimeIsoUtc
     confirmedAt?: DateTimeIsoUtc
 }
