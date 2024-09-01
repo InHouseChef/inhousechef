@@ -1,7 +1,6 @@
 'use client'
 
 import { createLogin } from '@/api/logins'
-import { Loader } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -70,7 +69,6 @@ export const LoginForm = () => {
 
     return (
         <div className='relative mx-8 w-full max-w-md rounded-xl bg-white p-8 shadow-lg'>
-            {isPending && <Loader className='rounded-xl' />}
             <h2 className='mb-2 text-center text-3xl font-bold'>Prijavite se</h2>
             <p className='mb-8 text-center text-sm text-gray-500'>Prijavite se na Vaš postojeći nalog</p>
             <Form {...form}>
@@ -82,7 +80,7 @@ export const LoginForm = () => {
                             <FormItem>
                                 <FormLabel>Korisničko ime</FormLabel>
                                 <FormControl>
-                                    <Input {...field} placeholder='example@gmail.com' required autoComplete='username' />
+                                    <Input {...field} required autoComplete='username' />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -112,7 +110,7 @@ export const LoginForm = () => {
                         type='submit'
                         className='w-full rounded-md bg-primary py-2 text-white'
                         disabled={isPending}>
-                        PRIJAVI SE
+                        Prijavi se
                     </Button>
                 </form>
             </Form>
