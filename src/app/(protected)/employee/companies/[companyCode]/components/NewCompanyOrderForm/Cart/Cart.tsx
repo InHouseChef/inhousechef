@@ -30,6 +30,7 @@ const Cart = () => {
         const isToday = isSameDay(currentDate, activeDayDate);
 
         if (selectedOrder?.type === 'Scheduled') {
+            // @ts-ignore
             const shift = regularShifts.find(shift => shift.id === selectedOrder?.orderedForShiftId);
             if (shift) {
                 const shiftStartTime = new Date(`${activeDay}T${shift.shiftStartAt}`);
