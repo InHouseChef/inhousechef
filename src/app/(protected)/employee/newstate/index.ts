@@ -1,4 +1,4 @@
-import { DateIso, DateTimeIsoUtc, OrderState, OrderType, Time } from '@/types';
+import { DateTimeLocalIso, DateTimeIsoUtc, OrderState, OrderType, Time } from '@/types';
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { axiosPrivate } from '@/lib/axios';
@@ -8,6 +8,7 @@ import { ReadDailyMenuResponse } from '@/api/daily-menus';
 import { ReadMyOrderResponse } from '@/api/order';
 import { ReadALaCardMenuResponse } from '@/api/alacard-menus';
 import { RolesEnum } from '@/api/users';
+import { getToLocalISOString } from '@/utils/date';
 
 export type MealType = 'MainCourse' | 'SideDish';
 
@@ -41,7 +42,7 @@ export interface ImmediateOrderDetails {
     customerId: string;
     state: OrderState;
     type: OrderType;
-    orderDate: DateIso;
+    orderDate: DateTimeLocalIso;
     orderItems: OrderItem[];
     placedAt?: DateTimeIsoUtc;
     confirmedAt?: DateTimeIsoUtc;
@@ -54,7 +55,7 @@ export interface ScheduledOrderDetails {
     customerId: string;
     state: OrderState;
     type: OrderType;
-    orderDate: DateIso;
+    orderDate: DateTimeLocalIso;
     orderedForShiftId?: string;
     orderItems: OrderItem[];
     placedAt?: DateTimeIsoUtc;
@@ -65,7 +66,7 @@ export interface CartStore {
     companyCode?: string;
     userRole: RolesEnum;
     hasALaCardPermission: boolean;
-    activeDay: DateIso; // ISO date string
+    activeDay: DateTimeLocalIso; // ISO date string
     activeShift?: Shift | ALaCarteShift;
     activeMenus?: ReadDailyMenuResponse[];
     activeALaCarteMenus?: ReadALaCardMenuResponse[];
@@ -76,8 +77,8 @@ export interface CartStore {
     selectedOrder?: ScheduledOrderDetails | ImmediateOrderDetails;
 
     // State management actions
-    setActiveDay: (day: DateIso) => void;
-    setActiveShift: (shiftId: string) => void;
+    setActiveDay: (day: DateTimeLocalIso) => void;
+    setActiveShift: (shiftId: string | undefined) => void;
     setSelectedOrderById: (orderId: string) => void;
     setMenus: (menu: ReadDailyMenuResponse, aLaCarteMenu?: ReadDailyMenuResponse) => void;
     addOrder: (order: ScheduledOrderDetails | ImmediateOrderDetails) => void;
@@ -91,8 +92,8 @@ export interface CartStore {
     // API integration placeholders
     fetchShifts: () => Promise<void>;
     fetchMenus: (day: string) => Promise<void>;
-    fetchImmediateOrders: (day: DateIso) => Promise<void>;
-    fetchScheduledOrders: (day: DateIso) => Promise<void>;
+    fetchImmediateOrders: (day: DateTimeLocalIso) => Promise<void>;
+    fetchScheduledOrders: (day: DateTimeLocalIso) => Promise<void>;
     loadCartData: (companyCode: string, role: RolesEnum, hasALaCardPermission: boolean) => Promise<void>;
 
     addOrUpdateOrder: (mealId: string, quantity: number) => void;
@@ -115,13 +116,13 @@ const api = {
         return axiosPrivate.get(`/alacard-menus?${createUrlParams({ From: from, To: to })}`);
     },
 
-    fetchImmediateOrders: (companyCode: string, date: DateIso) => {
+    fetchImmediateOrders: (companyCode: string, date: DateTimeLocalIso) => {
         return axiosPrivate.get(`/companies/${companyCode}/orders/me?${createBaseUrlQuery({
             filter: { fromDate: date, toDate: date, orderStates: ['Draft', 'Placed'], orderTypes: ['Immediate'] },
         })}`);
     },
 
-    fetchScheduledOrders: (companyCode: string, date: DateIso) => {
+    fetchScheduledOrders: (companyCode: string, date: DateTimeLocalIso) => {
         return axiosPrivate.get(`/companies/${companyCode}/orders/me?${createBaseUrlQuery({
             filter: { fromDate: date, toDate: date, orderStates: ['Draft', 'Placed'], orderTypes: ['Scheduled'] },
         })}`);
@@ -147,7 +148,7 @@ const api = {
         );
     },
 
-    createScheduledOrder: (companyCode: string, data: { shiftId: string; orderDate: DateIso; meals: { id: string; quantity: number }[] }) => {
+    createScheduledOrder: (companyCode: string, data: { shiftId: string; orderDate: DateTimeLocalIso; meals: { id: string; quantity: number }[] }) => {
         return axiosPrivate.post(
             `/companies/${companyCode}/orders/scheduled`,
             data
@@ -182,13 +183,13 @@ export const useCartStore = create<CartStore>()(
                 companyCode: undefined,
                 userRole: RolesEnum.Employee,
                 hasALaCardPermission: false,
-                activeDay: new Date().toISOString().split('T')[0] as DateIso,
+                activeDay: getToLocalISOString(new Date()).split('T')[0] as DateTimeLocalIso,
                 regularShifts: [],
                 immediateOrders: [],
                 scheduledOrders: [],
                 selectedOrder: undefined,
 
-                setActiveDay: async (day: DateIso) => {
+                setActiveDay: async (day: DateTimeLocalIso) => {
                     set(state => {
                         state.activeDay = day;
                         state.selectedOrder = undefined; // Reset selected order when day changes
@@ -216,7 +217,7 @@ export const useCartStore = create<CartStore>()(
                     get().updateSelectedOrder();
                 },
 
-                setActiveShift: async (shiftId: string) => {
+                setActiveShift: async (shiftId: string | undefined) => {
                     const shift = get().regularShifts.find(s => s.id === shiftId) || 
                                   (get().hasALaCardPermission ? get().aLaCarteShift : undefined);
                     if (shift) {
@@ -317,7 +318,6 @@ export const useCartStore = create<CartStore>()(
                                     imageUrl: meal.imageUrl,
                                     type: meal.type
                                 }));
-                                state[orderType][orderIndex].updatedAt = new Date().toISOString() as DateTimeIsoUtc;
                             }
                         });
                         await api.addOrderItem(companyCode, orderId, orderItems[0].skuId, { quantity: orderItems[0].quantity });
@@ -355,14 +355,6 @@ export const useCartStore = create<CartStore>()(
                 confirmOrder: async (orderId: string) => {
                     const companyCode = get().companyCode;
                     if (companyCode) {
-                        const orderType = get().selectedOrder?.type === 'Immediate' ? 'immediateOrders' : 'scheduledOrders';
-                        set(state => {
-                            const orderIndex = state[orderType].findIndex(order => order.id === orderId);
-                            if (orderIndex !== -1) {
-                                state[orderType][orderIndex].state = 'Confirmed';
-                                state[orderType][orderIndex].updatedAt = new Date().toISOString() as DateTimeIsoUtc;
-                            }
-                        });
                         await api.confirmImmediateOrder(companyCode, orderId, {});
                     }
                 },
@@ -406,7 +398,7 @@ export const useCartStore = create<CartStore>()(
                     }
                 },
 
-                fetchImmediateOrders: async (day: DateIso) => {
+                fetchImmediateOrders: async (day: DateTimeLocalIso) => {
                     const companyCode = get().companyCode;
                     if (companyCode) {
                         const orders = await api.fetchImmediateOrders(companyCode, day);
@@ -416,7 +408,7 @@ export const useCartStore = create<CartStore>()(
                     }
                 },
 
-                fetchScheduledOrders: async (day: DateIso) => {
+                fetchScheduledOrders: async (day: DateTimeLocalIso) => {
                     const companyCode = get().companyCode;
                     if (companyCode) {
                         const orders = await api.fetchScheduledOrders(companyCode, day);
@@ -525,16 +517,16 @@ export const useCartStore = create<CartStore>()(
                         state.hasALaCardPermission = hasALaCardPermission;
                         if (!hasALaCardPermission) {
                             // Default active day to tomorrow if no A La Carte permission
-                            state.activeDay = new Date(Date.now() + 86400000).toISOString().split('T')[0] as DateIso;
+                            state.activeDay = getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0] as DateTimeLocalIso;
                         }
                     });
 
                     const [regularShiftsResponse, aLaCarteShiftResponse, dailyMenuResponseTodayList, dailyMenuResponseTomorrow, aLaCarteMenuResponse] = await Promise.all([
                         api.fetchRegularShifts(companyCode),
                         hasALaCardPermission ? api.fetchALaCarteShift(companyCode) : Promise.resolve(undefined),
-                        api.fetchDailyMenu(new Date().toISOString().split('T')[0], new Date().toISOString().split('T')[0]),
-                        api.fetchDailyMenu(new Date(Date.now() + 86400000).toISOString().split('T')[0], new Date(Date.now() + 86400000).toISOString().split('T')[0]),
-                        hasALaCardPermission ? api.fetchALaCarteMenu(new Date().toISOString().split('T')[0], new Date(Date.now() + 86400000).toISOString().split('T')[0]) : Promise.resolve(undefined),
+                        api.fetchDailyMenu(getToLocalISOString(new Date()).split('T')[0], getToLocalISOString(new Date()).split('T')[0]),
+                        api.fetchDailyMenu(getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0], getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0]),
+                        hasALaCardPermission ? api.fetchALaCarteMenu(getToLocalISOString(new Date()).split('T')[0], getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0]) : Promise.resolve(undefined),
                     ]);
 
                     set(state => {
@@ -547,8 +539,8 @@ export const useCartStore = create<CartStore>()(
                     });
 
                     const [scheduledOrdersResponse, immediateOrdersResponse] = await Promise.all([
-                        api.fetchScheduledOrders(companyCode, new Date(Date.now() + 86400000).toISOString().split('T')[0] as DateIso),
-                        hasALaCardPermission ? api.fetchImmediateOrders(companyCode, new Date().toISOString().split('T')[0] as DateIso) : Promise.resolve([]),
+                        api.fetchScheduledOrders(companyCode, getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0] as DateTimeLocalIso),
+                        hasALaCardPermission ? api.fetchImmediateOrders(companyCode, getToLocalISOString(new Date()).split('T')[0] as DateTimeLocalIso) : Promise.resolve([]),
                     ]);
 
                     set(state => {

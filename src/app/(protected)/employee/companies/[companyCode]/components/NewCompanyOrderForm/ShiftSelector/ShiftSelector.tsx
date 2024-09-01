@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { ALaCarteShift, Shift, useCartStore } from '@/app/(protected)/employee/newstate';
-import { formatTimeWithoutSeconds } from '@/utils/date';
+import { formatTimeWithoutSeconds, getToLocalISOString } from '@/utils/date';
 
 interface ShiftSelectorProps {
     selectedShiftId?: string;
@@ -23,7 +23,7 @@ export const ShiftSelector: React.FC<ShiftSelectorProps> = ({ selectedShiftId, o
 
     const currentDate = new Date();
     const activeDayDate = new Date(activeDay);
-    const isToday = currentDate.toDateString() === activeDayDate.toDateString();
+    const isToday = getToLocalISOString(currentDate) === getToLocalISOString(activeDayDate);
 
     const allShiftsPassed = sortedShifts.every(shift => {
         const shiftEndTime = new Date(`${activeDay}T${shift.shiftEndAt}`);
@@ -56,7 +56,7 @@ export const ShiftSelector: React.FC<ShiftSelectorProps> = ({ selectedShiftId, o
                             <li
                                 key={shift.id}
                                 className={clsx(
-                                    'flex-1 cursor-pointer rounded-lg p-2 h-full text-sm flex items-center justify-center text-center',
+                                    'flex-1 cursor-pointer rounded-lg p-2 h-full text-xs flex items-center justify-center text-center',
                                     {
                                         'bg-primary text-white': selectedShiftId === shift.id && !isShiftDisabled,
                                         'text-black': selectedShiftId !== shift.id && !isShiftDisabled,

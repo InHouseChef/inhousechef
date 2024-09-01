@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 
-const MealTypeSelectorNav = ({ selectedMealType, onMealTypeChange }) => {
+const MealTypeSelector = ({ selectedMealType, onMealTypeChange }) => {
     return (
         <nav className="rounded-md bg-white mt-4">
             <ul className="flex h-full items-center">
@@ -28,4 +28,4 @@ const MealTypeSelectorNav = ({ selectedMealType, onMealTypeChange }) => {
     );
 };
 
-export default MealTypeSelectorNav;
+export default MealTypeSelector;

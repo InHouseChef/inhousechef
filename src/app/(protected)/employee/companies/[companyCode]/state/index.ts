@@ -2,8 +2,8 @@ import { ReadALaCardShiftResponse } from '@/api/alacard-shifts'
 import { MealType } from '@/api/meals'
 import { ReadMyOrderResponse } from '@/api/order'
 import { ReadShiftResponse } from '@/api/shifts'
-import { DateIso } from '@/types'
-import { toDateFromDateIso } from '@/utils/date'
+import { DateTimeLocalIso } from '@/types'
+import { toDateFromDateTimeLocalIso } from '@/utils/date'
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 import { Time } from '../utils'
@@ -21,7 +21,7 @@ interface CartStore {
     order: { [shiftId: string]: { [date: string]: CartItem[] } }
     activeShift?: ReadShiftResponse
     aLaCardShift?: ReadALaCardShiftResponse
-    activeDate: DateIso
+    activeDate: DateTimeLocalIso
     mealType: MealType
     activeOrderId: string
     activeOrders: { [orderId: string]: ReadMyOrderResponse }
@@ -29,7 +29,7 @@ interface CartStore {
     setActiveOrderId: (orderId: string) => void
     setActiveShift: (shift?: ReadShiftResponse) => void
     setALaCardShift: (shift?: ReadALaCardShiftResponse) => void
-    setActiveDate: (date: DateIso) => void
+    setActiveDate: (date: DateTimeLocalIso) => void
     setMealType: (type: MealType) => void
     addToCart: (item: CartItem) => void
     removeFromCart: (itemId: string) => void
@@ -142,7 +142,7 @@ export const useCartStore = create<CartStore>()(
 
                     const { shiftStartAt, orderingDeadlineBeforeShiftStart } = activeShift
 
-                    const dateFormatted = toDateFromDateIso(activeDate)
+                    const dateFormatted = toDateFromDateTimeLocalIso(activeDate)
                     const shiftStartFormatted = Time.fromString(shiftStartAt)
                     const orderingDeadlineBeforeShiftStartFormatted = new Time(orderingDeadlineBeforeShiftStart)
 

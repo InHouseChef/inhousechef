@@ -6,7 +6,7 @@ import {
     TIME_FORMAT
 } from '@/packages/constants'
 import { DateFormatProps, TimeFormatOptions } from '@/packages/types'
-import { DateIso, DateTimeIsoUtc, Time } from '@/types'
+import { DateIso, DateTimeIsoUtc, DateTimeLocalIso, Time } from '@/types'
 
 const toDateFromString = (date: string, options: Intl.DateTimeFormatOptions = DEFAULT_DATE_TIME_FORMAT_OPTIONS) =>
     new Date(getDateFormatter(options).format(new Date(date)))
@@ -20,7 +20,24 @@ export const toDateIso = (date?: Date): DateIso => {
     return [year, month, day].join('-')
 }
 
+export const toLocalIso = (date?: Date): DateTimeLocalIso => {
+    if (!date) return '' as DateTimeLocalIso;
+    
+    const year = date.getFullYear().toString();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed, so add 1
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
+    
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}` as DateTimeLocalIso;
+};
+
 export const toDateFromDateIso = (date: DateIso, timeZone: string = 'UTC') => toDateFromString(date, { timeZone })
+
+export const toDateFromDateIsoLocal = (date: DateTimeLocalIso, timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone) =>
+    toDateFromString(date, { timeZone });
 
 export const toDateFromDateTimeIsoUtc = (date: DateTimeIsoUtc, timeZone: string = 'UTC') =>
     toDateFromString(date, {
@@ -245,9 +262,27 @@ export const getTomorrowDateIso = (today: Date) => {
     return toDateIso(tomorrowDate)
 }
 
+export const getTomorrowDateLocalISO = (today: Date) => {
+    const tomorrowDate = new Date(today)
+    tomorrowDate.setDate(tomorrowDate.getDate() + 1)
+    return tomorrowDate.toISOString()
+}
+
 export const formatHoursToTime = (hours: number): string => {
     const pad = (num: number) => String(num).padStart(2, '0')
     return `${pad(hours)}:00:00`
+}
+
+export const getToLocalISOString = (date: Date = new Date()): DateTimeLocalIso => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
+    
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
 }
 
 export const timeStringToMinutes = (timeString: string): number => {

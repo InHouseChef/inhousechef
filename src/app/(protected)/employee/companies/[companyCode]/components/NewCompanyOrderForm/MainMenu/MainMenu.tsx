@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useCartStore } from '@/app/(protected)/employee/newstate';
-import { MealCard } from '../../CompanyOrderForm/components/MealCard/MealCard';
 import DaySelector from '../DaySelector/DaySelector';
 import { ShiftSelector } from '../ShiftSelector/ShiftSelector';
 import MealTypeSelector from '../MealTypeSelector/MealTypeSelector';
 import { MealDrawer } from '../MealDrawer/MealDrawer';
 import { DailyMenuMeal } from '@/api/daily-menus';
-import { DateIso } from '@/types';
+import { DateTimeLocalIso } from '@/types';
 import Cart from '../Cart/Cart';
+import { getToLocalISOString } from '@/utils/date';
+import { MealCard } from '../../MealCard/MealCard';
 
 const MainMenu: React.FC = () => {
     const [selectedMealType, setSelectedMealType] = useState<'MainCourse' | 'SideDish'>('MainCourse');
@@ -15,11 +16,7 @@ const MainMenu: React.FC = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const {
-        setActiveDay,
         setActiveShift,
-        fetchMenus,
-        fetchImmediateOrders,
-        fetchScheduledOrders,
         activeMenus,
         activeALaCarteMenus,
         regularShifts,
@@ -29,18 +26,6 @@ const MainMenu: React.FC = () => {
         activeDay,
         selectedOrder,
     } = useCartStore();
-
-    useEffect(() => {
-        const defaultDay = hasALaCardPermission
-            ? new Date().toISOString().split('T')[0]
-            : new Date(Date.now() + 86400000).toISOString().split('T')[0];
-
-        setActiveDay(defaultDay as DateIso);
-        fetchMenus(defaultDay as DateIso);
-        fetchImmediateOrders(defaultDay as DateIso);
-        fetchScheduledOrders(defaultDay as DateIso);
-        setActiveShift(undefined); // Reset selected shift when day changes
-    }, [hasALaCardPermission, setActiveDay, setActiveShift, fetchMenus, fetchImmediateOrders, fetchScheduledOrders]);
 
     const handleShiftChange = (shiftId: string) => {
         setActiveShift(shiftId);
@@ -68,7 +53,7 @@ const MainMenu: React.FC = () => {
 
     const mealsInActiveOrder = selectedOrder?.orderItems.filter(meal => meal.type === selectedMealType) || [];
 
-    const isTodaySelected = activeDay === new Date().toISOString().split('T')[0] as DateIso;
+    const isTodaySelected = activeDay === getToLocalISOString(new Date()).split('T')[0] as DateTimeLocalIso;
 
     return (
         <div className="relative p-4">

@@ -1,6 +1,6 @@
 import { DailyMenuMeal, ReadDailyMenuResponse } from '@/api/daily-menus'
 import { MealTypeEnum } from '@/api/meals'
-import { MealCard } from '@/app/(protected)/employee/companies/[companyCode]/components/CompanyOrderForm/components/MealCard/MealCard'
+import { MealCard } from '@/app/(protected)/employee/companies/[companyCode]/components/MealCard/MealCard';
 import { formatDateSerbianLatin } from '@/utils/date'
 
 export const MenuPage = ({ dailyMenus, days }: { dailyMenus: ReadDailyMenuResponse[]; days: number }) => {

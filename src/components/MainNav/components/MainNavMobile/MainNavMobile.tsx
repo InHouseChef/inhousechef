@@ -19,6 +19,7 @@ import { MyProfilePage } from './components/MyProfilePage/MyProfilePage'
 import { TermsAndConditionsPage } from './components/TermsAndConditionsPage/TermsAndConditionsPage'
 import { UsersPage } from './components/UsersPage/UsersPage'
 import { CartIcon, LogoutIcon, MenuIcon, TermsAndConditionsIcon, UserGroupIcon, UserProfileIcon } from './icons'
+import { getToLocalISOString } from '@/utils/date'
 
 interface MainNavMobileProps {
     isNavOpen: boolean
@@ -88,7 +89,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
         path: { companyCode }
     })
     const { roles } = useRoles()
-    const { from: sevenDayMenuFrom, to: sevenDayMenuTo } = calculateDateRange(new Date().toISOString(), 7)
+    const { from: sevenDayMenuFrom, to: sevenDayMenuTo } = calculateDateRange(getToLocalISOString(new Date()), 7)
     const { data: dailyMenus } = useReadDailyMenus({
         path: '',
         query: {
