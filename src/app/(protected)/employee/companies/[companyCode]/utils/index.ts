@@ -2,9 +2,15 @@ import { ReadALaCardShiftResponse } from '@/api/alacard-shifts'
 import { ReadDailyMenuResponse } from '@/api/daily-menus'
 import { MealType } from '@/api/meals'
 import { ReadShiftResponse } from '@/api/shifts'
-import { DateLocalIso } from '@/types'
-import { MEAL_TYPE_LABELS } from '../constants'
-import { addDaysToDate, addDaysToDateTimeLocalIso, getToLocalISOString, toDateFromDateIsoLocal, toStringFromTime } from '@/utils/date'
+import { DateLocalIso, OrderState } from '@/types'
+import {
+    addDaysToDate,
+    addDaysToDateTimeLocalIso,
+    getToLocalISOString,
+    toDateFromDateIsoLocal,
+    toStringFromTime
+} from '@/utils/date'
+import { MEAL_TYPE_LABELS, ORDER_STATE_LABELS } from '../constants'
 
 export const getDayName = (dateString: string) => {
     const date = new Date(dateString)
@@ -164,3 +170,5 @@ export class Time {
         return new Date(date.getFullYear(), date.getMonth(), date.getDate(), this._hours, this._minutes, this._seconds)
     }
 }
+
+export const getOrderStateLabel = (state: OrderState) => ORDER_STATE_LABELS[state]
