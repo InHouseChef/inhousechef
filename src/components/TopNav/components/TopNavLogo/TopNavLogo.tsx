@@ -3,7 +3,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useBaseUrl, useBranding, usePathParams } from '@/hooks'
 import { useRoles } from '@/providers/RoleProvider/RoleProvider'
 import { CompanyPath } from '@/types'
-import Image from 'next/image'
 import Link from 'next/link'
 
 export const TopNavLogo = () => {
@@ -24,7 +23,7 @@ export const TopNavLogo = () => {
         <Link href={`${baseUrl}/companies/${companyPath}`}>
             <div className='relative h-[50px] w-[50px]'>
                 {logo ? (
-                    <Image fill src={logo} className='aspect-square rounded-full object-cover' alt='logo' />
+                    <img src={logo} className='aspect-square rounded-full object-cover' alt='logo' />
                 ) : (
                     <Logo width={50} height={50} className='text-[#3B1A44]' />
                 )}
