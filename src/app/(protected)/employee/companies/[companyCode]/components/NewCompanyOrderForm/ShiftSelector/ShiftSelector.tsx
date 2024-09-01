@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { ALaCarteShift, Shift, useCartStore } from '@/app/(protected)/employee/newstate';
-import { formatTimeWithoutSeconds, getToLocalISOString } from '@/utils/date';
+import { formatTimeWithoutSeconds } from '@/utils/date';
 
 interface ShiftSelectorProps {
     selectedShiftId?: string;
@@ -11,24 +11,50 @@ interface ShiftSelectorProps {
     isTodaySelected: boolean;
 }
 
-export const ShiftSelector: React.FC<ShiftSelectorProps> = ({ selectedShiftId, onShiftChange, shifts, aLaCarteShift, isTodaySelected }) => {
-    const { hasALaCardPermission, activeDay } = useCartStore(state => ({
+export const ShiftSelector: React.FC<ShiftSelectorProps> = ({
+    selectedShiftId,
+    onShiftChange,
+    shifts,
+    aLaCarteShift,
+    isTodaySelected,
+}) => {
+    const { hasALaCardPermission, activeDay } = useCartStore((state) => ({
         hasALaCardPermission: state.hasALaCardPermission,
         activeDay: state.activeDay,
     }));
 
     const sortedShifts = shifts.slice().sort(
-        (a, b) => new Date(`1970-01-01T${a.shiftStartAt}`) - new Date(`1970-01-01T${b.shiftStartAt}`)
+        (a, b) =>
+            new Date(`1970-01-01T${a.shiftStartAt}`).getTime() -
+            new Date(`1970-01-01T${b.shiftStartAt}`).getTime()
     );
 
     const currentDate = new Date();
     const activeDayDate = new Date(activeDay);
-    const isToday = getToLocalISOString(currentDate) === getToLocalISOString(activeDayDate);
 
-    const allShiftsPassed = sortedShifts.every(shift => {
-        const shiftEndTime = new Date(`${activeDay}T${shift.shiftEndAt}`);
-        return isToday && currentDate > shiftEndTime;
+    const isSameDay = (date1: Date, date2: Date) => 
+        date1.getFullYear() === date2.getFullYear() &&
+        date1.getMonth() === date2.getMonth() &&
+        date1.getDate() === date2.getDate();
+
+    const isToday = isSameDay(currentDate, activeDayDate);
+
+    const allShiftsPassed = sortedShifts.every((shift) => {
+        const shiftStartTime = new Date(`${activeDay}T${shift.shiftStartAt}`);
+        const orderDeadlineTime = new Date(
+            shiftStartTime.getTime() - shift.orderingDeadlineBeforeShiftStart * 60 * 60 * 1000
+        );
+        return isToday && currentDate > orderDeadlineTime;
     });
+
+    const isALaCarteShiftActive = () => {
+        if (!aLaCarteShift || !isToday) return false;
+
+        const shiftStartTime = new Date(`${activeDay}T${aLaCarteShift.shiftStartAt}`);
+        const shiftEndTime = new Date(`${activeDay}T${aLaCarteShift.shiftEndAt}`);
+
+        return currentDate >= shiftStartTime && currentDate <= shiftEndTime;
+    };
 
     return (
         <div className="relative">
@@ -37,20 +63,28 @@ export const ShiftSelector: React.FC<ShiftSelectorProps> = ({ selectedShiftId, o
                     {hasALaCardPermission && isTodaySelected && aLaCarteShift && (
                         <li
                             className={clsx(
-                                'flex-1 cursor-pointer rounded-lg p-2 h-full flex items-center justify-center text-sm text-center', 
+                                'flex-1 cursor-pointer rounded-lg p-2 h-full flex items-center justify-center text-sm text-center',
                                 {
-                                    'bg-primary text-white': selectedShiftId === aLaCarteShift.id,
-                                    'text-black': selectedShiftId !== aLaCarteShift.id,
+                                    'bg-primary text-white': selectedShiftId === aLaCarteShift.id && isALaCarteShiftActive(),
+                                    'text-black': selectedShiftId !== aLaCarteShift.id && isALaCarteShiftActive(),
+                                    'text-gray-400 cursor-not-allowed bg-gray-100': !isALaCarteShiftActive(), // Disable if not active
                                 }
                             )}
-                            onClick={() => onShiftChange(aLaCarteShift.id)}
+                            onClick={() => {
+                                if (isALaCarteShiftActive()) {
+                                    onShiftChange(aLaCarteShift.id);
+                                }
+                            }}
                         >
                             Za sada
                         </li>
                     )}
-                    {sortedShifts.map(shift => {
-                        const shiftEndTime = new Date(`${activeDay}T${shift.shiftEndAt}`);
-                        const isShiftDisabled = isToday && currentDate > shiftEndTime;
+                    {sortedShifts.map((shift) => {
+                        const shiftStartTime = new Date(`${activeDay}T${shift.shiftStartAt}`);
+                        const orderDeadlineTime = new Date(
+                            shiftStartTime.getTime() - shift.orderingDeadlineBeforeShiftStart * 60 * 60 * 1000
+                        );
+                        const isShiftDisabled = isToday && currentDate > orderDeadlineTime;
 
                         return (
                             <li
@@ -72,12 +106,8 @@ export const ShiftSelector: React.FC<ShiftSelectorProps> = ({ selectedShiftId, o
                                     }
                                 }}
                             >
-                                <div>
-                                    {`${formatTimeWithoutSeconds(shift.shiftStartAt)}`}
-                                </div>
-                                <div>
-                                    {`${formatTimeWithoutSeconds(shift.shiftEndAt)}`}
-                                </div>
+                                <div>{`${formatTimeWithoutSeconds(shift.shiftStartAt)}`}</div>
+                                <div>{`${formatTimeWithoutSeconds(shift.shiftEndAt)}`}</div>
                             </li>
                         );
                     })}
