@@ -3,8 +3,15 @@ const nextConfig = {
     eslint: {
         ignoreDuringBuilds: true
     },
-    images: {
-        domains: ['s3.eu-central-1.amazonaws.com']
+    redirects: async () => {
+        return [
+            {
+                source: '/', // The old URL path
+                destination: '/home', // The new URL path
+                permanent: true, // This is a permanent redirect (status code 308)
+            },
+            // Add more redirects as needed
+        ]
     }
 }
 
