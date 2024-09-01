@@ -1,5 +1,5 @@
 import { MealType } from '@/api/meals'
-import { DateTimeLocalIso } from '@/types'
+import { DateLocalIso } from '@/types'
 
 export interface DailyMenuMeal {
     id: string
@@ -11,7 +11,7 @@ export interface DailyMenuMeal {
 }
 
 interface DailyMenu {
-    date: DateTimeLocalIso
+    date: DateLocalIso
     meals: DailyMenuMeal[]
 }
 
@@ -19,7 +19,7 @@ export interface ReadDailyMenuResponse extends DailyMenu {
     id: string
 }
 export interface AddMealsToDailyMenusRequest {
-    dates: DateTimeLocalIso[]
+    dates: DateLocalIso[]
     mealIds: string[]
 }
 export interface AddMealsToDailyMenusResponse {

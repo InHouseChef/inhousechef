@@ -33,10 +33,12 @@ export const ActiveOrders = () => {
 
     const getOrderSummary = (order: ReadMyOrderResponse) => {
         const number = order.number;
+        const forDate = order.orderDate;
+        const type = order.type;
         const concatDescription = order.orderItems.map(item => `${item.name} x${item.quantity}`).join(', ');
         const description = concatDescription.length > 50 ? `${concatDescription.slice(0, 50)}...` : concatDescription;
         const totalPrice = order.orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        return { description, totalPrice, number };
+        return { description, totalPrice, number, type, forDate };
     };
 
     const handleViewOrder = (orderId: string, orderedForShiftId?: string) => {
@@ -48,7 +50,7 @@ export const ActiveOrders = () => {
         <div className="mt-6">
             {(isFetching || isRefetching) && <Loader />}
             {(!isFetching && !isRefetching) && activeOrders?.map((order) => {
-                const { description, totalPrice, number } = getOrderSummary(order);
+                const { description, totalPrice, number, type, forDate } = getOrderSummary(order);
                 return (
                     <div key={order.id} className="mb-4 bg-white">
                         <div className='flex flex-row gap-8 mb-2'>
@@ -60,11 +62,13 @@ export const ActiveOrders = () => {
                                     'text-[#27AE60]': order.state === "Confirmed", 
                                     'text-[#EB5757]': order.state === "Cancelled" 
                                 })}>{order.state}</p>
+                            {type === "Immediate" && (<p className='text-sm text-black-900 font-medium'>Za odmah</p>)}
+                            {type === "Scheduled" && (<p className='text-sm text-black-900 font-medium'>Za {forDate}</p>)}
                         </div>
                         <div className="flex justify-between items-center border-t border-grey-300 py-4">
-                            <div className="flex items-center">
+                            <div className="flex items-center gap-4">
                                 {order.orderItems.length === 1 ? (
-                                    <div className="relative mr-4 flex-shrink-0 rounded-lg bg-gray-200 h-20 w-20 shadow">
+                                    <div className="relative flex-shrink-0 rounded-lg bg-gray-200 h-20 w-20 shadow">
                                         <img
                                             src={order.orderItems[0].imageUrl}
                                             alt={order.orderItems[0].name}
@@ -72,7 +76,7 @@ export const ActiveOrders = () => {
                                         />
                                     </div>
                                 ) : (
-                                    <div className="relative grid grid-cols-2 flex-shrink-0 gap-1 w-20 h-20 rounded-lg shadow p-2 mr-4 bg-gray-200">
+                                    <div className="relative grid grid-cols-2 flex-shrink-0 gap-1 w-20 h-20 rounded-lg shadow p-2 bg-gray-200">
                                         {order.orderItems.slice(0, 4).map((item, index) => (
                                             <div key={index} className="w-8 h-8">
                                                 <img
@@ -99,9 +103,11 @@ export const ActiveOrders = () => {
                             <button onClick={() => handleViewOrder(order.id, order.orderedForShiftId)} className="bg-primary text-white px-4 py-2 rounded">
                                 Idi na porudžbinu
                             </button>
-                            <button onClick={() => handleViewOrder(order.id, order.orderedForShiftId)} className="border border-primary text-primary px-4 py-2 rounded">
-                                Otkaži
-                            </button>
+                            {order.type === "Scheduled" && (order.state === "Draft" || order.state === "Placed") && (
+                                <button onClick={() => handleViewOrder(order.id, order.orderedForShiftId)} className="border border-primary text-primary px-4 py-2 rounded">
+                                    Otkaži
+                                </button>
+                            )}
                         </div>
                     </div>
                 );

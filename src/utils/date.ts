@@ -6,7 +6,7 @@ import {
     TIME_FORMAT
 } from '@/packages/constants'
 import { DateFormatProps, TimeFormatOptions } from '@/packages/types'
-import { DateIso, DateTimeIsoUtc, DateTimeLocalIso, Time } from '@/types'
+import { DateIso, DateTimeIsoUtc, DateLocalIso, Time } from '@/types'
 
 const toDateFromString = (date: string, options: Intl.DateTimeFormatOptions = DEFAULT_DATE_TIME_FORMAT_OPTIONS) =>
     new Date(getDateFormatter(options).format(new Date(date)))
@@ -20,8 +20,8 @@ export const toDateIso = (date?: Date): DateIso => {
     return [year, month, day].join('-')
 }
 
-export const toLocalIso = (date?: Date): DateTimeLocalIso => {
-    if (!date) return '' as DateTimeLocalIso;
+export const toLocalIso = (date?: Date): DateLocalIso => {
+    if (!date) return '' as DateLocalIso;
     
     const year = date.getFullYear().toString();
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed, so add 1
@@ -31,12 +31,12 @@ export const toLocalIso = (date?: Date): DateTimeLocalIso => {
     const seconds = String(date.getSeconds()).padStart(2, '0');
     const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
     
-    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}` as DateTimeLocalIso;
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}` as DateLocalIso;
 };
 
 export const toDateFromDateIso = (date: DateIso, timeZone: string = 'UTC') => toDateFromString(date, { timeZone })
 
-export const toDateFromDateIsoLocal = (date: DateTimeLocalIso, timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone) =>
+export const toDateFromDateIsoLocal = (date: DateLocalIso, timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone) =>
     toDateFromString(date, { timeZone });
 
 export const toDateFromDateTimeIsoUtc = (date: DateTimeIsoUtc, timeZone: string = 'UTC') =>
@@ -179,7 +179,7 @@ export const addDaysToDate = (daysToAdd: number, date: Date = new Date()): DateI
     return toDateIso(newDate)
 }
 
-export const addDaysToDateTimeLocalIso = (daysToAdd: number, date: Date = new Date()): DateTimeLocalIso => {
+export const addDaysToDateTimeLocalIso = (daysToAdd: number, date: Date = new Date()): DateLocalIso => {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + daysToAdd);
     return toLocalIso(newDate);
@@ -279,7 +279,7 @@ export const formatHoursToTime = (hours: number): string => {
     return `${pad(hours)}:00:00`
 }
 
-export const getToLocalISOString = (date: Date = new Date()): DateTimeLocalIso => {
+export const getToLocalISOString = (date: Date = new Date()): DateLocalIso => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
