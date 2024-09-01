@@ -31,12 +31,13 @@ export const refreshToken = async (error: any) => {
                     refreshToken: passwordCredentials ? passwordCredentials.refreshToken : ''
                 }
             })
-            identityStore.setState({ identity: refreshCredentials })
+            identityStore.setState({
+                identity: { ...refreshCredentials, refreshToken: passwordCredentials?.refreshToken || '' }
+            })
             queryClient.invalidateQueries({ queryKey: ['identity'] })
             config.headers.Authorization = `Bearer ${refreshCredentials.accessToken}`
             return axiosPrivate(config)
         } catch (error) {
-            localStorage.clear()
             identityStore.setState({ identity: null })
         }
     }
@@ -47,7 +48,7 @@ export const refreshToken = async (error: any) => {
 export const formatError = (error: any) => {
     const errorClone = structuredClone(error)
     if (/^(5\d{2}|600)$/.test(error.status)) {
-        errorClone.title = 'An unexpected error occurred.'
+        errorClone.title = 'Došlo je do neočekivane greške.'
     }
     return Promise.reject(errorClone)
 }

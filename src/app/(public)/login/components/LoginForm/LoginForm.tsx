@@ -1,25 +1,25 @@
 'use client'
 
-import { createLogin } from '@/api/logins'
+import { useCreateLogin } from '@/api/logins'
+import { Error } from '@/components'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useBaseUrl } from '@/hooks'
 import { useIdentity } from '@/hooks/useIdentity'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { createClientCredentialsSchema } from './schemas'
 
 export const LoginForm = () => {
     const { setIdentity } = useIdentity()
-    const [isPending, setIsPending] = useState<boolean>(false)
-    const [errorMessage, setErrorMessage] = useState<string | null>(null) // State for custom error message
+    // const [isPending, setIsPending] = useState<boolean>(false)
     const router = useRouter()
     const { adminUrl, employeeUrl } = useBaseUrl()
+    const { mutate, isPending, isError, error } = useCreateLogin()
 
     useEffect(() => {
         router.prefetch(`${adminUrl}/companies/`)
@@ -36,41 +36,62 @@ export const LoginForm = () => {
 
     const { control, handleSubmit } = form
 
-    const onSubmit = async (formData: z.infer<typeof createClientCredentialsSchema>) => {
-        setIsPending(true)
-        createLogin({
-            path: {},
-            body: { username: formData.username, password: formData.password, grantType: 'password_credentials' }
-        })
-            .then(data => {
-                setIdentity(data)
-            })
-            .catch((error: AxiosError) => {
-                if (error.response) {
-                    if (error.response.status === 401) {
-                        setErrorMessage('Korisničko ime ili lozinka nije ispravna.')
-                    } else {
-                        setErrorMessage(
-                            'Došlo je do greške. Molimo pokušajte ponovo kasnije. U slučaju da se greška ponovi, kontaktirajte podršku.'
-                        )
-                    }
-                } else if (error.request) {
-                    setErrorMessage('Nema odgovora sa servera. Molimo proverite Vašu konekciju.')
-                } else {
-                    setErrorMessage(
-                        'Došlo je do neočekivane greške. Molimo pokušajte ponovo. U slučaju da se greška ponovi, kontaktirajte podršku.'
-                    )
+    const onSubmit = (formData: z.infer<typeof createClientCredentialsSchema>) => {
+        mutate(
+            {
+                path: {},
+                body: { ...formData, grantType: 'password_credentials' }
+            },
+            {
+                onSuccess: data => {
+                    setIdentity(data)
                 }
-            })
-            .finally(() => {
-                setIsPending(false)
-            })
+            }
+        )
     }
+
+    // const onSubmit = async (formData: z.infer<typeof createClientCredentialsSchema>) => {
+    //     setIsPending(true)
+    //     createLogin({
+    //         path: {},
+    //         body: { username: formData.username, password: formData.password, grantType: 'password_credentials' }
+    //     })
+    //         .then(data => {
+    //             setIdentity(data)
+    //         })
+    //         .catch((error: AxiosError) => {
+    //             console.log(error)
+    //             if (error.response) {
+    //                 if (error.response.status === 401) {
+    //                     setErrorMessage('Korisničko ime ili lozinka nije ispravna.')
+    //                 } else {
+    //                     setErrorMessage(
+    //                         'Došlo je do greške. Molimo pokušajte ponovo kasnije. U slučaju da se greška ponovi, kontaktirajte podršku.'
+    //                     )
+    //                 }
+    //             } else if (error.request) {
+    //                 setErrorMessage('Nema odgovora sa servera. Molimo proverite Vašu konekciju.')
+    //             } else {
+    //                 setErrorMessage(
+    //                     'Došlo je do neočekivane greške. Molimo pokušajte ponovo. U slučaju da se greška ponovi, kontaktirajte podršku.'
+    //                 )
+    //             }
+    //         })
+    //         .finally(() => {
+    //             setIsPending(false)
+    //             setErrorMessage(null)
+    //         })
+    // }
+
+    useEffect(() => {
+        console.log(error, isError)
+    }, [error, isError])
 
     return (
         <div className='relative mx-8 w-full max-w-md rounded-xl bg-white p-8 shadow-lg'>
             <h2 className='mb-2 text-center text-3xl font-bold'>Prijavite se</h2>
             <p className='mb-8 text-center text-sm text-gray-500'>Prijavite se na Vaš postojeći nalog</p>
+            {isError ? <Error error={error} /> : undefined}
             <Form {...form}>
                 <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
                     <FormField
@@ -100,11 +121,11 @@ export const LoginForm = () => {
                         )}
                     />
                     {/* Display error message */}
-                    {errorMessage && (
+                    {/* {errorMessage && (
                         <div className='rounded border-red-400 bg-red-100 p-3 text-center text-red-700'>
                             <p className='text-sm'>{errorMessage}</p>
                         </div>
-                    )}
+                    )} */}
                     <Button
                         loading={isPending}
                         type='submit'

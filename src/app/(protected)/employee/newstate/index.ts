@@ -90,8 +90,9 @@ export interface CartStore {
     updateSelectedOrder(): void
     clearSelectedOrder: () => void
     resetCart: () => void
+    clearCart: () => void
     setIsOpen: (isOpen: boolean) => void
-    shouldDisableOrder: (order: ScheduledOrderDetails | ImmediateOrderDetails | undefined) => boolean;
+    shouldDisableOrder: (order: ScheduledOrderDetails | ImmediateOrderDetails | undefined) => boolean
 
     // API integration placeholders
     fetchShifts: () => Promise<void>
@@ -162,7 +163,9 @@ const api = {
     },
 
     decreaseOrderItemQuantity: async (companyCode: string, orderId: string, skuId: string) => {
-        const response = await axiosPrivate.patch(`/companies/${companyCode}/orders/${orderId}/items/${skuId}/decrease-quantity`)
+        const response = await axiosPrivate.patch(
+            `/companies/${companyCode}/orders/${orderId}/items/${skuId}/decrease-quantity`
+        )
         return response as unknown as ScheduledOrderDetails | ImmediateOrderDetails
     },
 
@@ -211,40 +214,40 @@ export const useCartStore = create<CartStore>()(
                 },
                 messageType: undefined,
 
-                shouldDisableOrder: (order) => {
-                    if (!order) return true;
+                shouldDisableOrder: order => {
+                    if (!order) return true
 
-                    const currentDate = new Date();
-                    const activeDay = get().activeDay;
-                    const aLaCarteShift = get().aLaCarteShift;
-                    const shifts = get().regularShifts;
-                    const activeDayDate = new Date(activeDay);
+                    const currentDate = new Date()
+                    const activeDay = get().activeDay
+                    const aLaCarteShift = get().aLaCarteShift
+                    const shifts = get().regularShifts
+                    const activeDayDate = new Date(activeDay)
 
                     const isSameDay = (date1: Date, date2: Date) =>
                         date1.getFullYear() === date2.getFullYear() &&
                         date1.getMonth() === date2.getMonth() &&
-                        date1.getDate() === date2.getDate();
-                    const isToday = isSameDay(currentDate, activeDayDate);
+                        date1.getDate() === date2.getDate()
+                    const isToday = isSameDay(currentDate, activeDayDate)
 
                     if (order.type === 'Immediate' && aLaCarteShift) {
-                        const shiftStartTime = new Date(`${activeDay}T${aLaCarteShift.shiftStartAt}`);
-                        const shiftEndTime = new Date(`${activeDay}T${aLaCarteShift.shiftEndAt}`);
-                        return !(isToday && currentDate >= shiftStartTime && currentDate <= shiftEndTime);
+                        const shiftStartTime = new Date(`${activeDay}T${aLaCarteShift.shiftStartAt}`)
+                        const shiftEndTime = new Date(`${activeDay}T${aLaCarteShift.shiftEndAt}`)
+                        return !(isToday && currentDate >= shiftStartTime && currentDate <= shiftEndTime)
                     }
 
                     if (order.type === 'Scheduled' && shifts) {
                         // @ts-ignore
-                        const shift = shifts.find(shift => shift.id === order.orderedForShiftId);
+                        const shift = shifts.find(shift => shift.id === order.orderedForShiftId)
                         if (shift) {
-                            const shiftStartTime = new Date(`${activeDay}T${shift.shiftStartAt}`);
+                            const shiftStartTime = new Date(`${activeDay}T${shift.shiftStartAt}`)
                             const orderDeadlineTime = new Date(
                                 shiftStartTime.getTime() - shift.orderingDeadlineBeforeShiftStart * 60 * 60 * 1000
-                            );
-                            return isToday && currentDate > orderDeadlineTime;
+                            )
+                            return isToday && currentDate > orderDeadlineTime
                         }
                     }
 
-                    return true;
+                    return true
                 },
 
                 clearSelectedOrder: () => {
@@ -454,7 +457,9 @@ export const useCartStore = create<CartStore>()(
                         state.selectedOrder = undefined
                     })
                 },
-
+                clearCart: () => {
+                    set(() => null)
+                },
                 fetchShifts: async () => {
                     const companyCode = get().companyCode
                     if (companyCode) {
@@ -611,7 +616,6 @@ export const useCartStore = create<CartStore>()(
                     }
                 },
                 loadCartData: async (companyCode: string, userRole: RolesEnum, hasALaCardPermission: boolean) => {
-                    console.log('Loading cart data for company:', companyCode)
                     set(state => {
                         state.companyCode = companyCode
                         state.userRole = userRole
