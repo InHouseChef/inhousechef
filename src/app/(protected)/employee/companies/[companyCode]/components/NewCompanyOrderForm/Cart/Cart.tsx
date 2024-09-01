@@ -258,17 +258,20 @@ const Cart = () => {
                                         </Button>
                                     </>
                                 ) : (
-                                    <Button
-                                        onClick={handleCancelOrder}
-                                        className="w-full py-3 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition">
-                                        Otkaži porudžbinu
-                                    </Button>
+                                    selectedOrder?.type === 'Scheduled' && (
+                                        <Button
+                                            onClick={handleCancelOrder}
+                                            className="w-full py-3 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition">
+                                            Otkaži porudžbinu
+                                        </Button>
+                                    )
                                 )}
                             </div>
                         ) : (
                             <p className="text-center text-gray-500 py-4">Ova porudžbina je samo za čitanje.</p>
                         )}
                     </div>
+
 
                 </SheetContent>
             </Sheet>

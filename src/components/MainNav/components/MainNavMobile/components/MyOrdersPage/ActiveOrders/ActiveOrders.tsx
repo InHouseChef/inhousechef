@@ -56,7 +56,7 @@ export const ActiveOrders = () => {
     return (
         <div className="mt-6">
             {(isFetching || isRefetching) && <Loader />}
-            {(!isFetching && !isRefetching) && activeOrders?.map((order) => {
+            {(!isFetching && !isRefetching) && activeOrders?.sort((a, b) => b - a).map((order) => {
                 const { description, totalPrice, number, type, forDate } = getOrderSummary(order);
                 return (
                     <div key={order.id} className="mb-4 bg-white">

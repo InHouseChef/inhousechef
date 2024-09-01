@@ -218,18 +218,7 @@ export const useCartStore = create<CartStore>()(
                         get().fetchScheduledOrders(day, day)
                     ]);
 
-                    const activeShift = get().activeShift;
-                    if (activeShift) {
-                        const isShiftStillValid = get().regularShifts.some(shift => shift.id === activeShift.id) ||
-                            (get().hasALaCardPermission && activeShift.id === get().aLaCarteShift?.id);
-                        if (!isShiftStillValid) {
-                            set(state => {
-                                state.activeShift = undefined;
-                            });
-                        }
-                    }
-
-                    // Determine the correct order for the new day and shift
+                    // // Determine the correct order for the new day and shift
                     get().updateSelectedOrder();
                 },
 
