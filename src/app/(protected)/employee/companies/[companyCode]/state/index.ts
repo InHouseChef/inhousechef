@@ -2,7 +2,7 @@ import { ReadALaCardShiftResponse } from '@/api/alacard-shifts'
 import { MealType } from '@/api/meals'
 import { ReadMyOrderResponse } from '@/api/order'
 import { ReadShiftResponse } from '@/api/shifts'
-import { DateTimeLocalIso } from '@/types'
+import { DateLocalIso } from '@/types'
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 import { Time } from '../utils'
@@ -21,7 +21,7 @@ interface CartStore {
     order: { [shiftId: string]: { [date: string]: CartItem[] } }
     activeShift?: ReadShiftResponse
     aLaCardShift?: ReadALaCardShiftResponse
-    activeDate: DateTimeLocalIso
+    activeDate: DateLocalIso
     mealType: MealType
     activeOrderId: string
     activeOrders: { [orderId: string]: ReadMyOrderResponse }
@@ -29,7 +29,7 @@ interface CartStore {
     setActiveOrderId: (orderId: string) => void
     setActiveShift: (shift?: ReadShiftResponse) => void
     setALaCardShift: (shift?: ReadALaCardShiftResponse) => void
-    setActiveDate: (date: DateTimeLocalIso) => void
+    setActiveDate: (date: DateLocalIso) => void
     setMealType: (type: MealType) => void
     addToCart: (item: CartItem) => void
     removeFromCart: (itemId: string) => void

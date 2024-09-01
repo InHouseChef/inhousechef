@@ -1,6 +1,6 @@
 import { DailyMenuMeal } from '@/api/daily-menus'
 import { useCartStore } from '@/app/(protected)/employee/newstate'
-import { DateTimeLocalIso } from '@/types'
+import { DateLocalIso } from '@/types'
 import { getToLocalISOString } from '@/utils/date'
 import React, { useState } from 'react'
 import Cart from '../Cart/Cart'
@@ -55,7 +55,7 @@ const MainMenu: React.FC = () => {
 
     const mealsInActiveOrder = selectedOrder?.orderItems.filter(meal => meal.type === selectedMealType) || []
 
-    const isTodaySelected = activeDay === (getToLocalISOString(new Date()).split('T')[0] as DateTimeLocalIso)
+    const isTodaySelected = activeDay === (getToLocalISOString(new Date()).split('T')[0] as DateLocalIso)
 
     return (
         <div className='relative p-4'>

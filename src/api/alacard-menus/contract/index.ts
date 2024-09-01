@@ -1,5 +1,5 @@
 import { MealType } from '@/api/meals'
-import { DateIso } from '@/types'
+import { DateLocalIso } from '@/types'
 
 export interface ALaCardMenuMeal {
     id: string
@@ -11,7 +11,7 @@ export interface ALaCardMenuMeal {
 }
 
 interface ALaCardMenu {
-    date: DateIso
+    date: DateLocalIso
     meals: ALaCardMenuMeal[]
 }
 
@@ -19,7 +19,7 @@ export interface ReadALaCardMenuResponse extends ALaCardMenu {
     id: string
 }
 export interface AddMealsToALaCardMenusRequest {
-    dates: DateIso[]
+    dates: DateLocalIso[]
     mealIds: string[]
 }
 export interface AddMealsToALaCardMenusResponse {
