@@ -28,7 +28,7 @@ export const MainNavDesktop = () => {
                 <div className='mt-5 px-4'>
                     {LINKS.map(({ path, label }) => {
                         const isCurrentPath = pathName.includes(path)
-                        const href = `${baseUrl}/${path}`
+                        const href = `/${path}`
                         return (
                             <Link
                                 className={clsx(
