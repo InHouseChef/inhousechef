@@ -27,11 +27,15 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
 
         if (!identity) return safeReplace('/login')
 
+        console.log('identity', identity)
+
         if (identity && roles.Admin) {
+            console.log('admin')
             return safeReplace('/admin/companies')
         }
 
         if (identity && (roles.Employee || roles.CompanyManager)) {
+            console.log('employee or company manager')
             const company = getCompany()
 
             if (company.companyCode && company.companyId) {
