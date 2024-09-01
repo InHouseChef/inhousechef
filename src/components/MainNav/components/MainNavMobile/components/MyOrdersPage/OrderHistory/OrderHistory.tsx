@@ -5,9 +5,10 @@ import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { Loader } from "@/components/Loader";
 import clsx from "clsx";
+import { getToLocalISOString } from "@/utils/date";
 
 export const OrderHistory = () => {
-    const {from, to} = calculateDateRange(new Date().toISOString(), -30);
+    const {from, to} = calculateDateRange(getToLocalISOString(new Date()), -30);
     const { companyCode } = useParams<{ companyCode: string }>();
 
     const { data: orderHistory, isFetching, refetch, isRefetching } = useReadMyOrders({

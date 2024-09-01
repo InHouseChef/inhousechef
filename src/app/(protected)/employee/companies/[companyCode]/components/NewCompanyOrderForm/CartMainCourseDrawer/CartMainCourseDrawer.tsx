@@ -25,6 +25,8 @@ export const CartMainCourseDrawer = ({ isOpen, onClose }: CartMainCourseDrawerPr
     const handleAddToOrder = () => {
         if (selectedMeal) {
             addOrUpdateOrder(selectedMeal.id, quantity);
+            setSelectedMeal(null);
+            setQuantity(1);
             onClose();
         }
     };

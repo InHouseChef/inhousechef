@@ -2,41 +2,41 @@ import { ReadALaCardShiftResponse } from '@/api/alacard-shifts'
 import { ReadDailyMenuResponse } from '@/api/daily-menus'
 import { MealType } from '@/api/meals'
 import { ReadShiftResponse } from '@/api/shifts'
-import { DateIso } from '@/types'
-import { addDaysToDate, toDateFromDateIso, toDateIso, toStringFromTime } from '@/utils/date'
+import { DateTimeLocalIso } from '@/types'
 import { MEAL_TYPE_LABELS } from '../constants'
+import { addDaysToDate, addDaysToDateTimeLocalIso, getToLocalISOString, toDateFromDateIsoLocal, toStringFromTime } from '@/utils/date'
 
 export const getDayName = (dateString: string) => {
     const date = new Date(dateString)
     return date.toLocaleDateString('sr-Latn-RS', { weekday: 'short' }).toUpperCase()
 }
 
-export const calculateDateRange = (today: DateIso, numberOfDays: number) => {
-    const formattedToday = toDateFromDateIso(today)
+export const calculateDateRange = (today: DateTimeLocalIso, numberOfDays: number) => {
+    const formattedToday = toDateFromDateIsoLocal(today)
     const toDate = addDaysToDate(numberOfDays - 1, formattedToday)
 
     return {
-        from: toDateIso(formattedToday),
-        to: toDateIso(new Date(toDate))
+        from: getToLocalISOString(formattedToday),
+        to: getToLocalISOString(new Date(toDate))
     }
 }
 
 export interface UpcomingDailyMenuDate {
     day: string
     name: string
-    date: DateIso
+    date: DateTimeLocalIso
     available: boolean
     disabled: boolean
 }
 
-export const generateUpcomingDates = (today: DateIso, dailyMenus?: ReadDailyMenuResponse[]) => {
-    const formattedToday = toDateFromDateIso(today)
+export const generateUpcomingDates = (today: DateTimeLocalIso, dailyMenus?: ReadDailyMenuResponse[]) => {
+    const formattedToday = toDateFromDateIsoLocal(today)
     const upcomingDates: UpcomingDailyMenuDate[] = []
 
     const totalDays = 10
 
     for (let i = 0; i < totalDays; i++) {
-        const futureDate = addDaysToDate(i, formattedToday)
+        const futureDate = addDaysToDateTimeLocalIso(i, formattedToday)
 
         const dayName = getDayName(futureDate)
         const isAvailable = dailyMenus?.some(({ date }) => date === futureDate) || false

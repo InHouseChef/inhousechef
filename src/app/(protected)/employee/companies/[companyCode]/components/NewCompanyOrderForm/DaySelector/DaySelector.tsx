@@ -1,13 +1,14 @@
 import React from 'react';
 import clsx from 'clsx';
 import { useCartStore } from '@/app/(protected)/employee/newstate';
+import { getToLocalISOString } from '@/utils/date';
 
 const DaySelector: React.FC = () => {
     const { activeDay, setActiveDay, hasALaCardPermission } = useCartStore();
 
     if (!hasALaCardPermission) {
         // If the user doesn't have A La Carte permission, only allow selecting "tomorrow"
-        const tomorrowDate = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+        const tomorrowDate = getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0];
         if (activeDay !== tomorrowDate) {
             setActiveDay(tomorrowDate);
         }
@@ -15,7 +16,7 @@ const DaySelector: React.FC = () => {
     }
 
     const handleDayChange = (day: 'today' | 'tomorrow') => {
-        const selectedDate = day === 'today' ? new Date().toISOString().split('T')[0] : new Date(Date.now() + 86400000).toISOString().split('T')[0];
+        const selectedDate = day === 'today' ? getToLocalISOString(new Date()).split('T')[0] : getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0];
         setActiveDay(selectedDate);
     };
 
@@ -24,8 +25,8 @@ const DaySelector: React.FC = () => {
             <ul className="flex h-full items-center">
                 <li
                     className={clsx('ml-2 flex-1 cursor-pointer rounded-lg py-2 text-center', {
-                        'bg-primary text-white': activeDay === new Date().toISOString().split('T')[0],
-                        'text-black': activeDay !== new Date().toISOString().split('T')[0],
+                        'bg-primary text-white': activeDay === getToLocalISOString(new Date()).split('T')[0],
+                        'text-black': activeDay !== getToLocalISOString(new Date()).split('T')[0],
                     })}
                     onClick={() => handleDayChange('today')}
                 >
@@ -33,8 +34,8 @@ const DaySelector: React.FC = () => {
                 </li>
                 <li
                     className={clsx('mr-2 flex-1 cursor-pointer rounded-lg py-2 text-center', {
-                        'bg-primary text-white': activeDay === new Date(Date.now() + 86400000).toISOString().split('T')[0],
-                        'text-black': activeDay !== new Date(Date.now() + 86400000).toISOString().split('T')[0],
+                        'bg-primary text-white': activeDay === getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0],
+                        'text-black': activeDay !== getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0],
                     })}
                     onClick={() => handleDayChange('tomorrow')}
                 >
