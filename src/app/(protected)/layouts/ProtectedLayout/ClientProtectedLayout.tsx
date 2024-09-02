@@ -7,7 +7,6 @@ interface ClientProtectedLayoutProps {
 }
 
 export const ClientProtectedLayout = ({ children }: ClientProtectedLayoutProps) => {
-    console.log('ClientProtectedLayout')
     return (
         <>
             <RequireCompanyAuthorization role='Employee'>

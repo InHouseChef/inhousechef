@@ -3,8 +3,7 @@
 import { RequireCompanyAuthorization } from '@/components'
 import { NewCompanyOrderForm } from './components/NewCompanyOrderForm/NewCompanyOrderForm'
 
-export default function CompanyPage({}: { params: { companyCode: string } }) {
-    console.log('lalalalalala')
+export default function CompanyPage() {
     return (
         <>
             <RequireCompanyAuthorization role='Employee'>
