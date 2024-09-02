@@ -65,13 +65,13 @@ const Cart = () => {
     if (selectedOrder?.type === 'Immediate') {
         message = (
             <div className="p-4 bg-gray-100 text-center text-sm text-gray-700">
-                Nakon što se odobri od strane restorana Vaša porudžbina će biti dostavljena u roku od <strong>dva sata</strong>.
+                Hvala Vam na porudžbini.
             </div>
         );
     } else {
         message = (
             <div className="p-4 bg-gray-100 text-center text-sm text-gray-700">
-                Vaša porudžbina će biti dostavljena u naredna <strong>dva sata</strong>.
+                Hvala Vam na porudžbini.
             </div>
         );
     }
