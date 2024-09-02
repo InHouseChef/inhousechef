@@ -1,6 +1,6 @@
 'use client'
 
-import { ReadUserResponse, RolesEnum, useUpdateUserALaCardPermission } from '@/api/users'
+import { ReadUserResponse, RolesEnum } from '@/api/users'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
@@ -16,8 +16,6 @@ export const UsersPage = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [selectedUser, setSelectedUser] = useState<ReadUserResponse|null>(null)
     const [tableRefreshToggle, setTableRefreshToggle] = useState(false)
-
-    const { mutate: updateUserALaCardPermission } = useUpdateUserALaCardPermission()
 
     const handleResetFilters = () => {
         setSelectedRole('All')

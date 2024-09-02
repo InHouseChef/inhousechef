@@ -89,7 +89,7 @@ export const LoginForm = () => {
 
     return (
         <div className='relative mx-8 w-full max-w-md rounded-xl bg-white p-8 shadow-lg'>
-            <h2 className='mb-2 text-center text-3xl font-bold'>Prijavite se</h2>
+            <h2 className='mb-2 text-center text-3xl font-bold'>Dobro došli</h2>
             <p className='mb-8 text-center text-sm text-gray-500'>Prijavite se na Vaš postojeći nalog</p>
             {isError ? <Error error={error} /> : undefined}
             <Form {...form}>
