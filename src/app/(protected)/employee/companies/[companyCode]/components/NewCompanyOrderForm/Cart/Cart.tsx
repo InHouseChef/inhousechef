@@ -124,7 +124,7 @@ const Cart = () => {
                         </SheetClose>
                     </SheetHeader>
 
-                    {message}
+                    {/* {message} */}
 
                     {isLoading && <Loader />}
 

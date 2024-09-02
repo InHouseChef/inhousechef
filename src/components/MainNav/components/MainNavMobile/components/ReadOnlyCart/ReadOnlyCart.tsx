@@ -52,7 +52,7 @@ const ReadOnlyCart: React.FC<ReadOnlyCartProps> = ({ order, isOpen, onClose }) =
                     </SheetClose>
                 </SheetHeader>
 
-                {message}
+                {/* {message} */}
 
                 <div className="flex-1 py-4 space-y-4 overflow-y-auto">
                     {/* Main Courses Section */}
