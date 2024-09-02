@@ -32,7 +32,7 @@ export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
                             <img src={meal.imageUrl} alt={meal.name} className='h-64 w-full rounded-lg object-cover' />
                         ) : (
                             <div className='flex h-64 w-full flex-col items-center justify-center rounded-lg bg-gray-200 text-gray-600'>
-                                No Image
+                                Nema slike
                             </div>
                         )}
                         <DrawerTitle className='mt-2 text-3xl font-bold lowercase'>{meal.name}</DrawerTitle>

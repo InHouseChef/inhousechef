@@ -48,7 +48,7 @@ export const MyProfilePage = ({ user }: { user?: ReadUserResponse }) => {
                 </li>
                 <li
                     className={clsx(
-                        'flex cursor-pointer items-center gap-4 border-b bg-gray-100 px-4 py-6 transition-all last:border-b-0 hover:bg-gray-200'
+                        'flex cursor-pointer items-center gap-4 rounded-b-lg border-b bg-gray-100 px-4 py-6 transition-all last:border-b-0 hover:bg-gray-200'
                     )}
                     key={'username'}>
                     <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-100'>
