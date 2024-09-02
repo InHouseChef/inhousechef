@@ -1,4 +1,4 @@
-import { RolesEnum, useCreateUser } from '@/api/users'
+import { createUser, RolesEnum, useCreateUser } from '@/api/users'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -44,7 +44,7 @@ export type CreateUserFormProps = {
 }
 
 export const CreateUserForm = ({ companyCode, onSubmit, onClose }: CreateUserFormProps) => {
-    const { mutate: createUser } = useCreateUser()
+
 
     const form = useForm<CreateUserFormData>({
         resolver: zodResolver(createUserSchema),
@@ -64,8 +64,8 @@ export const CreateUserForm = ({ companyCode, onSubmit, onClose }: CreateUserFor
         onClose()
     }
 
-    const submit = (formData: CreateUserFormData) => {
-        createUser({
+    const submit = async (formData: CreateUserFormData) => {
+        await createUser({
             path: {
                 companyCode
             }, 
