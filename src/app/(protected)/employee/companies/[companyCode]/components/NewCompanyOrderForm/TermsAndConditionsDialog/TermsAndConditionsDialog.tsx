@@ -1,7 +1,7 @@
 import { useUpdateTermsAccept } from '@/api/users'
+import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useLogout, usePathParams } from '@/hooks'
-import { Button } from '@/packages/components'
 import { CompanyPath } from '@/types'
 import { useState } from 'react'
 
@@ -66,7 +66,7 @@ export const TermsAndConditionsDialog = ({ acceptedTerms }: TermsAndConditionsDi
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className='flex-row justify-end gap-2'>
-                    <Button isLoading={isPending} onClick={handleAcceptTerms}>
+                    <Button loading={isPending} onClick={handleAcceptTerms}>
                         Prihvatam
                     </Button>
                     <Button variant='outline' onClick={logout}>
