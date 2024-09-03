@@ -642,7 +642,7 @@ export const useCartStore = create<CartStore>()(
                             )[0] as DateLocalIso
                         }
                         else {
-                            state.activeDay = getToLocalISOString(new Date(Date.now() + 86400000)).split(
+                            state.activeDay = getToLocalISOString(new Date(Date.now())).split(
                                 'T'
                             )[0] as DateLocalIso
                         }
