@@ -80,7 +80,7 @@ const Cart = () => {
         if (selectedOrder.state === 'Draft') {
             message = (
                 <div className="p-4 bg-yellow-100 text-center text-sm text-yellow-700">
-                    Ovu započetu porudžbinu možete izmeniti dok traje "A La Carte" smena za današnji dan, 
+                    Ovu započetu porudžbinu možete poručiti dok traje "A La Carte" smena za današnji dan, 
                     od <strong>{shiftStartTime.toLocaleTimeString(serbianLocale)}</strong> do <strong>{shiftEndTime.toLocaleTimeString(serbianLocale)}</strong>. 
                     Nakon tog perioda porudžbina će biti automatski odbačena.
                 </div>
@@ -106,7 +106,7 @@ const Cart = () => {
             if (selectedOrder.state === 'Draft') {
                 message = (
                     <div className="p-4 bg-yellow-100 text-center text-sm text-yellow-700">
-                        Ovu započetu porudžbinu možete izmeniti do <strong>{formatDateSerbianLatin(new Date(selectedOrder.orderDate))}</strong>
+                        Ovu započetu porudžbinu možete poručiti do <strong>{formatDateSerbianLatin(new Date(selectedOrder.orderDate))}</strong>
                         &nbsp;<strong>{orderDeadlineTime.toLocaleTimeString(serbianLocale)}</strong>&nbsp; Nakon tog vremena, porudžbina će biti automatski odbačena.
                     </div>
                 );
