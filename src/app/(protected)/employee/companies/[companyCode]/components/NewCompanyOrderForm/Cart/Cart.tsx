@@ -92,7 +92,6 @@ const Cart = () => {
             .finally(() => {
                 setIsOpen(false);
                 setIsCancelOrderLoading(false)
-                clearSelectedOrder();
             });
     };
 
@@ -102,7 +101,6 @@ const Cart = () => {
             .finally(() => {
                 setIsOpen(false);
                 setIsPlaceOrderLoading(false)
-                clearSelectedOrder();
             });
     };
 
