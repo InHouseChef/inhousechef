@@ -2,7 +2,9 @@
 
 import { ReadUserCompanyResponse } from '@/api/companies'
 import { readUserCompany } from '@/api/companies/repository/hooks/readUserCompany'
+import { useCartStore } from '@/app/(protected)/employee/newstate'
 import { Loader } from '@/components'
+import { useSafeReplace } from '@/hooks'
 import { useReadIdentity } from '@/hooks/useIdentity'
 import { useRoles } from '@/providers/RoleProvider/RoleProvider'
 import { useCompanyStore } from '@/state'
@@ -21,6 +23,23 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
     const [isFetchingCompany, setIsFetchingCompany] = useState(false)
     const setCompany = useCompanyStore(state => state.setCompany)
     const getCompany = useCompanyStore(state => state.getCompany)
+
+    useEffect(() => {
+        const handleBeforeUnload = (event: any) => {
+          // This message is required to show the confirmation dialog
+          const message = 'Da li ste sigurni da želite da napustite stranicu? Vaše izmene neće biti sačuvane.';
+          event.returnValue = message;
+          return message;
+        };
+    
+        // Attach the event listener
+        window.addEventListener('beforeunload', handleBeforeUnload);
+    
+        // Clean up the event listener on component unmount
+        return () => {
+          window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+      }, []);
 
     useEffect(() => {
         if (!isFetched) return
