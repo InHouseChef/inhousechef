@@ -2,6 +2,8 @@ import React from 'react';
 import { ReadMyOrderResponse } from '@/api/order';
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { X } from 'lucide-react'; // Icon for the close button
+import { useCartStore } from '@/app/(protected)/employee/newstate';
+import { formatDateSerbianLatin } from '@/utils/date';
 
 interface ReadOnlyCartProps {
     order: ReadMyOrderResponse | null;
@@ -10,6 +12,7 @@ interface ReadOnlyCartProps {
 }
 
 const ReadOnlyCart: React.FC<ReadOnlyCartProps> = ({ order, isOpen, onClose }) => {
+    const { aLaCarteShift, regularShifts } = useCartStore();
     if (!order) return null;
 
     const mainCourses = order.orderItems
@@ -23,18 +26,49 @@ const ReadOnlyCart: React.FC<ReadOnlyCartProps> = ({ order, isOpen, onClose }) =
     const totalAmount = order.orderItems.reduce((total, item) => total + item.price * item.quantity, 0) || 0;
 
     let message = <></>;
+    const serbianLocale = 'sr-RS';
     if (order?.type === 'Immediate') {
-        message = (
-            <div className="p-4 bg-gray-100 text-center text-sm text-gray-700">
-                Hvala Vam na porudžbini!
-            </div>
-        );
-    } else {
-        message = (
-            <div className="p-4 bg-gray-100 text-center text-sm text-gray-700">
-                Hvala Vam na porudžbini!
-            </div>
-        );
+        if (order.state === 'Confirmed') {
+            message = (
+                <div className="p-4 bg-green-100 text-center text-sm text-green-700">
+                    Hvala Vam na porudžbini! <br/> Biće poslužena u naredna <strong>dva sata</strong>.
+                </div>
+            );
+        }
+    } else if (order?.type === 'Scheduled') {
+        //@ts-ignore
+        const shift = regularShifts.find(shift => shift.id === order?.orderedForShiftId);
+    
+        if (shift) {
+            const shiftStartTime = new Date(`${order.orderDate}T${shift.shiftStartAt}`);
+            const shiftEndTime = new Date(`${order.orderDate}T${shift.shiftEndAt}`);
+            const orderDeadlineTime = new Date(
+                shiftStartTime.getTime() - shift.orderingDeadlineBeforeShiftStart * 60 * 60 * 1000
+            );
+    
+            if (order.state === 'Draft') {
+                message = (
+                    <div className="p-4 bg-yellow-100 text-center text-sm text-yellow-700">
+                        Ovu započetu porudžbinu možete izmeniti do <strong>{formatDateSerbianLatin(new Date(order.orderDate))}</strong>
+                        &nbsp;<strong>{orderDeadlineTime.toLocaleTimeString(serbianLocale)}</strong>&nbsp; Nakon tog vremena, porudžbina će biti automatski odbačena.
+                    </div>
+                );
+            } else if (order.state === 'Placed') {
+                message = (
+                    <div className="p-4 bg-blue-100 text-center text-sm text-blue-700">
+                        Vaša porudžbina je poručena i može se izmeniti do <strong>{formatDateSerbianLatin(new Date(order.orderDate))}</strong>
+                        &nbsp;<strong>{orderDeadlineTime.toLocaleTimeString(serbianLocale)}&nbsp;</strong>. Nakon toga, porudžbina će biti zaključana i poslužena u izabranom periodu.
+                    </div>
+                );
+            } else if (order.state === 'Confirmed') {
+                message = (
+                    <div className="p-4 bg-green-100 text-center text-sm text-green-700">
+                        Hvala Vam na porudžbini! <br/> Biće poslužena <strong>{formatDateSerbianLatin(new Date(order.orderDate))}</strong> u periodu od 
+                        <strong>{shiftStartTime.toLocaleTimeString(serbianLocale)}</strong> do <strong>{shiftEndTime.toLocaleTimeString(serbianLocale)}</strong>.
+                    </div>
+                );
+            }
+        }
     }
 
     return (
@@ -52,7 +86,7 @@ const ReadOnlyCart: React.FC<ReadOnlyCartProps> = ({ order, isOpen, onClose }) =
                     </SheetClose>
                 </SheetHeader>
 
-                {/* {message} */}
+                {message}
 
                 <div className="flex-1 py-4 space-y-4 overflow-y-auto">
                     {/* Main Courses Section */}
@@ -116,7 +150,7 @@ const ReadOnlyCart: React.FC<ReadOnlyCartProps> = ({ order, isOpen, onClose }) =
 
                 <div className="bg-white border-t mt-4 pt-4">
                     <p className="text-center text-gray-700 font-semibold">
-                        Total: {totalAmount.toFixed(2)} RSD
+                        Ukupno: {totalAmount.toFixed(2)} RSD
                     </p>
                 </div>
             </SheetContent>

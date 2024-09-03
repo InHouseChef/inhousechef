@@ -9,7 +9,7 @@ import { useParams } from 'next/navigation'
 import { useEffect } from 'react'
 
 export const ActiveOrders = () => {
-    const { from, to } = calculateDateRange(getToLocalISOString(new Date(Date.now() + 86400000)), 2)
+    const { from, to } = calculateDateRange(getToLocalISOString(new Date(Date.now())), 2)
     const { companyCode } = useParams<{ companyCode: string }>()
 
     const {
@@ -27,7 +27,7 @@ export const ActiveOrders = () => {
                 orderTypes: ['Scheduled', 'Immediate'].join(',')
             }
         },
-        options: { enabled: true }
+        options: { enabled: false }
     })
 
     const { setSelectedOrderById, clearSelectedOrder, isOpen, setIsOpen, setActiveShift } = useCartStore()
