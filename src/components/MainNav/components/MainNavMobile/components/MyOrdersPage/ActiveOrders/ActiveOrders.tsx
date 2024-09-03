@@ -58,6 +58,11 @@ export const ActiveOrders = () => {
     return (
         <div className='relative mt-6'>
             {(isFetching || isRefetching) && <Loader className='flex min-h-[50vh] items-center justify-center' />}
+            {!isFetching && !isRefetching && activeOrders?.length === 0 && (
+                <div className='flex items-center justify-center min-h-[50vh]'>
+                    <p className='text-md text-black-900 text-center'>Nemate aktivnih porudžbina.</p>
+                </div>
+            )}
             {!isFetching &&
                 !isRefetching &&
                 activeOrders

@@ -61,6 +61,11 @@ export const OrderHistory = () => {
     return (
         <div className='relative mt-6'>
             {(isFetching || isRefetching) && <Loader className='flex min-h-[50vh] items-center justify-center' />}
+            {isFetching && isRefetching && orderHistory?.length === 0 && (
+                <div className='flex items-center justify-center min-h-[50vh]'>
+                    <p className='text-md text-black-900 text-center'>Niste do sada ništa poručivali.</p>
+                </div>
+            )}
             {!isFetching &&
                 !isRefetching &&
                 orderHistory?.map(order => {
