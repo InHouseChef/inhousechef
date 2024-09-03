@@ -90,7 +90,7 @@ const MainMenu: React.FC = () => {
             </div>
 
             {/* Meal Drawer */}
-            {selectedMeal && <MealDrawer meal={selectedMeal} isOpen={isDrawerOpen} onClose={closeDrawer} />}
+            <MealDrawer meal={selectedMeal} isOpen={isDrawerOpen} onClose={closeDrawer} />
 
             {/* Cart */}
             <Cart />

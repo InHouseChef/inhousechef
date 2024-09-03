@@ -161,7 +161,6 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                                     <span className='text-lg font-medium text-gray-700'>{'Moj profil'}</span>
                                     <ChevronRight className='ml-auto text-gray-400' />
                                 </li>
-
                             </ul>
                             <ul>
                                 {TERMS_AND_CONDITIONS.map(({ path, label, icon }, index) => (

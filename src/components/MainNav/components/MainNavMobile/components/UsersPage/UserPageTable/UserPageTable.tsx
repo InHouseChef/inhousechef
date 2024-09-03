@@ -22,6 +22,7 @@ export const UserPageTable = ({
     selectedPermission,
     onEditUser
 }: UserPageTableProps) => {
+    const [refreshKey, setRefreshKey] = useState(0);
     const [usersData, setUsersData] = useState<ReadUserResponse[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [page, setPage] = useState(0)
@@ -67,14 +68,19 @@ export const UserPageTable = ({
     }, [selectedRole, selectedPermission, companyCode, page])
 
     useEffect(() => {
-        setPage(0)
-        setUsersData([])
-        setHasMore(true)
-    }, [selectedRole, selectedPermission, toggleRefresh])
-
+        // Reset state when toggleRefresh, selectedRole, or selectedPermission changes
+        setPage(0);
+        setUsersData([]);
+        setHasMore(true);
+    
+        // Increment refreshKey to trigger re-fetch
+        setRefreshKey(prevKey => prevKey + 1);
+    }, [selectedRole, selectedPermission, toggleRefresh]);
+    
     useEffect(() => {
-        fetchUsers()
-    }, [page, fetchUsers])
+        // Fetch users whenever page or refreshKey changes
+        fetchUsers();
+    }, [page, refreshKey, fetchUsers]);
 
     useEffect(() => {
         const calculateHeight = () => {
@@ -129,20 +135,23 @@ export const UserPageTable = ({
                 key={user.id}
                 className='flex cursor-pointer items-center justify-between border-b bg-white py-4 pr-8'
                 onClick={() => onEditUser(user)} // Handle click to edit the user
-            >
+                >
                 <div className='flex flex-col'>
                     <span className='text-lg font-semibold'>{user.fullName}</span>
-                    {user.role === 'Employee' && <span className='text-sm text-gray-500'>Radnik</span>}
-                    {user.role === 'CompanyManager' && <span className='text-sm text-gray-500'>Menadžer</span>}
+                    {user.role === 'Employee' && <span className='text-xs text-gray-500'><strong>@{user.username}</strong> | Radnik</span>}
+                    {user.role === 'CompanyManager' && <span className='text-xs text-gray-500'><strong>@{user.username}</strong> | Menadžer</span>}
                 </div>
+                <div className='flex flex-col items-center'>
                 <CheckCircle2Icon
                     className={`cursor-pointer ${user.aLaCardPermission ? 'text-green-500' : 'text-gray-500'}`}
                     size={24}
                     onClick={e => {
-                        e.stopPropagation() // Prevent triggering the row click event
-                        handlePermissionChange(user.id, user.aLaCardPermission)
+                    e.stopPropagation() // Prevent triggering the row click event
+                    handlePermissionChange(user.id, user.aLaCardPermission)
                     }}
                 />
+                <span className='text-sm text-gray-500'>A la carte</span>
+                </div>
             </div>
         )
     }

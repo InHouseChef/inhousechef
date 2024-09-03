@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react'
 import ReadOnlyCart from '../../ReadOnlyCart/ReadOnlyCart'
 
 export const OrderHistory = () => {
-    const { from, to } = calculateDateRange(getToLocalISOString(new Date()), -30)
+    const { from, to } = calculateDateRange(getToLocalISOString(new Date(Date.now() + 86400000)), -31)
     const { companyCode } = useParams<{ companyCode: string }>()
 
     const [selectedOrder, setSelectedOrder] = useState<ReadMyOrderResponse | null>(null)
