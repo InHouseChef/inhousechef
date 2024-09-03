@@ -2,30 +2,54 @@ import { DailyMenuMeal } from '@/api/daily-menus'
 import { useCartStore } from '@/app/(protected)/employee/newstate'
 import { Button } from '@/components/ui/button'
 import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface MealDrawerProps {
-    meal: DailyMenuMeal
+    meal: DailyMenuMeal | null
     isOpen: boolean
     onClose: () => void
 }
 
 export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
+    const [isLoading, setIsLoading] = useState(false)
     const { addOrUpdateOrder } = useCartStore()
     const [quantity, setQuantity] = useState(1)
+    const [drawerOpen, setDrawerOpen] = useState(isOpen)
 
-    const handleAddToOrder = () => {
-        addOrUpdateOrder(meal.id, quantity)
-        onClose()
+    useEffect(() => {
+        if (isOpen) {
+            setDrawerOpen(true)
+        }
+    }, [isOpen])
+
+    const handleAddToOrder = async () => {
+        if (!meal) {
+            return
+        }
+        setIsLoading(true)
+        await addOrUpdateOrder(meal.id, quantity)
+        setIsLoading(false)
+        handleCloseDrawer()
     }
 
     const handleQuantityChange = (increment: number) => {
         setQuantity(prevQuantity => Math.max(1, prevQuantity + increment))
     }
 
+    const handleCloseDrawer = () => {
+        setDrawerOpen(false)
+        setTimeout(() => {
+            onClose()
+        }, 300) // Delay closing to allow the drawer to animate
+    }
+
+    if (!meal) {
+        return null
+    }
+
     return (
-        <Drawer open={isOpen} onClose={onClose}>
-            <DrawerContent onPointerDownOutside={e => e.target === e.currentTarget && onClose()}>
+        <Drawer open={drawerOpen} onClose={handleCloseDrawer}>
+            <DrawerContent onPointerDownOutside={e => e.target === e.currentTarget && handleCloseDrawer()}>
                 <div className='mx-auto w-full max-w-sm'>
                     <DrawerHeader className='text-left'>
                         {meal.imageUrl ? (
@@ -62,6 +86,7 @@ export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
                         <Button
                             type='button'
                             onClick={handleAddToOrder}
+                            loading={isLoading}
                             className='flex min-w-full items-center justify-between gap-2'>
                             <span>Dodaj u porudžbinu</span>
                             <span className='font-semibold'>{(meal.price * quantity).toFixed(2)} RSD</span>

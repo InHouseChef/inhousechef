@@ -1,4 +1,5 @@
-import { ReadUserResponse, RolesEnum, useUpdateUserProfile } from '@/api/users'
+import { ReadUserResponse, RolesEnum } from '@/api/users'
+import { updateUserProfile } from '@/api/users/repository/hooks/updateUserProfile'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -7,15 +8,18 @@ import { nameSchema } from '@/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { object, z } from 'zod'
+import { useState } from 'react'
 
 const updateUserProfileSchema = object({
-    fullName: nameSchema.max(100, 'Name cannot be longer than 100 characters.'),
-    role: z.enum([RolesEnum.CompanyManager, RolesEnum.Employee, RolesEnum.RestaurantWorker])
+    fullName: nameSchema.max(100, 'Ime ne može biti duže od 100 karaktera.'),
+    role: z.enum([RolesEnum.CompanyManager, RolesEnum.Employee, RolesEnum.RestaurantWorker]),
+    username: z.string().optional()
 })
 
 type UpdateUserProfileData = {
     fullName: string
     role: RolesEnum
+    username?: string
 }
 
 export type UpdateUserFormProps = {
@@ -26,12 +30,15 @@ export type UpdateUserFormProps = {
 }
 
 export const UpdateUserForm = ({ companyCode, user, onSubmit, onClose }: UpdateUserFormProps) => {
-    const { mutate: updateUserProfile } = useUpdateUserProfile()
+    const [isLoading, setIsLoading] = useState(false)
+    const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
     const form = useForm<UpdateUserProfileData>({
         resolver: zodResolver(updateUserProfileSchema),
         defaultValues: {
             fullName: user.fullName,
-            role: user.role
+            role: user.role,
+            username: user.username
         }
     })
 
@@ -41,15 +48,23 @@ export const UpdateUserForm = ({ companyCode, user, onSubmit, onClose }: UpdateU
         onClose()
     }
 
-    const submit = (formDate: UpdateUserProfileData) => {
-        updateUserProfile({
-            path: { companyCode, userId: user.id },
-            body: {
-                fullName: formDate.fullName,
-                role: formDate.role
-            }
-        })
-        onSubmit()
+    const submit = async (formData: UpdateUserProfileData) => {
+        setIsLoading(true)
+        setErrorMessage(null)
+        try {
+            await updateUserProfile({
+                path: { companyCode, userId: user.id },
+                body: {
+                    fullName: formData.fullName,
+                    role: formData.role
+                }
+            })
+            onSubmit()
+        } catch (error) {
+            setErrorMessage('Failed to update user profile. Please try again.')
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -65,6 +80,21 @@ export const UpdateUserForm = ({ companyCode, user, onSubmit, onClose }: UpdateU
                                     <FormLabel>Ime i prezime</FormLabel>
                                     <FormControl>
                                         <Input {...field} value={field.value || ''} required />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div className='col-span-6'>
+                        <FormField
+                            control={control}
+                            name='username'
+                            render={() => (
+                                <FormItem>
+                                    <FormLabel>Korisničko ime</FormLabel>
+                                    <FormControl>
+                                        <Input value={user.username} disabled />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -95,9 +125,16 @@ export const UpdateUserForm = ({ companyCode, user, onSubmit, onClose }: UpdateU
                         />
                     </div>
                 </div>
+                {errorMessage && (
+                    <div className="text-red-500 text-center">
+                        {errorMessage}
+                    </div>
+                )}
                 <div className='py-6 flex items-center justify-center gap-4'>
-                    <Button variant="outline" onClick={handleOnClose}>Otkaži</Button>
-                    <Button variant="default" type="submit">Sačuvaj</Button>
+                    <Button variant="outline" onClick={handleOnClose} disabled={isLoading}>Otkaži</Button>
+                    <Button variant="default" type="submit" loading={isLoading}>
+                        Sačuvaj
+                    </Button>
                 </div>
             </form>
         </Form>

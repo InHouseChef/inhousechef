@@ -11,6 +11,7 @@ interface CartSideDishDrawerProps {
 }
 
 export const CartSideDishDrawer = ({ isOpen, onClose }: CartSideDishDrawerProps) => {
+    const [isLoading, setIsLoading] = useState(false)
     const { activeMenus, addOrUpdateOrder } = useCartStore()
     const [selectedMeal, setSelectedMeal] = useState<DailyMenuMeal | null>(null)
     const [quantity, setQuantity] = useState(1)
@@ -22,9 +23,11 @@ export const CartSideDishDrawer = ({ isOpen, onClose }: CartSideDishDrawerProps)
         setQuantity(1) // Reset quantity when a new meal is selected
     }
 
-    const handleAddToOrder = () => {
+    const handleAddToOrder = async () => {
         if (selectedMeal) {
-            addOrUpdateOrder(selectedMeal.id, quantity)
+            setIsLoading(true)
+            await addOrUpdateOrder(selectedMeal.id, quantity)
+            setIsLoading(false)
             setSelectedMeal(null)
             setQuantity(1)
             onClose()
@@ -71,7 +74,7 @@ export const CartSideDishDrawer = ({ isOpen, onClose }: CartSideDishDrawerProps)
                                     +
                                 </Button>
                             </div>
-                            <Button type='button' onClick={handleAddToOrder} className='flex items-center gap-2'>
+                            <Button type='button' onClick={handleAddToOrder} loading={isLoading} className='flex items-center gap-2'>
                                 <span>Dodaj u porudžbinu</span>
                                 <span className='font-semibold'>{(selectedMeal.price * quantity).toFixed(2)} RSD</span>
                             </Button>

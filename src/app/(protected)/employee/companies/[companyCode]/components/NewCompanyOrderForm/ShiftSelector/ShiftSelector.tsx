@@ -32,7 +32,7 @@ export const ShiftSelector: React.FC<ShiftSelectorProps> = ({
     const currentDate = new Date();
     const activeDayDate = new Date(activeDay);
 
-    const isSameDay = (date1: Date, date2: Date) => 
+    const isSameDay = (date1: Date, date2: Date) =>
         date1.getFullYear() === date2.getFullYear() &&
         date1.getMonth() === date2.getMonth() &&
         date1.getDate() === date2.getDate();
@@ -53,7 +53,19 @@ export const ShiftSelector: React.FC<ShiftSelectorProps> = ({
         const orderDeadlineTime = new Date(
             shiftStartTime.getTime() - shift.orderingDeadlineBeforeShiftStart * 60 * 60 * 1000
         );
-        return isToday && currentDate > orderDeadlineTime && !isALaCarteShiftActive();
+
+        if (isToday) {
+            // Validate today's shifts
+            return currentDate > orderDeadlineTime && !isALaCarteShiftActive();
+        } else {
+            // Validate tomorrow's shifts
+            const adjustedDeadlineTime = new Date(orderDeadlineTime);
+            // If the shift deadline is today, compare with today's date
+            if (adjustedDeadlineTime < currentDate) {
+                return false; // Disable the shift for tomorrow
+            }
+            return false;
+        }
     });
 
     return (
@@ -87,7 +99,17 @@ export const ShiftSelector: React.FC<ShiftSelectorProps> = ({
                         const orderDeadlineTime = new Date(
                             shiftStartTime.getTime() - shift.orderingDeadlineBeforeShiftStart * 60 * 60 * 1000
                         );
-                        const isShiftDisabled = isToday && currentDate > orderDeadlineTime;
+
+                        let isShiftDisabled;
+                        if (isToday) {
+                            // Today's shift validation
+                            isShiftDisabled = currentDate > orderDeadlineTime;
+                        } else {
+                            // Tomorrow's shift validation
+                            const adjustedDeadlineTime = new Date(orderDeadlineTime);
+                            // If the shift deadline is today, disable the shift for tomorrow
+                            isShiftDisabled = adjustedDeadlineTime < currentDate;
+                        }
 
                         return (
                             <li
@@ -126,7 +148,7 @@ export const ShiftSelector: React.FC<ShiftSelectorProps> = ({
                         Porudžbine za današnji dan su zatvorene.
                     </p>
                     <p className="text-sm text-gray-600 text-center">
-                        Možete preći na porudžbine za sutrašnji dan.
+                        Možete poručiti za sutra.
                     </p>
                 </div>
             )}

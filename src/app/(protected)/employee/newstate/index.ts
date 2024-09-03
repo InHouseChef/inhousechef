@@ -429,6 +429,8 @@ export const useCartStore = create<CartStore>()(
                             },
                             'success'
                         )
+
+                        await state.setActiveDay(getToLocalISOString(new Date()).split('T')[0] as DateLocalIso)
                     } catch (error) {
                         get().setMessage(
                             {
@@ -460,6 +462,7 @@ export const useCartStore = create<CartStore>()(
                 clearCart: () => {
                     set(() => null)
                 },
+
                 fetchShifts: async () => {
                     const companyCode = get().companyCode
                     if (companyCode) {
@@ -541,6 +544,8 @@ export const useCartStore = create<CartStore>()(
                             },
                             'success'
                         )
+
+                        await state.setActiveDay(getToLocalISOString(new Date()).split('T')[0] as DateLocalIso)
                     } catch (error) {
                         get().setMessage({
                             text: 'Poručivanje nije uspelo.',

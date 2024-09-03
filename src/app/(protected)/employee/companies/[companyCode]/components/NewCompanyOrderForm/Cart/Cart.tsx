@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCartStore } from '@/app/(protected)/employee/newstate';
 import { Button } from '@/components/ui/button';
-import { Loader } from '@/components';
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { CartMainCourseDrawer } from '../CartMainCourseDrawer/CartMainCourseDrawer';
 import { CartSideDishDrawer } from '../CartSideDishDrawer/CartSideDishDrawer';
@@ -11,7 +10,8 @@ const Cart = () => {
     const { selectedOrder, addOrUpdateOrder, cancelOrder, placeOrder, isOpen, setIsOpen, regularShifts, aLaCarteShift, activeDay, shouldDisableOrder } = useCartStore();
     const [isMainCourseDrawerOpen, setIsMainCourseDrawerOpen] = useState(false);
     const [isSideDishDrawerOpen, setIsSideDishDrawerOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isPlaceOrderLoading, setIsPlaceOrderLoading] = useState(false);
+    const [isCancelOrderLoading, setIsCancelOrderLoading] = useState(false);
     const [isShiftValid, setIsShiftValid] = useState(true);
 
     useEffect(() => {
@@ -77,23 +77,21 @@ const Cart = () => {
     }
 
     const handleCancelOrder = () => {
-        setIsLoading(true);
+        setIsCancelOrderLoading(true);
         cancelOrder()
             .then(() => {
-                setIsLoading(false);
                 setIsOpen(false);
             })
-            .catch(() => setIsLoading(false));
+            .finally(() => setIsCancelOrderLoading(false));
     };
 
     const handlePlaceOrder = () => {
-        setIsLoading(true);
+        setIsPlaceOrderLoading(true);
         placeOrder()
             .then(() => {
-                setIsLoading(false);
                 setIsOpen(false);
             })
-            .catch(() => setIsLoading(false));
+            .finally(() => setIsPlaceOrderLoading(false));
     };
 
     const isOrderDisabled = shouldDisableOrder(selectedOrder);
@@ -125,8 +123,6 @@ const Cart = () => {
                     </SheetHeader>
 
                     {/* {message} */}
-
-                    {isLoading && <Loader />}
 
                     <div className="flex-1 py-4 space-y-4 overflow-y-auto">
                         {/* Main Courses Section */}
@@ -251,11 +247,13 @@ const Cart = () => {
                                     <>
                                         <Button
                                             onClick={handlePlaceOrder}
+                                            loading={isPlaceOrderLoading}
                                             className="w-full py-3 bg-primary text-white rounded-lg shadow-md hover:bg-primary-dark transition">
                                             Poruči - {totalAmount} RSD
                                         </Button>
                                         <Button
                                             onClick={handleCancelOrder}
+                                            loading={isCancelOrderLoading}
                                             className="w-full py-3 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition">
                                             Otkaži porudžbinu
                                         </Button>
@@ -264,6 +262,7 @@ const Cart = () => {
                                     selectedOrder?.type === 'Scheduled' && (
                                         <Button
                                             onClick={handleCancelOrder}
+                                            loading={isCancelOrderLoading}
                                             className="w-full py-3 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition">
                                             Otkaži porudžbinu
                                         </Button>

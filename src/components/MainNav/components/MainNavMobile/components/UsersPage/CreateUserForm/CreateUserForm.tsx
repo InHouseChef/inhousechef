@@ -1,4 +1,4 @@
-import { createUser, RolesEnum, useCreateUser } from '@/api/users'
+import { createUser, RolesEnum } from '@/api/users'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -6,23 +6,24 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/packages/components'
 import { nameSchema } from '@/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { boolean, object, string, z } from 'zod'
 
 const createUserSchema = object({
-    fullName: nameSchema.max(100, 'Name cannot be longer than 100 characters.'),
-    username: string().min(1, 'Username is required.'),
+    fullName: nameSchema.max(100, 'Ime ne može biti duže od 100 karaktera.'),
+    username: string().min(1, 'Korisničko ime je obavezno.'),
     password: string()
-        .min(8, 'Password is required.')
+        .min(8, 'Lozinka je obavezna.')
         .regex(
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
-            'Password must contain at least one uppercase letter, one lowercase letter, and one number.'
+            'Lozinka mora imati bar 8 karaktera, sadržati barem jedno veliko slovo, jedno malo slovo i jedan broj.'
         ),
     confirmPassword: string()
-        .min(8, 'Password is required.')
+        .min(8, 'Lozinka je obavezna.')
         .regex(
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
-            'Password must contain at least one uppercase letter, one lowercase letter, and one number.'
+            'Potvrda lozinke se mora podudarati sa lozinkom.'
         ),
     aLaCardPermission: boolean(),
     role: z.enum([RolesEnum.CompanyManager, RolesEnum.Employee])
@@ -44,7 +45,8 @@ export type CreateUserFormProps = {
 }
 
 export const CreateUserForm = ({ companyCode, onSubmit, onClose }: CreateUserFormProps) => {
-
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null) // Error state
 
     const form = useForm<CreateUserFormData>({
         resolver: zodResolver(createUserSchema),
@@ -65,18 +67,28 @@ export const CreateUserForm = ({ companyCode, onSubmit, onClose }: CreateUserFor
     }
 
     const submit = async (formData: CreateUserFormData) => {
-        await createUser({
-            path: {
-                companyCode
-            }, 
-            body: {
-                fullName: formData.fullName,
-                username: formData.username,
-                password: formData.password,
-                role: formData.role,
-                aLaCardPermission: formData.aLaCardPermission
-            }})
-        onSubmit()
+        setIsLoading(true)
+        setError(null)
+
+        try {
+            await createUser({
+                path: {
+                    companyCode
+                }, 
+                body: {
+                    fullName: formData.fullName,
+                    username: formData.username,
+                    password: formData.password,
+                    role: formData.role,
+                    aLaCardPermission: formData.aLaCardPermission
+                }
+            })
+            onSubmit()
+        } catch (error) {
+            setError(`Dodavanje korisnika je neuspešno.`) // Set error message
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -119,7 +131,7 @@ export const CreateUserForm = ({ companyCode, onSubmit, onClose }: CreateUserFor
                             name='password'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Password</FormLabel>
+                                    <FormLabel>Lozinka</FormLabel>
                                     <FormControl>
                                         <Input {...field} type='password' value={field.value || ''} required />
                                     </FormControl>
@@ -134,7 +146,7 @@ export const CreateUserForm = ({ companyCode, onSubmit, onClose }: CreateUserFor
                             name='confirmPassword'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Confirm Password</FormLabel>
+                                    <FormLabel>Potvrda lozinke</FormLabel>
                                     <FormControl>
                                         <Input {...field} type='password' value={field.value || ''} required />
                                     </FormControl>
@@ -185,9 +197,19 @@ export const CreateUserForm = ({ companyCode, onSubmit, onClose }: CreateUserFor
                         />
                     </div>
                 </div>
+
+                {/* Display the error message if exists */}
+                {error && (
+                    <div className="text-red-500 text-sm text-center">
+                        {error}
+                    </div>
+                )}
+
                 <div className='py-6 flex items-center justify-center gap-4'>
                     <Button variant="outline" onClick={handleOnClose}>Otkaži</Button>
-                    <Button variant="default" type="submit">Dodaj</Button>
+                    <Button variant="default" type="submit" loading={isLoading}>
+                        Dodaj
+                    </Button>
                 </div>
             </form>
         </Form>
