@@ -29,7 +29,6 @@ export const useReadDailyMenus = <T = ReadDailyMenuResponse[]>(params?: UseReadD
     })
 
     return useQuery({
-        gcTime: 0,
         queryKey: DAILY_MENU_KEYS.collection(defaultParams),
         queryFn: () => readDailyMenus(defaultParams),
         select: params?.select,

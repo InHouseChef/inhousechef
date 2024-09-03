@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import React from 'react'
 
 const DaySelector: React.FC = () => {
-    const { activeDay, setActiveDay, hasALaCardPermission } = useCartStore()
+    const { activeDay, setActiveDay, hasALaCardPermission, setActiveShift } = useCartStore()
 
     if (!hasALaCardPermission) {
         // If the user doesn't have A La Carte permission, only allow selecting "tomorrow"
@@ -21,6 +21,7 @@ const DaySelector: React.FC = () => {
                 ? getToLocalISOString(new Date()).split('T')[0]
                 : getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0]
         setActiveDay(selectedDate)
+        setActiveShift(undefined)
     }
 
     return (

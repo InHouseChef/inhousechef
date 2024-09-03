@@ -75,13 +75,13 @@ export interface CartStore {
     aLaCarteShift?: ALaCarteShift
     immediateOrders: ImmediateOrderDetails[]
     scheduledOrders: ScheduledOrderDetails[]
-    selectedOrder?: ScheduledOrderDetails | ImmediateOrderDetails
+    selectedOrder?: ScheduledOrderDetails | ImmediateOrderDetails | undefined
     isOpen: boolean
 
     // State management actions
     setActiveDay: (day: DateLocalIso) => void
     setActiveShift: (shiftId: string | undefined) => void
-    setSelectedOrderById: (orderId: string) => Promise<void>
+    setSelectedOrderById: (orderId: string | undefined) => Promise<void>
     addOrder: (order: ScheduledOrderDetails | ImmediateOrderDetails) => void
     updateOrder: (orderId: string, orderItems: OrderItem[]) => void
     cancelOrder: () => Promise<void>
@@ -265,7 +265,6 @@ export const useCartStore = create<CartStore>()(
                 setActiveDay: async (day: DateLocalIso) => {
                     set(state => {
                         state.activeDay = day
-                        state.selectedOrder = undefined // Reset selected order when day changes
                     })
 
                     // Refetch menus and orders for the selected day
@@ -277,13 +276,20 @@ export const useCartStore = create<CartStore>()(
                 },
 
                 setActiveShift: async (shiftId: string | undefined) => {
+                    if (!shiftId) {
+                        set(state => {
+                            state.activeShift = undefined
+                        })
+                        get().clearSelectedOrder()
+                        return
+                    }
+
                     const shift =
                         get().regularShifts.find(s => s.id === shiftId) ||
                         (get().hasALaCardPermission ? get().aLaCarteShift : undefined)
                     if (shift) {
                         set(state => {
                             state.activeShift = shift
-                            state.selectedOrder = undefined // Reset selected order when shift changes
                         })
 
                         const activeDay = get().activeDay
@@ -325,7 +331,12 @@ export const useCartStore = create<CartStore>()(
                     }
                 },
 
-                setSelectedOrderById: async (orderId: string) => {
+                setSelectedOrderById: async (orderId: string | undefined) => {
+                    if (!orderId) {
+                        get().clearSelectedOrder()
+                        return
+                    }
+
                     let immediateOrder = get().immediateOrders.find(order => order.id === orderId)
                     let scheduledOrder = get().scheduledOrders.find(order => order.id === orderId)
 
@@ -402,7 +413,8 @@ export const useCartStore = create<CartStore>()(
 
                 cancelOrder: async () => {
                     const state = get()
-                    const { selectedOrder, companyCode, activeShift, activeDay } = state
+                    const { selectedOrder, companyCode } = state
+                    const orderDate = selectedOrder?.orderDate
 
                     if (!companyCode || !selectedOrder) return
 
@@ -419,7 +431,7 @@ export const useCartStore = create<CartStore>()(
                             if (orderIndex !== -1) {
                                 // Remove the order from the state
                                 state[orderType].splice(orderIndex, 1)
-                                state.selectedOrder = undefined // Clear the selected order
+                                state.clearSelectedOrder()
                             }
                         })
                         get().setMessage(
@@ -430,7 +442,7 @@ export const useCartStore = create<CartStore>()(
                             'success'
                         )
 
-                        await state.setActiveDay(getToLocalISOString(new Date()).split('T')[0] as DateLocalIso)
+                        await state.setActiveDay(orderDate as DateLocalIso)
                     } catch (error) {
                         get().setMessage(
                             {
@@ -450,15 +462,9 @@ export const useCartStore = create<CartStore>()(
                 },
 
                 resetCart: () => {
-                    set(state => {
-                        state.activeShift = undefined
-                        state.activeMenus = undefined
-                        state.activeALaCarteMenus = undefined
-                        state.immediateOrders = []
-                        state.scheduledOrders = []
-                        state.selectedOrder = undefined
-                    })
+                    set(state => {})
                 },
+
                 clearCart: () => {
                     set(() => null)
                 },
@@ -514,6 +520,7 @@ export const useCartStore = create<CartStore>()(
                 placeOrder: async () => {
                     const state = get()
                     const { selectedOrder, companyCode } = state
+                    const orderDate = selectedOrder?.orderDate
 
                     if (!companyCode || !selectedOrder) return
 
@@ -545,7 +552,7 @@ export const useCartStore = create<CartStore>()(
                             'success'
                         )
 
-                        await state.setActiveDay(getToLocalISOString(new Date()).split('T')[0] as DateLocalIso)
+                        await state.setActiveDay(orderDate as DateLocalIso)
                     } catch (error) {
                         get().setMessage({
                             text: 'Poručivanje nije uspelo.',
@@ -620,10 +627,13 @@ export const useCartStore = create<CartStore>()(
                         })
                     }
                 },
+
                 loadCartData: async (companyCode: string, userRole: RolesEnum, hasALaCardPermission: boolean) => {
                     set(state => {
                         state.companyCode = companyCode
                         state.userRole = userRole
+                        state.isOpen = false
+                        state.selectedOrder = undefined
                         state.hasALaCardPermission = hasALaCardPermission
                         if (!hasALaCardPermission) {
                             // Default active day to tomorrow if no A La Carte permission
@@ -631,63 +641,17 @@ export const useCartStore = create<CartStore>()(
                                 'T'
                             )[0] as DateLocalIso
                         }
-                    })
-
-                    const [
-                        regularShiftsResponse,
-                        aLaCarteShiftResponse,
-                        dailyMenuResponseTodayList,
-                        dailyMenuResponseTomorrow,
-                        aLaCarteMenuResponse
-                    ] = await Promise.all([
-                        api.fetchRegularShifts(companyCode),
-                        hasALaCardPermission ? api.fetchALaCarteShift(companyCode) : Promise.resolve(undefined),
-                        api.fetchDailyMenu(
-                            getToLocalISOString(new Date()).split('T')[0],
-                            getToLocalISOString(new Date()).split('T')[0]
-                        ),
-                        api.fetchDailyMenu(
-                            getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0],
-                            getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0]
-                        ),
-                        hasALaCardPermission
-                            ? api.fetchALaCarteMenu(
-                                  getToLocalISOString(new Date()).split('T')[0],
-                                  getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0]
-                              )
-                            : Promise.resolve(undefined)
-                    ])
-
-                    set(state => {
-                        state.regularShifts = regularShiftsResponse
-                        if (hasALaCardPermission) {
-                            state.aLaCarteShift = aLaCarteShiftResponse
-                            state.activeALaCarteMenus = aLaCarteMenuResponse
-                        }
-                        state.activeMenus = dailyMenuResponseTodayList
-                    })
-
-                    const [scheduledOrdersResponse, immediateOrdersResponse] = await Promise.all([
-                        api.fetchScheduledOrders(
-                            companyCode,
-                            getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0] as DateLocalIso,
-                            getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0] as DateLocalIso
-                        ),
-                        hasALaCardPermission
-                            ? api.fetchImmediateOrders(
-                                  companyCode,
-                                  getToLocalISOString(new Date()).split('T')[0] as DateLocalIso,
-                                  getToLocalISOString(new Date()).split('T')[0] as DateLocalIso
-                              )
-                            : Promise.resolve([])
-                    ])
-
-                    set(state => {
-                        state.scheduledOrders = scheduledOrdersResponse
-                        if (hasALaCardPermission) {
-                            state.immediateOrders = immediateOrdersResponse
+                        else {
+                            state.activeDay = getToLocalISOString(new Date(Date.now() + 86400000)).split(
+                                'T'
+                            )[0] as DateLocalIso
                         }
                     })
+
+                    await get().fetchShifts()
+                    await get().fetchMenus(getToLocalISOString(new Date()).split('T')[0], getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0])
+
+                    get().setActiveShift(undefined)
                 },
                 setMessage: (
                     message?: {

@@ -26,7 +26,7 @@ export const useReadMyOrders = <T = ReadMyOrderResponse[]>(params?: UseReadMyOrd
     const defaultParams = useDefaultQueryParams(params)
 
     return useQuery({
-        gcTime: 0,
+        // gcTime: 0,
         queryKey: MY_ORDER_KEYS.base,
         queryFn: () => readMyOrders(defaultParams),
         select: params?.select,

@@ -7,7 +7,17 @@ import { CartSideDishDrawer } from '../CartSideDishDrawer/CartSideDishDrawer';
 import { X } from 'lucide-react'; // Icon for the close button
 
 const Cart = () => {
-    const { selectedOrder, addOrUpdateOrder, cancelOrder, placeOrder, isOpen, setIsOpen, regularShifts, aLaCarteShift, activeDay, shouldDisableOrder } = useCartStore();
+    const { 
+        selectedOrder, 
+        addOrUpdateOrder, 
+        cancelOrder, 
+        placeOrder, 
+        isOpen, 
+        setIsOpen, 
+        regularShifts, 
+        aLaCarteShift, 
+        clearSelectedOrder, 
+        shouldDisableOrder } = useCartStore();
     const [isMainCourseDrawerOpen, setIsMainCourseDrawerOpen] = useState(false);
     const [isSideDishDrawerOpen, setIsSideDishDrawerOpen] = useState(false);
     const [isPlaceOrderLoading, setIsPlaceOrderLoading] = useState(false);
@@ -22,33 +32,33 @@ const Cart = () => {
 
     const validateShift = () => {
         const currentDate = new Date();
-        const activeDayDate = new Date(activeDay);
-        const isSameDay = (date1: Date, date2: Date) =>
-            date1.getFullYear() === date2.getFullYear() &&
-            date1.getMonth() === date2.getMonth() &&
-            date1.getDate() === date2.getDate();
-        const isToday = isSameDay(currentDate, activeDayDate);
 
         if (selectedOrder?.type === 'Scheduled') {
-            // @ts-ignore
+            //@ts-ignore
             const shift = regularShifts.find(shift => shift.id === selectedOrder?.orderedForShiftId);
             if (shift) {
-                const shiftStartTime = new Date(`${activeDay}T${shift.shiftStartAt}`);
+                // Calculate the shift start time on the order date
+                const shiftStartTime = new Date(`${selectedOrder.orderDate}T${shift.shiftStartAt}`);
+                // Calculate the deadline for placing the order
                 const orderDeadlineTime = new Date(
                     shiftStartTime.getTime() - shift.orderingDeadlineBeforeShiftStart * 60 * 60 * 1000
                 );
-                setIsShiftValid(!(isToday && currentDate > orderDeadlineTime));
+                // Validate whether the current time is before the order deadline
+                setIsShiftValid(currentDate < orderDeadlineTime);
             }
         } else if (selectedOrder?.type === 'Immediate') {
-            if (aLaCarteShift && isToday) {
-                const shiftStartTime = new Date(`${activeDay}T${aLaCarteShift.shiftStartAt}`);
-                const shiftEndTime = new Date(`${activeDay}T${aLaCarteShift.shiftEndAt}`);
+            if (aLaCarteShift) {
+                // Calculate the shift start time and end time on the order date
+                const shiftStartTime = new Date(`${selectedOrder.orderDate}T${aLaCarteShift.shiftStartAt}`);
+                const shiftEndTime = new Date(`${selectedOrder.orderDate}T${aLaCarteShift.shiftEndAt}`);
+                // Validate whether the current time is within the a la carte shift window
                 setIsShiftValid(currentDate >= shiftStartTime && currentDate <= shiftEndTime);
             } else {
                 setIsShiftValid(false);
             }
         }
     };
+
 
     const mainCourses = selectedOrder?.orderItems
         .filter(item => item.type === 'MainCourse')
@@ -79,19 +89,21 @@ const Cart = () => {
     const handleCancelOrder = () => {
         setIsCancelOrderLoading(true);
         cancelOrder()
-            .then(() => {
+            .finally(() => {
                 setIsOpen(false);
-            })
-            .finally(() => setIsCancelOrderLoading(false));
+                setIsCancelOrderLoading(false)
+                clearSelectedOrder();
+            });
     };
 
     const handlePlaceOrder = () => {
         setIsPlaceOrderLoading(true);
         placeOrder()
-            .then(() => {
+            .finally(() => {
                 setIsOpen(false);
-            })
-            .finally(() => setIsPlaceOrderLoading(false));
+                setIsPlaceOrderLoading(false)
+                clearSelectedOrder();
+            });
     };
 
     const isOrderDisabled = shouldDisableOrder(selectedOrder);
@@ -236,7 +248,7 @@ const Cart = () => {
                                 >
                                     Dodaj još priloga
                                 </Button>
-                            )}  
+                            )}
                         </div>
                     </div>
 

@@ -3,7 +3,6 @@
 import { ReadUserCompanyResponse } from '@/api/companies'
 import { readUserCompany } from '@/api/companies/repository/hooks/readUserCompany'
 import { Loader } from '@/components'
-import { useSafeReplace } from '@/hooks'
 import { useReadIdentity } from '@/hooks/useIdentity'
 import { useRoles } from '@/providers/RoleProvider/RoleProvider'
 import { useCompanyStore } from '@/state'

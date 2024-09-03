@@ -1,9 +1,6 @@
 'use client'
 
-import { useReadDailyMenus } from '@/api/daily-menus'
 import { useReadMyUser } from '@/api/users'
-import { calculateDateRange } from '@/app/(protected)/employee/companies/[companyCode]/utils'
-import { RequireCompanyAuthorization } from '@/components/RequireAuthorization/RequireAuthorization'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetClose, SheetContent, SheetFooter, SheetTrigger } from '@/components/ui/sheet'
 import { useLogout, usePathParams } from '@/hooks'
@@ -19,7 +16,6 @@ import { MyProfilePage } from './components/MyProfilePage/MyProfilePage'
 import { TermsAndConditionsPage } from './components/TermsAndConditionsPage/TermsAndConditionsPage'
 import { UsersPage } from './components/UsersPage/UsersPage'
 import { CartIcon, LogoutIcon, MenuIcon, TermsAndConditionsIcon, UserGroupIcon, UserProfileIcon } from './icons'
-import { getToLocalISOString } from '@/utils/date'
 
 interface MainNavMobileProps {
     isNavOpen: boolean
@@ -89,13 +85,6 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
         path: { companyCode }
     })
     const { roles } = useRoles()
-    const { from: sevenDayMenuFrom, to: sevenDayMenuTo } = calculateDateRange(getToLocalISOString(new Date()), 7)
-    const { data: dailyMenus } = useReadDailyMenus({
-        path: '',
-        query: {
-            filter: { from: sevenDayMenuFrom, to: sevenDayMenuTo }
-        }
-    })
 
     // State to track which sub-drawer is open
     const [activeDrawer, setActiveDrawer] = useState<string | null>(null)
@@ -223,7 +212,7 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                 <SheetContent side='right' className='flex h-full flex-col px-6 py-8'>
                     <CloseSection close={closeDrawer} heading='7-dnevni jelovnik' />
                     <div className='flex-grow overflow-y-auto p-1'>
-                        <MenuPage dailyMenus={dailyMenus ?? []} days={7} />
+                        <MenuPage days={7} />
                     </div>
                 </SheetContent>
             </Sheet>

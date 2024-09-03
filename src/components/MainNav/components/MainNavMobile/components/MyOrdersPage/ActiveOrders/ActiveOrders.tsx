@@ -9,7 +9,7 @@ import { useParams } from 'next/navigation'
 import { useEffect } from 'react'
 
 export const ActiveOrders = () => {
-    const { from, to } = calculateDateRange(getToLocalISOString(new Date()), 2)
+    const { from, to } = calculateDateRange(getToLocalISOString(new Date(Date.now() + 86400000)), 2)
     const { companyCode } = useParams<{ companyCode: string }>()
 
     const {
@@ -27,19 +27,16 @@ export const ActiveOrders = () => {
                 orderTypes: ['Scheduled', 'Immediate'].join(',')
             }
         },
-        options: { enabled: false }
+        options: { enabled: true }
     })
 
-    const { setSelectedOrderById, clearSelectedOrder, isOpen, setIsOpen } = useCartStore()
-
-    useEffect(() => {
-        refetch()
-    }, [refetch])
+    const { setSelectedOrderById, clearSelectedOrder, isOpen, setIsOpen, setActiveShift } = useCartStore()
 
     useEffect(() => {
         if (!isOpen) {
             refetch()
             clearSelectedOrder()
+            setActiveShift(undefined)
         }
     }, [isOpen])
 

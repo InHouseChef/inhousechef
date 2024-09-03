@@ -12,7 +12,7 @@ import { ShiftSelector } from '../ShiftSelector/ShiftSelector'
 
 const MainMenu: React.FC = () => {
     const [selectedMealType, setSelectedMealType] = useState<'MainCourse' | 'SideDish'>('MainCourse')
-    const [selectedMeal, setSelectedMeal] = useState<DailyMenuMeal | null>(null)
+    const [selectedMeal, setSelectedMeal] = useState<DailyMenuMeal | undefined>(undefined)
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
     const {
@@ -45,7 +45,7 @@ const MainMenu: React.FC = () => {
 
     const closeDrawer = () => {
         setIsDrawerOpen(false)
-        setSelectedMeal(null)
+        setSelectedMeal(undefined)
     }
 
     const alacardMeals = activeShift?.id === aLaCarteShift?.id && activeALaCarteMenus ? activeALaCarteMenus[0]?.meals : []

@@ -30,7 +30,7 @@ export const OrderHistory = () => {
                 orderTypes: ['Scheduled', 'Immediate'].join(',')
             }
         },
-        options: { enabled: false }
+        options: { enabled: true }
     })
 
     useEffect(() => {
@@ -69,7 +69,6 @@ export const OrderHistory = () => {
                         <div
                             key={order.id}
                             className='mb-4 cursor-pointer bg-white'
-                            onClick={() => handleSelectOrder(order)} // Pass the entire order to ReadOnlyCart
                         >
                             <div className='mb-2 flex flex-row gap-8'>
                                 <p className='text-md text-black-900 font-medium'>Status:</p>
@@ -121,6 +120,13 @@ export const OrderHistory = () => {
                                         </p>
                                     </div>
                                 </div>
+                            </div>
+                            <div className='mt-4 flex items-center justify-between'>
+                                <button
+                                    onClick={() => handleSelectOrder(order)} // Pass the entire order to ReadOnlyCart
+                                    className='rounded bg-primary px-4 py-2 text-white'>
+                                    Idi na porudžbinu
+                                </button>
                             </div>
                         </div>
                     )

@@ -8,8 +8,8 @@ export const calculateDateRange = (today: DateLocalIso, numberOfDays: number) =>
     const toDate = addDaysToDate(numberOfDays - 1, formattedToday)
 
     return {
-        from: getToLocalISOString(formattedToday),
-        to: getToLocalISOString(new Date(toDate))
+        from: getToLocalISOString(formattedToday).split('T')[0],
+        to: getToLocalISOString(new Date(toDate)).split('T')[0]
     }
 }
 

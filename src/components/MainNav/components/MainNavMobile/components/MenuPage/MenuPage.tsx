@@ -1,11 +1,19 @@
-import { DailyMenuMeal, ReadDailyMenuResponse } from '@/api/daily-menus'
+import { DailyMenuMeal, useReadDailyMenus } from '@/api/daily-menus'
 import { MealTypeEnum } from '@/api/meals'
 import { MealCard } from '@/app/(protected)/employee/companies/[companyCode]/components/NewCompanyOrderForm/MealCard/MealCard';
-import { formatDateSerbianLatin } from '@/utils/date'
+import { calculateDateRange } from '@/app/(protected)/employee/companies/[companyCode]/utils';
+import { formatDateSerbianLatin, getToLocalISOString } from '@/utils/date'
 
-export const MenuPage = ({ dailyMenus, days }: { dailyMenus: ReadDailyMenuResponse[]; days: number }) => {
+export const MenuPage = ({ days }: { days: number }) => {
+    const { from: sevenDayMenuFrom, to: sevenDayMenuTo } = calculateDateRange(getToLocalISOString(new Date()), 7)
+    const { data: dailyMenus } = useReadDailyMenus({
+        path: '',
+        query: {
+            filter: { from: sevenDayMenuFrom, to: sevenDayMenuTo }
+        }
+    })
     // Get the latest date from the dailyMenus array
-    const latestDate = dailyMenus.length > 0 ? new Date(dailyMenus[dailyMenus.length - 1].date) : new Date()
+    const latestDate = dailyMenus && dailyMenus.length > 0 ? new Date(dailyMenus[dailyMenus.length - 1].date) : new Date()
 
     // Helper function to calculate the date for the next day
     const calculateDate = (date: Date, daysToAdd: number) => {
@@ -16,7 +24,7 @@ export const MenuPage = ({ dailyMenus, days }: { dailyMenus: ReadDailyMenuRespon
 
     return (
         <div className='mt-4'>
-            {Array.from({ length: days }).map((_, index) => {
+            {dailyMenus && Array.from({ length: days }).map((_, index) => {
                 const dailyMenu = dailyMenus[index]
                 const displayDate = dailyMenu
                     ? new Date(dailyMenu.date)
