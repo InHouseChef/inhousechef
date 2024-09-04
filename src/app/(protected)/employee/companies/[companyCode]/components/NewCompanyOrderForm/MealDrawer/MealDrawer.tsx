@@ -8,9 +8,10 @@ interface MealDrawerProps {
     meal: DailyMenuMeal | undefined
     isOpen: boolean
     onClose: () => void
+    isReadOnly?: boolean
 }
 
-export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
+export const MealDrawer = ({ meal, isOpen, onClose, isReadOnly }: MealDrawerProps) => {
     const [isLoading, setIsLoading] = useState(false)
     const [quantity, setQuantity] = useState(1)
     const [drawerOpen, setDrawerOpen] = useState(isOpen)
@@ -64,41 +65,43 @@ export const MealDrawer = ({ meal, isOpen, onClose }: MealDrawerProps) => {
                         {meal.description ? <p className='mt-4 text-sm text-gray-600'>{meal.description}</p> : undefined}
                     </DrawerHeader>
 
-                    <DrawerFooter className='items-center justify-between'>
-                        <div className='flex items-center justify-between gap-2'>
-                            <Button
-                                variant='outline'
-                                size='icon'
-                                className='h-8 w-8 rounded-full'
-                                onClick={() => handleQuantityChange(-1)}
-                                disabled={quantity <= 1}>
-                                -
-                            </Button>
-                            <div className='text-lg font-semibold'>{quantity}</div>
-                            <Button
-                                variant='outline'
-                                size='icon'
-                                className='h-8 w-8 rounded-full'
-                                onClick={() => handleQuantityChange(1)}>
-                                +
-                            </Button>
-                        </div>
-                        {!activeShift && (
-                            <div className='flex min-w-full bg-primary/50 rounded-md h-10 items-center justify-center'>
-                                <p className='text-sm text-gray-100 text-center'>Izaberite smenu da biste dodali obrok</p>
+                    {!isReadOnly && (
+                        <DrawerFooter className='items-center justify-between'>
+                            <div className='flex items-center justify-between gap-2'>
+                                <Button
+                                    variant='outline'
+                                    size='icon'
+                                    className='h-8 w-8 rounded-full'
+                                    onClick={() => handleQuantityChange(-1)}
+                                    disabled={quantity <= 1}>
+                                    -
+                                </Button>
+                                <div className='text-lg font-semibold'>{quantity}</div>
+                                <Button
+                                    variant='outline'
+                                    size='icon'
+                                    className='h-8 w-8 rounded-full'
+                                    onClick={() => handleQuantityChange(1)}>
+                                    +
+                                </Button>
                             </div>
-                        )}
-                        {!!activeShift && (
-                            <Button
-                                type='button'
-                                onClick={handleAddToOrder}
-                                loading={isLoading}
-                                className='flex min-w-full items-center justify-between gap-2'>
-                                <span>Dodaj u porudžbinu</span>
-                                <span className='font-semibold'>{(meal.price * quantity).toFixed(2)} RSD</span>
-                            </Button>
-                        )}
-                    </DrawerFooter>
+                            {!activeShift && (
+                                <div className='flex min-w-full bg-primary/50 rounded-md h-10 items-center justify-center'>
+                                    <p className='text-sm text-gray-100 text-center'>Izaberite smenu da biste dodali obrok</p>
+                                </div>
+                            )}
+                            {!!activeShift && (
+                                <Button
+                                    type='button'
+                                    onClick={handleAddToOrder}
+                                    loading={isLoading}
+                                    className='flex min-w-full items-center justify-between gap-2'>
+                                    <span>Dodaj u porudžbinu</span>
+                                    <span className='font-semibold'>{(meal.price * quantity).toFixed(2)} RSD</span>
+                                </Button>
+                            )}
+                        </DrawerFooter>
+                    )}
                 </div>
             </DrawerContent>
         </Drawer>
