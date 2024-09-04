@@ -22,7 +22,6 @@ const MainMenu: React.FC = () => {
         regularShifts,
         aLaCarteShift,
         activeShift,
-        hasALaCardPermission,
         activeDay,
         selectedOrder,
         shouldDisableOrder

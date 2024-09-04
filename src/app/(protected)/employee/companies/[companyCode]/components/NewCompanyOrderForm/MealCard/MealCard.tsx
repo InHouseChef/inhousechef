@@ -15,7 +15,7 @@ interface MealCardProps {
 
 export const MealCard = ({ id, name, description, price, imageUrl, onClick, small, quantity }: MealCardProps) => {
     return (
-        <div onClick={onClick} className={clsx('relative col-span-full cursor-pointer rounded-xl bg-white')}>
+        <div onClick={onClick} className={clsx('relative col-span-full cursor-pointer rounded-xl bg-transparent')}>
             <div className='flex h-full items-center'>
                 <div
                     className={clsx('relative mr-4 flex-shrink-0 rounded-lg bg-gray-200', {
