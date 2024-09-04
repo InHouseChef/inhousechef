@@ -61,9 +61,7 @@ const MainMenu: React.FC = () => {
     const isTodaySelected = activeDay === (getToLocalISOString(new Date()).split('T')[0] as DateLocalIso)
 
     return (
-        <div className='relative p-4'>
-            {/* Day Selector */}
-            {hasALaCardPermission && <DaySelector />}
+        <div className='relative px-4 pb-4'>
 
             {/* Shift Selector */}
             <ShiftSelector
