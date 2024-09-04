@@ -22,6 +22,9 @@ const config = {
             }
         },
         extend: {
+            dropShadow: {
+                primary: '0 25px 25px rgba(var(--color-primary), 0.15)'
+            },
             fontFamily: {
                 satoshi: ['var(--font-satoshi)']
             },

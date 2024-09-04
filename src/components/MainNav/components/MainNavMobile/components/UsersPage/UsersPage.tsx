@@ -89,7 +89,7 @@ export const UsersPage = () => {
                 onEditUser={handleStartEditUserForm} // Pass the edit handler
             />
 
-            <div className="fixed bottom-0 left-0 right-0 p-4 bg-white drop-shadow-lg">
+            <div className="fixed bottom-0 left-0 right-0 p-4 bg-white drop-shadow-primary">
                 <Button className="w-full" variant="default" onClick={handleStartNewUserForm}>
                     Dodaj novog korisnika
                 </Button>
