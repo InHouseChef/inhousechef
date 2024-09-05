@@ -5,9 +5,10 @@ import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger 
 import { CartMainCourseDrawer } from '../CartMainCourseDrawer/CartMainCourseDrawer';
 import { CartSideDishDrawer } from '../CartSideDishDrawer/CartSideDishDrawer';
 import { X } from 'lucide-react'; // Icon for the close button
-import { formatDateSerbianLatin, formatDateTime, formatEuropeanDate, formatEuropeanDateTime, formatTimeWithoutSeconds, getToLocalISOString, toLocalIso } from '@/utils/date';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { formatDateSerbianLatin } from '@/utils/date';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { OrderDetails } from './OrderDetails/OrderDetails';
+import emptyCart from '../../../../../../../../../public/images/empty-cart.png';
 
 const Cart = () => {
     const { 
@@ -213,157 +214,181 @@ const Cart = () => {
                         </SheetClose>
                     </SheetHeader>
 
-                    <div className="flex-1 py-4 space-y-4 overflow-y-auto">
-                        {/* Main Courses Section */}
-                        {message}
-
-                        <div>
-                            <h3 className="text-lg font-semibold mb-2">Glavna jela</h3>
-                            {mainCourses.length > 0 ? (
-                                <div className="space-y-2">
-                                    {mainCourses.map((item, index) => (
-                                        <div key={index} className="flex justify-between items-center p-3 bg-white rounded-md shadow-sm flex-shrink-0">
-                                            <div className="flex items-center space-x-3">
-                                                <img
-                                                    src={item.imageUrl}
-                                                    alt={item.name}
-                                                    className="w-10 h-10 rounded-lg object-cover"
-                                                />
-                                                <div>
-                                                    <div className="font-semibold text-sm">{item.name}</div>
-                                                    <div className="text-xs text-gray-500">{item.price} RSD</div>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-center space-x-2 w-26">
-                                                {isShiftValid && (
-                                                    <button
-                                                        onClick={() => handleOrderItemDecrease(item.skuId, -1)}
-                                                        className="flex-1 px-2 py-1 bg-gray-200 rounded text-center"
-                                                        disabled={!isShiftValid}>
-                                                        −
-                                                    </button>
-                                                )}
-                                                <div className="flex-1 text-sm font-semibold text-center font-mono">
-                                                    x{item.quantity.toString().padStart(2, '0')}
-                                                </div>
-                                                {isShiftValid && (
-                                                    <button
-                                                        onClick={() => handleAddOrUpdateOrder(item.skuId, 1)}
-                                                        className="flex-1 px-2 py-1 bg-gray-200 rounded text-center"
-                                                        disabled={!isShiftValid}>
-                                                        +
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </div>
-                                    ))}
+                    {mainCourses.length === 0 && sideDishes.length === 0 && (
+                        <>
+                            <div className="flex flex-col items-center justify-center p-8 max-w-lg mx-auto rounded-md">
+                                <div className="mb-6 mt-5">
+                                    <img src={emptyCart.src} alt="Empty Cart" className="w-48 h-auto mx-auto" />
                                 </div>
-                            ) : (
-                                <p className="text-sm text-gray-500">{isShiftValid ? 'Trenutno n' : 'N'}ema glavnih jela u vašoj porudžbini.</p>
-                            )}
-                            {isShiftValid && (
-                                <Button
-                                    variant="link"
-                                    className="mt-2 text-primary"
-                                    onClick={() => setIsMainCourseDrawerOpen(true)}
-                                    disabled={!isShiftValid}
+                                <h1 className="text-xl font-bold text-gray-800 mb-4 text-center">Vaša korpa je prazna</h1>
+                                <p className="text-md text-gray-600 mb-6 text-center">
+                                    Kad dodate jela sa glavnog menija ona će se prikazati ovde kako biste mogli lakše da pravite izmene.
+                                </p>
+                                <button
+                                    className="bg-primary text-white text-sm px-4 py-2 rounded-md"
+                                    onClick={() => setIsOpen(false)}
                                 >
-                                    Dodaj još glavnih jela
-                                </Button>
-                            )}
-                        </div>
-
-                        {/* Side Dishes Section */}
-                        <div>
-                            <h3 className="text-lg font-semibold mb-2">Prilozi</h3>
-                            {sideDishes.length > 0 ? (
-                                <div className="space-y-2">
-                                    {sideDishes.map((item, index) => (
-                                        <div key={index} className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm flex-shrink-0">
-                                            <div className="flex items-center space-x-2">
-                                                <img
-                                                    src={item.imageUrl}
-                                                    alt={item.name}
-                                                    className="w-10 h-10 rounded-lg object-cover"
-                                                />
-                                                <div>
-                                                    <div className="font-semibold text-sm">{item.name}</div>
-                                                    <div className="text-xs text-gray-500">{item.price} RSD</div>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-center space-x-2 w-26">
-                                                {isShiftValid && (
-                                                    <button
-                                                        onClick={() => handleOrderItemDecrease(item.skuId, -1)}
-                                                        className="flex-1 px-2 py-1 bg-gray-200 rounded text-center"
-                                                        disabled={!isShiftValid}>
-                                                        −
-                                                    </button>
-                                                )}
-                                                <div className="flex-1 text-sm font-semibold text-center font-mono">
-                                                    x{item.quantity.toString().padStart(2, '0')}
-                                                </div>
-                                                {isShiftValid && (
-                                                    <button
-                                                        onClick={() => handleAddOrUpdateOrder(item.skuId, 1)}
-                                                        className="flex-1 px-2 py-1 bg-gray-200 rounded text-center"
-                                                        disabled={!isShiftValid}>
-                                                        +
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </div>
-                                    ))}
+                                    Počnite sa poručivanjem
+                                </button>
                                 </div>
-                            ) : (
-                                <p className="text-sm text-gray-500">{isShiftValid ? 'Trenutno n' : 'N'}ema priloga u vašoj porudžbini.</p>
-                            )}
-                            {isShiftValid && (
-                                <Button
-                                    variant="link"
-                                    className="mt-2 text-primary"
-                                    onClick={() => setIsSideDishDrawerOpen(true)}
-                                    disabled={!isShiftValid}
-                                >
-                                    Dodaj još priloga
-                                </Button>
-                            )}
-                        </div>
-                    </div>
+                        </>
+                    )}
 
-                    <div className="bg-white border-t">
-                        {isShiftValid ? (
-                            <div className="flex flex-col space-y-2">
-                                {isDraft ? (
-                                    <>
+                    {(mainCourses.length !== 0 || sideDishes.length !== 0) && (
+                        <>
+                            <div className="flex-1 py-4 space-y-4 overflow-y-auto">
+                                {/* Main Courses Section */}
+                                {message}
+
+                                <div>
+                                    <h3 className="text-lg font-semibold mb-2">Glavna jela</h3>
+                                    {mainCourses.length > 0 ? (
+                                        <div className="space-y-2">
+                                            {mainCourses.map((item, index) => (
+                                                <div key={index} className="flex justify-between items-center p-3 bg-white rounded-md shadow-sm flex-shrink-0">
+                                                    <div className="flex items-center space-x-3">
+                                                        <img
+                                                            src={item.imageUrl}
+                                                            alt={item.name}
+                                                            className="w-10 h-10 rounded-lg object-cover"
+                                                        />
+                                                        <div>
+                                                            <div className="font-semibold text-sm">{item.name}</div>
+                                                            <div className="text-xs text-gray-500">{item.price} RSD</div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center space-x-2 w-26">
+                                                        {isShiftValid && (
+                                                            <button
+                                                                onClick={() => handleOrderItemDecrease(item.skuId, -1)}
+                                                                className="flex-1 px-2 py-1 bg-gray-200 rounded text-center"
+                                                                disabled={!isShiftValid}>
+                                                                −
+                                                            </button>
+                                                        )}
+                                                        <div className="flex-1 text-sm font-semibold text-center font-mono">
+                                                            x{item.quantity.toString().padStart(2, '0')}
+                                                        </div>
+                                                        {isShiftValid && (
+                                                            <button
+                                                                onClick={() => handleAddOrUpdateOrder(item.skuId, 1)}
+                                                                className="flex-1 px-2 py-1 bg-gray-200 rounded text-center"
+                                                                disabled={!isShiftValid}>
+                                                                +
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <p className="text-sm text-gray-500">{isShiftValid ? 'Trenutno n' : 'N'}ema glavnih jela u vašoj porudžbini.</p>
+                                    )}
+                                    {isShiftValid && (
                                         <Button
-                                            onClick={handlePlaceOrder}
-                                            loading={isPlaceOrderLoading}
-                                            className="w-full py-3 bg-primary text-white rounded-lg shadow-md hover:bg-primary-dark transition">
-                                            Poruči - {totalAmount} RSD
+                                            variant="link"
+                                            className="mt-2 text-primary"
+                                            onClick={() => setIsMainCourseDrawerOpen(true)}
+                                            disabled={!isShiftValid}
+                                        >
+                                            Dodaj još glavnih jela
                                         </Button>
+                                    )}
+                                </div>
+
+                                {/* Side Dishes Section */}
+                                <div>
+                                    <h3 className="text-lg font-semibold mb-2">Prilozi</h3>
+                                    {sideDishes.length > 0 ? (
+                                        <div className="space-y-2">
+                                            {sideDishes.map((item, index) => (
+                                                <div key={index} className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm flex-shrink-0">
+                                                    <div className="flex items-center space-x-2">
+                                                        <img
+                                                            src={item.imageUrl}
+                                                            alt={item.name}
+                                                            className="w-10 h-10 rounded-lg object-cover"
+                                                        />
+                                                        <div>
+                                                            <div className="font-semibold text-sm">{item.name}</div>
+                                                            <div className="text-xs text-gray-500">{item.price} RSD</div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center space-x-2 w-26">
+                                                        {isShiftValid && (
+                                                            <button
+                                                                onClick={() => handleOrderItemDecrease(item.skuId, -1)}
+                                                                className="flex-1 px-2 py-1 bg-gray-200 rounded text-center"
+                                                                disabled={!isShiftValid}>
+                                                                −
+                                                            </button>
+                                                        )}
+                                                        <div className="flex-1 text-sm font-semibold text-center font-mono">
+                                                            x{item.quantity.toString().padStart(2, '0')}
+                                                        </div>
+                                                        {isShiftValid && (
+                                                            <button
+                                                                onClick={() => handleAddOrUpdateOrder(item.skuId, 1)}
+                                                                className="flex-1 px-2 py-1 bg-gray-200 rounded text-center"
+                                                                disabled={!isShiftValid}>
+                                                                +
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <p className="text-sm text-gray-500">{isShiftValid ? 'Trenutno n' : 'N'}ema priloga u vašoj porudžbini.</p>
+                                    )}
+                                    {isShiftValid && (
                                         <Button
-                                            onClick={handleCancelOrder}
-                                            loading={isCancelOrderLoading}
-                                            className="w-full py-3 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition">
-                                            Otkaži porudžbinu
+                                            variant="link"
+                                            className="mt-2 text-primary"
+                                            onClick={() => setIsSideDishDrawerOpen(true)}
+                                            disabled={!isShiftValid}
+                                        >
+                                            Dodaj još priloga
                                         </Button>
-                                    </>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="bg-white border-t">
+                                {isShiftValid ? (
+                                    <div className="flex flex-col space-y-2">
+                                        {isDraft ? (
+                                            <>
+                                                <Button
+                                                    onClick={handlePlaceOrder}
+                                                    loading={isPlaceOrderLoading}
+                                                    className="w-full py-3 bg-primary text-white rounded-lg shadow-md hover:bg-primary-dark transition">
+                                                    Poruči - {totalAmount} RSD
+                                                </Button>
+                                                <Button
+                                                    onClick={handleCancelOrder}
+                                                    loading={isCancelOrderLoading}
+                                                    className="w-full py-3 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition">
+                                                    Otkaži porudžbinu
+                                                </Button>
+                                            </>
+                                        ) : (
+                                            selectedOrder?.type === 'Scheduled' && (
+                                                <Button
+                                                    onClick={handleCancelOrder}
+                                                    loading={isCancelOrderLoading}
+                                                    className="w-full py-3 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition">
+                                                    Otkaži porudžbinu
+                                                </Button>
+                                            )
+                                        )}
+                                    </div>
                                 ) : (
-                                    selectedOrder?.type === 'Scheduled' && (
-                                        <Button
-                                            onClick={handleCancelOrder}
-                                            loading={isCancelOrderLoading}
-                                            className="w-full py-3 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition">
-                                            Otkaži porudžbinu
-                                        </Button>
-                                    )
+                                    <p className="text-center text-gray-500 py-4">Ovu porudžbinu ne možete menjati jer je isteklo vreme za izmene.</p>
                                 )}
                             </div>
-                        ) : (
-                            <p className="text-center text-gray-500 py-4">Ovu porudžbinu ne možete menjati jer je isteklo vreme za izmene.</p>
-                        )}
-                    </div>
+                        </>
+                    )}
 
 
                 </SheetContent>

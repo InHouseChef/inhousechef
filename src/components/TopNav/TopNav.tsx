@@ -22,6 +22,10 @@ export const TopNav = () => {
 
     const handleToggle = () => setIsOpen(!isOpen)
 
+    const handleOpenCart = () => {
+        setIsCartOpen(true)
+    }
+
     return (
         <>
             <div
@@ -39,7 +43,7 @@ export const TopNav = () => {
                 </div>
                 <div className='flex flex-row items-center justify-center gap-4'>
                     <div className='relative'>
-                        <ShoppingCartIcon onClick={() => setIsCartOpen(true)} />
+                        <ShoppingCartIcon onClick={handleOpenCart} />
                         {selectedOrder && (
                             <div className='absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full'></div>
                         )}
