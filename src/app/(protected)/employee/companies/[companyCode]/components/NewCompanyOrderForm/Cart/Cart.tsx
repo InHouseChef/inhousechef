@@ -6,6 +6,7 @@ import { CartMainCourseDrawer } from '../CartMainCourseDrawer/CartMainCourseDraw
 import { CartSideDishDrawer } from '../CartSideDishDrawer/CartSideDishDrawer';
 import { X } from 'lucide-react'; // Icon for the close button
 import { formatDateSerbianLatin } from '@/utils/date';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 const Cart = () => {
     const { 
@@ -23,12 +24,47 @@ const Cart = () => {
     const [isPlaceOrderLoading, setIsPlaceOrderLoading] = useState(false);
     const [isCancelOrderLoading, setIsCancelOrderLoading] = useState(false);
     const [isShiftValid, setIsShiftValid] = useState(true);
+    const [isCancelingOrderModalOpen, setIsCancelingOrderModalOpen] = useState(false);
 
     useEffect(() => {
         if (selectedOrder) {
             validateShift();
         }
     }, [selectedOrder]);
+
+    const handleOrderItemDecrease = (skuId: string, quantity: number) => {
+        const totalQuantity = selectedOrder?.orderItems.reduce((total, item) => total + item.quantity, 0) || 0;
+        if (totalQuantity === 1) {
+            setIsCancelingOrderModalOpen(true);
+        } else {
+            addOrUpdateOrder(skuId, quantity);
+        }
+    }
+
+    const handleAddOrUpdateOrder = (skuId: string, quantity: number) => {
+        addOrUpdateOrder(skuId, quantity);
+    }
+
+    const handleCancelOrder = () => {
+        setIsCancelOrderLoading(true);
+        cancelOrder()
+            .finally(() => {
+                setIsOpen(false);
+                setIsCancelOrderLoading(false)
+                setIsCancelingOrderModalOpen(false);
+            });
+    };
+
+    const handlePlaceOrder = () => {
+        setIsPlaceOrderLoading(true);
+        placeOrder()
+            .finally(() => {
+                setIsOpen(false);
+                setIsPlaceOrderLoading(false)
+            });
+    };
+
+    const isOrderDisabled = shouldDisableOrder(selectedOrder);
 
     const validateShift = () => {
         const currentDate = new Date();
@@ -58,7 +94,6 @@ const Cart = () => {
             }
         }
     };
-
 
     const mainCourses = selectedOrder?.orderItems
         .filter(item => item.type === 'MainCourse')
@@ -121,26 +156,6 @@ const Cart = () => {
         }
     }
 
-    const handleCancelOrder = () => {
-        setIsCancelOrderLoading(true);
-        cancelOrder()
-            .finally(() => {
-                setIsOpen(false);
-                setIsCancelOrderLoading(false)
-            });
-    };
-
-    const handlePlaceOrder = () => {
-        setIsPlaceOrderLoading(true);
-        placeOrder()
-            .finally(() => {
-                setIsOpen(false);
-                setIsPlaceOrderLoading(false)
-            });
-    };
-
-    const isOrderDisabled = shouldDisableOrder(selectedOrder);
-
     return (
         <>
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -191,7 +206,7 @@ const Cart = () => {
                                             <div className="flex items-center space-x-2 w-26">
                                                 {isShiftValid && (
                                                     <button
-                                                        onClick={() => addOrUpdateOrder(item.skuId, -1)}
+                                                        onClick={() => handleOrderItemDecrease(item.skuId, -1)}
                                                         className="flex-1 px-2 py-1 bg-gray-200 rounded text-center"
                                                         disabled={!isShiftValid}>
                                                         −
@@ -202,7 +217,7 @@ const Cart = () => {
                                                 </div>
                                                 {isShiftValid && (
                                                     <button
-                                                        onClick={() => addOrUpdateOrder(item.skuId, 1)}
+                                                        onClick={() => handleAddOrUpdateOrder(item.skuId, 1)}
                                                         className="flex-1 px-2 py-1 bg-gray-200 rounded text-center"
                                                         disabled={!isShiftValid}>
                                                         +
@@ -248,7 +263,7 @@ const Cart = () => {
                                             <div className="flex items-center space-x-2 w-26">
                                                 {isShiftValid && (
                                                     <button
-                                                        onClick={() => addOrUpdateOrder(item.skuId, -1)}
+                                                        onClick={() => handleOrderItemDecrease(item.skuId, -1)}
                                                         className="flex-1 px-2 py-1 bg-gray-200 rounded text-center"
                                                         disabled={!isShiftValid}>
                                                         −
@@ -259,7 +274,7 @@ const Cart = () => {
                                                 </div>
                                                 {isShiftValid && (
                                                     <button
-                                                        onClick={() => addOrUpdateOrder(item.skuId, 1)}
+                                                        onClick={() => handleAddOrUpdateOrder(item.skuId, 1)}
                                                         className="flex-1 px-2 py-1 bg-gray-200 rounded text-center"
                                                         disabled={!isShiftValid}>
                                                         +
@@ -331,6 +346,26 @@ const Cart = () => {
                 isOpen={isSideDishDrawerOpen}
                 onClose={() => setIsSideDishDrawerOpen(false)}
             />
+
+            <AlertDialog open={isCancelingOrderModalOpen} onOpenChange={setIsCancelingOrderModalOpen}>
+                <AlertDialogContent className='p-6 w-3/4 rounded-md'>
+                    <AlertDialogTitle>Otkazivanje porudžbine</AlertDialogTitle>
+                    <AlertDialogDescription className='mb-4'>
+                        Ova akcija će dovesti do otkazivanja porudžbine. Da li ste sigurni da želite da nastavite?
+                    </AlertDialogDescription>
+
+                    <div className='flex justify-end items-center gap-4'>
+                        <AlertDialogCancel asChild>
+                            <Button className='mt-0' variant='secondary' onClick={() => setIsCancelingOrderModalOpen(false)}>
+                                Otkaži
+                            </Button>
+                        </AlertDialogCancel>
+                        <AlertDialogAction asChild>
+                            <Button className='mt-0' onClick={handleCancelOrder}>Nastavi</Button>
+                        </AlertDialogAction>
+                    </div>
+                </AlertDialogContent>
+            </AlertDialog>
         </>
     );
 };

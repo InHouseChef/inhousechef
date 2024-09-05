@@ -41,6 +41,7 @@ export const MealDrawer = ({ meal, isOpen, onClose, isReadOnly }: MealDrawerProp
         setDrawerOpen(false)
         setTimeout(() => {
             onClose()
+            setQuantity(1)
         }, 300) // Delay closing to allow the drawer to animate
     }
 

@@ -367,6 +367,7 @@ export const useCartStore = create<CartStore>()(
                     // Set the found order or keep it undefined if still not found
                     set(state => {
                         state.selectedOrder = immediateOrder || scheduledOrder
+                        state.activeShift = immediateOrder === undefined ? get().regularShifts.find(x => x.id === scheduledOrder?.orderedForShiftId) : get().aLaCarteShift
                     })
                 },
 
