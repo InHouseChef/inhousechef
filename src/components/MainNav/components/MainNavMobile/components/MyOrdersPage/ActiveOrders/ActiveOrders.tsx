@@ -3,7 +3,7 @@ import { useReadMyOrders } from '@/api/order/repository/hooks/readMyOrder'
 import { calculateDateRange, getOrderStateLabel } from '@/app/(protected)/employee/companies/[companyCode]/utils'
 import { useCartStore } from '@/app/(protected)/employee/newstate'
 import { Loader } from '@/components/Loader'
-import { getToLocalISOString } from '@/utils/date'
+import { formatEuropeanDate, getToLocalISOString } from '@/utils/date'
 import clsx from 'clsx'
 import { useParams } from 'next/navigation'
 import { useEffect } from 'react'
@@ -84,7 +84,7 @@ export const ActiveOrders = () => {
                                     </p>
                                     {type === 'Immediate' && <p className='text-md text-black-900 font-medium'>Za odmah</p>}
                                     {type === 'Scheduled' && (
-                                        <p className='text-md text-black-900 font-medium'>Za {forDate}</p>
+                                        <p className='text-md text-black-900 font-medium'>Za {formatEuropeanDate(forDate)}</p>
                                     )}
                                 </div>
                                 <div className='border-grey-300 flex items-center justify-between border-t py-4'>

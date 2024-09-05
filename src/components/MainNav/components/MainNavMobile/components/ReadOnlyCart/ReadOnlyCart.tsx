@@ -4,6 +4,7 @@ import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle } from '@/comp
 import { X } from 'lucide-react'; // Icon for the close button
 import { useCartStore } from '@/app/(protected)/employee/newstate';
 import { formatDateSerbianLatin } from '@/utils/date';
+import { OrderDetails } from '@/app/(protected)/employee/companies/[companyCode]/components/NewCompanyOrderForm/Cart/OrderDetails/OrderDetails';
 
 interface ReadOnlyCartProps {
     order: ReadMyOrderResponse | null;
@@ -26,13 +27,25 @@ const ReadOnlyCart: React.FC<ReadOnlyCartProps> = ({ order, isOpen, onClose }) =
     const totalAmount = order.orderItems.reduce((total, item) => total + item.price * item.quantity, 0) || 0;
 
     let message = <></>;
+
     const serbianLocale = 'sr-RS';
     if (order?.type === 'Immediate') {
         if (order.state === 'Confirmed') {
+            const details = <OrderDetails 
+                number={order.number}
+                orderDate={order.orderDate}
+                orderCreatedAt={order.created}
+                shiftStart={aLaCarteShift?.shiftStartAt}
+                shiftEnd={aLaCarteShift?.shiftEndAt} 
+                placedAt={order.placedAt}
+                confirmedAt={order.confirmedAt} />
             message = (
-                <div className="p-4 bg-green-100 text-center text-sm text-green-700">
-                    Hvala Vam na porudžbini! <br/> Biće poslužena u naredna <strong>dva sata</strong>.
-                </div>
+                <>
+                    {details}
+                    <div className="p-4 bg-green-100 rounded-md text-center text-sm text-green-700">
+                        Hvala Vam na porudžbini! <br/> Biće poslužena u naredna <strong>dva sata</strong>.
+                    </div>
+                </>
             );
         }
     } else if (order?.type === 'Scheduled') {
@@ -45,27 +58,51 @@ const ReadOnlyCart: React.FC<ReadOnlyCartProps> = ({ order, isOpen, onClose }) =
             const orderDeadlineTime = new Date(
                 shiftStartTime.getTime() - shift.orderingDeadlineBeforeShiftStart * 60 * 60 * 1000
             );
+
+            const details = <OrderDetails 
+                number={order.number}
+                orderDate={order.orderDate}
+                orderCreatedAt={order.created}
+                shiftStart={shift.shiftStartAt}
+                shiftEnd={shift.shiftEndAt} 
+                placedAt={order.placedAt}
+                confirmedAt={order.confirmedAt} />
     
             if (order.state === 'Draft') {
                 message = (
-                    <div className="p-4 bg-yellow-100 text-center text-sm text-yellow-700">
-                        Ovu započetu porudžbinu možete izmeniti do <strong>{formatDateSerbianLatin(new Date(order.orderDate))}</strong>
-                        &nbsp;<strong>{orderDeadlineTime.toLocaleTimeString(serbianLocale)}</strong>&nbsp; Nakon tog vremena, porudžbina će biti automatski odbačena.
-                    </div>
+                    <>
+                        {details}
+                        <div className="p-4 bg-yellow-100 rounded-md text-center text-sm text-yellow-700">
+                            Ovu započetu porudžbinu možete izmeniti do <strong>{formatDateSerbianLatin(new Date(order.orderDate))}</strong>
+                            &nbsp;<strong>{orderDeadlineTime.toLocaleTimeString(serbianLocale)}</strong>&nbsp; Nakon tog vremena, porudžbina će biti automatski odbačena.
+                        </div>
+                    </>
                 );
             } else if (order.state === 'Placed') {
                 message = (
-                    <div className="p-4 bg-blue-100 text-center text-sm text-blue-700">
-                        Vaša porudžbina je poručena i može se izmeniti do <strong>{formatDateSerbianLatin(new Date(order.orderDate))}</strong>
-                        &nbsp;<strong>{orderDeadlineTime.toLocaleTimeString(serbianLocale)}&nbsp;</strong>. Nakon toga, porudžbina će biti zaključana i poslužena u izabranom periodu.
-                    </div>
+                    <>
+                        {details}
+                        <div className="p-4 bg-blue-100 rounded-md text-center text-sm text-blue-700">
+                            Vaša porudžbina je poručena i može se izmeniti do <strong>{formatDateSerbianLatin(new Date(order.orderDate))}</strong>
+                            &nbsp;<strong>{orderDeadlineTime.toLocaleTimeString(serbianLocale)}&nbsp;</strong>. Nakon toga, porudžbina će biti zaključana i poslužena u izabranom periodu.
+                        </div>
+                    </>
                 );
             } else if (order.state === 'Confirmed') {
                 message = (
-                    <div className="p-4 bg-green-100 text-center text-sm text-green-700">
-                        Hvala Vam na porudžbini! <br/> Biće poslužena <strong>{formatDateSerbianLatin(new Date(order.orderDate))}</strong> u periodu od 
-                        <strong>{shiftStartTime.toLocaleTimeString(serbianLocale)}</strong> do <strong>{shiftEndTime.toLocaleTimeString(serbianLocale)}</strong>.
-                    </div>
+                    <>
+                        {details}
+                        <div className="p-4 bg-green-100 rounded-md text-center text-sm text-green-700">
+                            Hvala Vam na porudžbini! <br/> Biće poslužena <strong>{formatDateSerbianLatin(new Date(order.orderDate))}</strong> u periodu od 
+                            <strong>{shiftStartTime.toLocaleTimeString(serbianLocale)}</strong> do <strong>{shiftEndTime.toLocaleTimeString(serbianLocale)}</strong>.
+                        </div>
+                    </>
+                );
+            } else {
+                message = (
+                    <>
+                        {details}
+                    </>
                 );
             }
         }
@@ -86,9 +123,9 @@ const ReadOnlyCart: React.FC<ReadOnlyCartProps> = ({ order, isOpen, onClose }) =
                     </SheetClose>
                 </SheetHeader>
 
-                {message}
-
                 <div className="flex-1 py-4 space-y-4 overflow-y-auto">
+                    {message}
+
                     {/* Main Courses Section */}
                     <div>
                         <h3 className="text-lg font-semibold mb-2">Glavna jela</h3>

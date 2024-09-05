@@ -47,6 +47,7 @@ export interface ImmediateOrderDetails {
     orderItems: OrderItem[]
     placedAt?: DateTimeIsoUtc
     confirmedAt?: DateTimeIsoUtc
+    created: DateTimeIsoUtc
 }
 
 export interface ScheduledOrderDetails {
@@ -61,6 +62,7 @@ export interface ScheduledOrderDetails {
     orderItems: OrderItem[]
     placedAt?: DateTimeIsoUtc
     confirmedAt?: DateTimeIsoUtc
+    created: DateTimeIsoUtc
 }
 
 export interface CartStore {

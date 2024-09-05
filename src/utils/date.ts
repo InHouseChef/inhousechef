@@ -82,13 +82,24 @@ export const formatDateIso = (date?: DateIso, props?: DateFormatProps) =>
     date ? formatDate(toDateFromDateIso(date), props).date : ''
 
 export const formatEuropeanDate = (date: number | string | Date) => {
-    const parts = getDateFormatterParts(date, {
-        day: 'numeric',
-        month: 'numeric',
-        year: 'numeric'
-    })
+    // Ensure that the input date is always treated as a Date object
+    const dateObj = new Date(date)
 
-    return `${parts.day}.${parts.month}.${parts.year}`
+    // Use the 'sr-RS' locale for Serbian format and UTC time zone
+    const options: Intl.DateTimeFormatOptions = {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        timeZone: 'UTC'  // Ensures consistent interpretation of the time
+    }
+
+    // Format the date parts
+    const parts = new Intl.DateTimeFormat('sr-RS', options).formatToParts(dateObj)
+    const day = parts.find(part => part.type === 'day')?.value || '00'
+    const month = parts.find(part => part.type === 'month')?.value || '00'
+    const year = parts.find(part => part.type === 'year')?.value || '0000'
+
+    return `${day.padStart(2, '0')}.${month.padStart(2, '0')}.${year}`
 }
 
 export const formatDate = (
@@ -289,6 +300,20 @@ export const getToLocalISOString = (date: Date = new Date()): DateLocalIso => {
     const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
     
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
+}
+
+export const formatEuropeanDateTime = (date: number | string | Date) => {
+    const parts = getDateFormatterParts(date, {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    })
+
+    const formattedDate = `${parts.day.padStart(2, '0')}.${parts.month.padStart(2, '0')}.${parts.year} ${parts.hour}:${parts.minute}:${parts.second}`
+    return formattedDate
 }
 
 export const timeStringToMinutes = (timeString: string): number => {

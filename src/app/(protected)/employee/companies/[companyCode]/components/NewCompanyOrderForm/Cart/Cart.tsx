@@ -5,8 +5,9 @@ import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger 
 import { CartMainCourseDrawer } from '../CartMainCourseDrawer/CartMainCourseDrawer';
 import { CartSideDishDrawer } from '../CartSideDishDrawer/CartSideDishDrawer';
 import { X } from 'lucide-react'; // Icon for the close button
-import { formatDateSerbianLatin } from '@/utils/date';
+import { formatDateSerbianLatin, formatDateTime, formatEuropeanDate, formatEuropeanDateTime, formatTimeWithoutSeconds, getToLocalISOString, toLocalIso } from '@/utils/date';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { OrderDetails } from './OrderDetails/OrderDetails';
 
 const Cart = () => {
     const { 
@@ -111,21 +112,36 @@ const Cart = () => {
     if (selectedOrder?.type === 'Immediate') {
         const shiftStartTime = new Date(`${selectedOrder.orderDate}T${aLaCarteShift?.shiftStartAt}`);
         const shiftEndTime = new Date(`${selectedOrder.orderDate}T${aLaCarteShift?.shiftEndAt}`);
-    
+
+        const details = <OrderDetails 
+            number={selectedOrder.number}
+            orderDate={selectedOrder.orderDate}
+            orderCreatedAt={selectedOrder.created}
+            shiftStart={aLaCarteShift?.shiftStartAt}
+            shiftEnd={aLaCarteShift?.shiftEndAt} 
+            placedAt={selectedOrder.placedAt}
+            confirmedAt={selectedOrder.confirmedAt} />
+
         if (selectedOrder.state === 'Draft') {
             message = (
-                <div className="p-4 bg-yellow-100 text-center text-sm text-yellow-700">
-                    Ovu započetu porudžbinu možete poručiti dok traje "A La Carte" smena za današnji dan, 
-                    od <strong>{shiftStartTime.toLocaleTimeString(serbianLocale)}</strong> do <strong>{shiftEndTime.toLocaleTimeString(serbianLocale)}</strong>. 
-                    Nakon tog perioda porudžbina će biti automatski odbačena.
-                </div>
+                <>
+                    {details}
+                    <div className="p-4 bg-yellow-100 rounded-md text-center text-sm text-yellow-700">
+                        Ovu započetu porudžbinu možete poručiti dok traje "A La Carte" smena za današnji dan, 
+                        od <strong>{shiftStartTime.toLocaleTimeString(serbianLocale)}</strong> do <strong>{shiftEndTime.toLocaleTimeString(serbianLocale)}</strong>. 
+                        Nakon tog perioda porudžbina će biti automatski odbačena.
+                    </div>
+                </>
             );
         } else if (selectedOrder.state === 'Placed' || selectedOrder.state === 'Confirmed') {
             message = (
-                <div className="p-4 bg-blue-100 text-center text-sm text-blue-700">
-                    Vaša porudžbina je poručena i više ne može biti izmenjena. 
-                    Biće poslužena u naredna <strong>dva sata</strong>.
-                </div>
+                <>
+                    {details}
+                    <div className="p-4 bg-blue-100 rounded-md text-center text-sm text-blue-700">
+                        Vaša porudžbina je poručena i više ne može biti izmenjena. 
+                        Biće poslužena u naredna <strong>dva sata</strong>.
+                    </div>
+                </>
             );
         }
     } else if (selectedOrder?.type === 'Scheduled') {
@@ -137,20 +153,35 @@ const Cart = () => {
             const orderDeadlineTime = new Date(
                 shiftStartTime.getTime() - shift.orderingDeadlineBeforeShiftStart * 60 * 60 * 1000
             );
-    
+
+            const details = <OrderDetails 
+                number={selectedOrder.number}
+                orderDate={selectedOrder.orderDate}
+                orderCreatedAt={selectedOrder.created}
+                shiftStart={shift.shiftStartAt}
+                shiftEnd={shift.shiftEndAt} 
+                placedAt={selectedOrder.placedAt}
+                confirmedAt={selectedOrder.confirmedAt} />
+
             if (selectedOrder.state === 'Draft') {
                 message = (
-                    <div className="p-4 bg-yellow-100 text-center text-sm text-yellow-700">
-                        Ovu započetu porudžbinu možete poručiti do <strong>{formatDateSerbianLatin(new Date(selectedOrder.orderDate))}</strong>
-                        &nbsp;<strong>{orderDeadlineTime.toLocaleTimeString(serbianLocale)}</strong>&nbsp; Nakon tog vremena, porudžbina će biti automatski odbačena.
-                    </div>
+                    <>
+                        {details}
+                        <div className="p-4 bg-yellow-100 rounded-md text-center text-sm text-yellow-700">
+                            Ovu započetu porudžbinu možete poručiti do <strong>{formatDateSerbianLatin(new Date(selectedOrder.orderDate))}</strong>
+                            &nbsp;<strong>{orderDeadlineTime.toLocaleTimeString(serbianLocale)}</strong>&nbsp; Nakon tog vremena, porudžbina će biti automatski odbačena.
+                        </div>
+                    </>
                 );
             } else if (selectedOrder.state === 'Placed') {
                 message = (
-                    <div className="p-4 bg-blue-100 text-center text-sm text-blue-700">
-                        Vaša porudžbina je poručena i može se izmeniti do <strong>{formatDateSerbianLatin(new Date(selectedOrder.orderDate))}</strong>
-                        <strong>&nbsp;{orderDeadlineTime.toLocaleTimeString(serbianLocale)}</strong>&nbsp;. Nakon toga, porudžbina će biti zaključana i poslužena u izabranom periodu.
-                    </div>
+                    <>
+                        {details}
+                        <div className="p-4 bg-blue-100 rounded-md text-center text-sm text-blue-700">
+                            Vaša porudžbina je poručena i može se izmeniti do <strong>{formatDateSerbianLatin(new Date(selectedOrder.orderDate))}</strong>
+                            <strong>&nbsp;{orderDeadlineTime.toLocaleTimeString(serbianLocale)}</strong>&nbsp;. Nakon toga, porudžbina će biti zaključana i poslužena u izabranom periodu.
+                        </div>
+                    </>
                 );
             }
         }
@@ -182,10 +213,10 @@ const Cart = () => {
                         </SheetClose>
                     </SheetHeader>
 
-                    {message}
-
                     <div className="flex-1 py-4 space-y-4 overflow-y-auto">
                         {/* Main Courses Section */}
+                        {message}
+
                         <div>
                             <h3 className="text-lg font-semibold mb-2">Glavna jela</h3>
                             {mainCourses.length > 0 ? (
