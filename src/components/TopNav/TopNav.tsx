@@ -7,9 +7,12 @@ import { MainNavMobile } from '../MainNav'
 import { TopNavHamburger } from './components/TopNavHamburger'
 import { TopNavLogo } from './components/TopNavLogo'
 import { DaySelectorDropdown } from '@/app/(protected)/employee/companies/[companyCode]/components/NewCompanyOrderForm/DaySelector/DaySelectorDropdown'
+import { ShoppingCartIcon } from 'lucide-react'
+import { useCartStore } from '@/app/(protected)/employee/newstate'
 
 export const TopNav = () => {
     const { isOpen, setIsOpen, handleClose } = useDialogControl()
+    const { selectedOrder, setIsOpen: setIsCartOpen } = useCartStore()
     const pathname = usePathname()
 
     useEffect(() => {
@@ -28,12 +31,21 @@ export const TopNav = () => {
                         'border-grey700/0': isOpen,
                         'border-grey700/50': !isOpen
                     }
-                )}>
+                )}
+            >
                 <div className='flex flex-row items-center justify-center gap-4'>
                     <TopNavLogo />
                     <DaySelectorDropdown />
                 </div>
-                <TopNavHamburger isNavOpen={isOpen} onToggle={handleToggle} />
+                <div className='flex flex-row items-center justify-center gap-4'>
+                    <div className='relative'>
+                        <ShoppingCartIcon onClick={() => setIsCartOpen(true)} />
+                        {selectedOrder && (
+                            <div className='absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full'></div>
+                        )}
+                    </div>
+                    <TopNavHamburger isNavOpen={isOpen} onToggle={handleToggle} />
+                </div>
             </div>
             <MainNavMobile isNavOpen={isOpen} onOverlayClick={handleClose} />
         </>
