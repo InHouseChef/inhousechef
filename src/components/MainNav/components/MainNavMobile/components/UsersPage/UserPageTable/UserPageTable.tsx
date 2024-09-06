@@ -138,19 +138,19 @@ export const UserPageTable = ({
                 >
                 <div className='flex flex-col'>
                     <span className='text-lg font-semibold'>{user.fullName}</span>
-                    {user.role === 'Employee' && <span className='text-xs text-gray-500'><strong>@{user.username}</strong> | Radnik</span>}
-                    {user.role === 'CompanyManager' && <span className='text-xs text-gray-500'><strong>@{user.username}</strong> | Menadžer</span>}
+                    {user.role === 'Employee' && <span className='text-xs text-gray-700'><strong>@{user.username}</strong> | Radnik</span>}
+                    {user.role === 'CompanyManager' && <span className='text-xs text-gray-700'><strong>@{user.username}</strong> | Menadžer</span>}
                 </div>
                 <div className='flex flex-col items-center'>
                 <CheckCircle2Icon
-                    className={`cursor-pointer ${user.aLaCardPermission ? 'text-green-500' : 'text-gray-500'}`}
+                    className={`cursor-pointer ${user.aLaCardPermission ? 'text-green-700' : 'text-gray-700'}`}
                     size={24}
                     onClick={e => {
                     e.stopPropagation() // Prevent triggering the row click event
                     handlePermissionChange(user.id, user.aLaCardPermission)
                     }}
                 />
-                <span className='text-sm text-gray-500'>A la carte</span>
+                <span className='text-sm text-gray-700'>A la carte</span>
                 </div>
             </div>
         )

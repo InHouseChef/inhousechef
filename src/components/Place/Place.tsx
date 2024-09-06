@@ -5,7 +5,7 @@ interface PlaceProps {
 }
 
 export const Place = ({ address }: PlaceProps) => {
-    if (!address) return <span className='text-grey'>N/A</span>
+    if (!address) return <span className='text-gray'>N/A</span>
 
     const { street, city } = address
 

@@ -91,7 +91,7 @@ const BUTTON_VARIANTS = cva(
                 variant: 'outline',
                 state: 'secondary',
                 disabled: true,
-                className: 'border-grey800 text-grey800'
+                className: 'border-grey800 text-gray800'
             },
             {
                 variant: 'text',
@@ -103,7 +103,7 @@ const BUTTON_VARIANTS = cva(
                 variant: 'text',
                 state: 'secondary',
                 disabled: true,
-                className: 'text-grey800'
+                className: 'text-gray800'
             },
             // DANGER
             {
@@ -233,13 +233,13 @@ const BUTTON_VARIANTS = cva(
                 variant: 'outline',
                 state: 'info',
                 disabled: false,
-                className: 'border-grey900 text-grey900 hover:bg-grey900'
+                className: 'border-grey900 text-gray900 hover:bg-grey900'
             },
             {
                 variant: 'outline',
                 state: 'info',
                 disabled: true,
-                className: 'border-grey600 text-grey600'
+                className: 'border-grey600 text-gray600'
             },
             {
                 variant: 'text',

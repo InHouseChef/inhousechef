@@ -63,20 +63,20 @@ export const OrderHistory = () => {
             {(isFetching || isRefetching) && <Loader className='flex min-h-[50vh] items-center justify-center' />}
             {isFetching && isRefetching && orderHistory?.length === 0 && (
                 <div className='flex items-center justify-center min-h-[50vh]'>
-                    <p className='text-md text-gray-700-900 text-center'>Niste do sada ništa poručivali.</p>
+                    <p className='text-md text-gray-700 text-center'>Niste do sada ništa poručivali.</p>
                 </div>
             )}
             {!isFetching &&
                 !isRefetching &&
                 orderHistory?.map(order => {
-                    const { description, totalPrice, forDate, placedAt, confirmedAt, number } = getOrderSummary(order)
+                    const { description, totalPrice, number } = getOrderSummary(order)
                     return (
                         <div
                             key={order.id}
                             className='mb-4 cursor-pointer bg-white'
                         >
                             <div className='mb-2 flex flex-row gap-8'>
-                                <p className='text-md text-gray-700-900 font-medium'>Status:</p>
+                                <p className='text-md text-gray-700 font-medium'>Status:</p>
                                 <p
                                     className={clsx('text-md font-bold', {
                                         'text-[#2F80ED]/75': order.state === 'Draft',
@@ -119,7 +119,7 @@ export const OrderHistory = () => {
                                         <div className='flex items-center'>
                                             <h4 className='font-semibold'>Porudžbina #{number}</h4>
                                         </div>
-                                        <p className='text-grey-500 text-sm'>
+                                        <p className='text-gray-500 text-sm'>
                                             <span className='text-sm text-blue-500'>{totalPrice.toFixed(2)} RSD</span> |{' '}
                                             {description}
                                         </p>

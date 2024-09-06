@@ -58,7 +58,7 @@ export const ColorInput = forwardRef<ColorInputRef, ColorInputProps>(
                             'rounded-lg border bg-white text-sm font-normal leading-6 outline-none transition',
                             message ? 'border-red500' : 'border-grey400',
                             'enabled:hover:border-primary500 enabled:focus:border-primary500',
-                            'disabled:bg-grey200 disabled:text-grey disabled:opacity-100',
+                            'disabled:bg-grey200 disabled:text-gray disabled:opacity-100',
                             'placeholder-grey500'
                         )}
                     />

@@ -43,7 +43,7 @@ export const CartSideDishDrawer = ({ isOpen, onClose }: CartSideDishDrawerProps)
             <DrawerContent onPointerDownOutside={e => e.target === e.currentTarget && onClose()}>
                 <div className='mx-auto w-full max-w-sm'>
                     <DrawerHeader className='text-left'>
-                        <DrawerTitle className='mt-2 text-3xl font-bold lowercase'>Prilozi</DrawerTitle>
+                        <DrawerTitle className='mt-2 text-3xl font-bold lowercase text-gray-700'>Prilozi</DrawerTitle>
                     </DrawerHeader>
 
                     <div className='px-2 py-4'>

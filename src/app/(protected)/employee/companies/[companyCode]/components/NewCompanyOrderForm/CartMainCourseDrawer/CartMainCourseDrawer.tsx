@@ -43,7 +43,7 @@ export const CartMainCourseDrawer = ({ isOpen, onClose }: CartMainCourseDrawerPr
             <DrawerContent onPointerDownOutside={e => e.target === e.currentTarget && onClose()}>
                 <div className='mx-auto w-full max-w-sm'>
                     <DrawerHeader className='text-left'>
-                        <DrawerTitle className='mt-2 text-3xl font-bold lowercase'>Glavna jela</DrawerTitle>
+                        <DrawerTitle className='mt-2 text-3xl font-bold lowercase text-gray-700'>Glavna jela</DrawerTitle>
                     </DrawerHeader>
 
                     <div className='px-2 py-4'>

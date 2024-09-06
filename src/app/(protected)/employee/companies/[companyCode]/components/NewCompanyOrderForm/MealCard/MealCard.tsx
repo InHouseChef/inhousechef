@@ -45,7 +45,7 @@ export const MealCard = ({ id, name, description, price, imageUrl, onClick, smal
                 </div>
                 <div className={clsx('flex h-full flex-1 flex-col justify-between px-2 py-2 gap-3')}>
                     <div className='flex flex-col gap-1'>
-                        <h4 className={clsx('text-md font-semibold')}>{name}</h4>
+                        <h4 className={clsx('text-md font-semibold text-gray-700')}>{name}</h4>
                         <p className={clsx('text-xs text-gray-600')}>
                             {description && description.length > 50
                                 ? description.substring(0, 50).concat('...')

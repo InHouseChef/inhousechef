@@ -32,7 +32,7 @@ export const Password = forwardRef<HTMLInputElement, InputProps>(
                             'h-full w-full rounded-lg border bg-[#fcfcff] px-3 py-2.5 outline-none transition-colors duration-200',
                             icon && 'pr-12',
                             message && 'border-red',
-                            'disabled:bg-grey300 disabled:text-grey500 disabled:opacity-100',
+                            'disabled:bg-grey300 disabled:text-gray500 disabled:opacity-100',
                             'placeholder:text-[#b5bbc6]',
                             {
                                 'focus-within:[+:svg]text-red border-red focus-within:border-red hover:border-red': message,
@@ -51,7 +51,7 @@ export const Password = forwardRef<HTMLInputElement, InputProps>(
                             tooltip && 'pointer-events-auto',
                             {
                                 'text-red focus-within:text-red hover:text-red': message,
-                                'text-grey hover:text-primary': !message
+                                'text-gray hover:text-primary': !message
                             }
                         )}
                         onClick={() => setType(type === 'text' ? 'password' : 'text')}>

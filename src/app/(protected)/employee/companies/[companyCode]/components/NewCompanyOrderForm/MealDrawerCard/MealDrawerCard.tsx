@@ -14,7 +14,7 @@ const MealDrawerCard = ({ meal, onClick }: MealDrawerCardProps) => (
         <img src={meal?.imageUrl} alt={meal?.name} className='h-32 w-full object-cover' />
         <div className='flex flex-col gap-4'>
             <div className='flex flex-col gap-0'>
-                <h3 className='text-lg font-semibold'>{meal?.name}</h3>
+                <h3 className='text-lg font-semibold text-gray-700'>{meal?.name}</h3>
                 <p className='text-blue-500'>{meal?.price.toFixed(2)} RSD</p>
             </div>
             <Button onClick={onClick} className='self-start'>

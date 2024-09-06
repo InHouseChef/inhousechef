@@ -11,11 +11,11 @@ interface PaginationProps {
 }
 
 export const Pagination = ({ page, onPrev, onNext, disabledPrev, disabledNext, isFetching }: PaginationProps) => {
-    const buttonClassNames = 'group grid place-items-center border-0 bg-transparent p-0 text-grey outline-none'
-    const iconClassNames = 'h-4 w-4 text-grey transition-colors  group-hover:text-primary group-disabled:text-grey/50'
+    const buttonClassNames = 'group grid place-items-center border-0 bg-transparent p-0 text-gray outline-none'
+    const iconClassNames = 'h-4 w-4 text-gray transition-colors  group-hover:text-primary group-disabled:text-gray/50'
 
     return (
-        <div className='text-grey flex items-center'>
+        <div className='text-gray flex items-center'>
             <button type='button' className={buttonClassNames} onClick={onPrev} disabled={disabledPrev || isFetching}>
                 <ChevronLeft className={iconClassNames} />
             </button>

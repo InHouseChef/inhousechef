@@ -235,7 +235,7 @@ const Cart = () => {
                                 {message}
 
                                 <div>
-                                    <h3 className="text-lg font-semibold mb-2">Glavna jela</h3>
+                                    <h3 className="text-lg font-semibold mb-2 text-gray-700">Glavna jela</h3>
                                     {mainCourses.length > 0 ? (
                                         <div className="space-y-2">
                                             {mainCourses.map((item, index) => (
@@ -281,7 +281,7 @@ const Cart = () => {
                                     {isShiftValid && (
                                         <Button
                                             variant="link"
-                                            className="mt-2 text-grey-900"
+                                            className="mt-2 text-gray-900"
                                             onClick={() => setIsMainCourseDrawerOpen(true)}
                                             disabled={!isShiftValid}
                                         >
@@ -292,7 +292,7 @@ const Cart = () => {
 
                                 {/* Side Dishes Section */}
                                 <div>
-                                    <h3 className="text-lg font-semibold mb-2">Prilozi</h3>
+                                    <h3 className="text-lg font-semibold mb-2 text-gray-700">Prilozi</h3>
                                     {sideDishes.length > 0 ? (
                                         <div className="space-y-2">
                                             {sideDishes.map((item, index) => (

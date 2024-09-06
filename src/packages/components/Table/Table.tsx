@@ -259,8 +259,8 @@ export const Table = ({
             ) : (
                 <div>
                     <p className='mt-3 text-2xl'>No results found</p>
-                    <p className='text-grey mt-2'>We couldn&apos;t find what you&apos;re looking for</p>
-                    <p className='text-grey'>Please try searching for another term.</p>
+                    <p className='text-gray mt-2'>We couldn&apos;t find what you&apos;re looking for</p>
+                    <p className='text-gray'>Please try searching for another term.</p>
                 </div>
             )}
         </>

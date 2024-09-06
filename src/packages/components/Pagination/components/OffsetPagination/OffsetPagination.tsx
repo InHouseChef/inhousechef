@@ -47,7 +47,7 @@ export const OffsetPagination = ({
                         height='16'
                         viewBox='0 0 16 16'
                         fill='none'
-                        className='text-grey disabled:text-grey/[.50] group-disabled:text-grey/50 h-4 w-4 transition-colors duration-200 group-hover:text-primary'>
+                        className='text-gray disabled:text-gray/[.50] group-disabled:text-gray/50 h-4 w-4 transition-colors duration-200 group-hover:text-primary'>
                         <path d='M10 12L6 8L10 4' stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' />
                     </svg>
                 </button>
@@ -56,7 +56,7 @@ export const OffsetPagination = ({
                 {pageNumbers.map((pageNumber, index) => (
                     <button
                         className={clsx(
-                            'text-grey grid h-8 min-w-8 place-items-center rounded-lg border border-white px-1 outline-none transition-colors hover:border-primary hover:text-primary',
+                            'text-gray grid h-8 min-w-8 place-items-center rounded-lg border border-white px-1 outline-none transition-colors hover:border-primary hover:text-primary',
                             {
                                 'pointer-events-none border-primary bg-primary text-white hover:text-white':
                                     pageNumber === page + 1,
@@ -83,7 +83,7 @@ export const OffsetPagination = ({
                         height='16'
                         viewBox='0 0 16 16'
                         fill='none'
-                        className='text-grey group-disabled:text-grey/50 h-4 w-4 transition-colors duration-200 group-hover:text-primary'>
+                        className='text-gray group-disabled:text-gray/50 h-4 w-4 transition-colors duration-200 group-hover:text-primary'>
                         <path d='M6 4L10 8L6 12' stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' />
                     </svg>
                 </button>

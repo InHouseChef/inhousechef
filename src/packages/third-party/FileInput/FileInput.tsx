@@ -192,7 +192,7 @@ export const FileInput: ForwardRefExoticComponent<FileInputProps & RefAttributes
                             <p>{files[0]?.name}</p>
                             <button
                                 type='button'
-                                className='text-grey500 hover:text-red500 h-5 w-5 border-0 bg-transparent p-0 transition-colors'
+                                className='text-gray500 hover:text-red500 h-5 w-5 border-0 bg-transparent p-0 transition-colors'
                                 onClick={handleRemove}>
                                 <FileInputCircleX />
                             </button>
@@ -200,14 +200,14 @@ export const FileInput: ForwardRefExoticComponent<FileInputProps & RefAttributes
                     ) : undefined}
                     <div className='flex'>
                         {showSize && !multiple ? (
-                            <p className='text-grey'>File size: {formatBytes(files[0]?.size)}</p>
+                            <p className='text-gray'>File size: {formatBytes(files[0]?.size)}</p>
                         ) : undefined}
                         {dropzoneOptions?.maxSize ? (
-                            <p className='text-grey500'>Maximum file size {formatBytes(dropzoneOptions?.maxSize)}</p>
+                            <p className='text-gray500'>Maximum file size {formatBytes(dropzoneOptions?.maxSize)}</p>
                         ) : undefined}
                     </div>
                     {requirements && options?.accept ? (
-                        <p className='text-grey'>
+                        <p className='text-gray'>
                             {description} We support {options?.accept.join(', ')}
                         </p>
                     ) : undefined}
@@ -229,7 +229,7 @@ export const FileInput: ForwardRefExoticComponent<FileInputProps & RefAttributes
                                     </div>
                                     <div className='flex flex-col gap-0'>
                                         <p>{name}</p>
-                                        <p className='text-grey'>{formatBytes(size)}</p>
+                                        <p className='text-gray'>{formatBytes(size)}</p>
                                     </div>
                                 </div>
                                 <EventButton style={{ paddingRight: '8px' }} onClick={() => handleRemoveFile(index)}>

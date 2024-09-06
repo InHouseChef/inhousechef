@@ -10,10 +10,10 @@ interface FileInputAcceptProps {
 export const FileInputRequirement = ({ accept, maxSize, description }: FileInputAcceptProps) => (
     <div className='flex flex-col gap-0.5'>
         {accept ? (
-            <p className='text-grey'>
+            <p className='text-gray'>
                 {description} We support {accept.join(', ')}
             </p>
         ) : undefined}
-        {maxSize && <p className='text-grey500'>Max file size {formatBytes(maxSize)}</p>}
+        {maxSize && <p className='text-gray500'>Max file size {formatBytes(maxSize)}</p>}
     </div>
 )

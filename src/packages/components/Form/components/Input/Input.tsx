@@ -57,7 +57,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                                 'pointer-events-auto': Boolean(tooltip),
                                 'pointer-events-none': !tooltip,
                                 'text-red group-focus-within:text-red group-hover:text-red': message,
-                                'text-grey group-focus-within:text-primary group-hover:text-primary': !message
+                                'text-gray group-focus-within:text-primary group-hover:text-primary': !message
                             })}>
                             <Tooltip label={tooltip || ''}>{icon}</Tooltip>
                         </div>

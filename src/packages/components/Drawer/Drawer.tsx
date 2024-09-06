@@ -73,7 +73,7 @@ export const Drawer = ({
                     <div className='relative flex h-full w-full flex-col overflow-y-auto bg-white p-6'>
                         <button
                             onClick={onClose}
-                            className={clsx('text-grey flex items-center md:hidden', classes?.mobileClose)}>
+                            className={clsx('text-gray flex items-center md:hidden', classes?.mobileClose)}>
                             <ArrowLeft /> Back
                         </button>
                         {title ? (

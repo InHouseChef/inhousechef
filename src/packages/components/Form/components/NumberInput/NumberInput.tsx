@@ -123,7 +123,7 @@ export const NumberInput = forwardRef<NumberInputRef, NumberInputProps>(
                     <input
                         className={clsx(
                             'h-full w-full rounded-lg border bg-[#fcfcff] px-3 py-3 outline-none transition-colors',
-                            'disabled:bg-grey300 disabled:text-grey500 disabled:opacity-100',
+                            'disabled:bg-grey300 disabled:text-gray500 disabled:opacity-100',
                             'placeholder:text-[#b5bbc6]',
                             {
                                 'focus:[&:svg]text-red border-red hover:border-red focus:border-red': message,
@@ -149,7 +149,7 @@ export const NumberInput = forwardRef<NumberInputRef, NumberInputProps>(
                                 tooltip && 'pointer-events-auto',
                                 {
                                     'text-red group-focus-within:text-red group-hover:text-red': message,
-                                    'text-grey group-focus-within:text-primary group-hover:text-primary': !message
+                                    'text-gray group-focus-within:text-primary group-hover:text-primary': !message
                                 }
                             )}>
                             <Tooltip label={tooltip || ''}>{icon}</Tooltip>

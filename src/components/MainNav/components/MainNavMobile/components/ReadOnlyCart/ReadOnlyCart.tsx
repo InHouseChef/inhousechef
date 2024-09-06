@@ -112,7 +112,7 @@ const ReadOnlyCart: React.FC<ReadOnlyCartProps> = ({ order, isOpen, onClose }) =
         <Sheet open={isOpen} onOpenChange={onClose}>
             <SheetContent side="bottom" className="w-full h-full bg-white flex flex-col">
                 <SheetHeader className="flex justify-between items-center p-4 border-b">
-                    <SheetTitle className="text-lg font-bold">Vaša porudžbina</SheetTitle>
+                    <SheetTitle className="text-lg font-bold text-gray-700">Vaša porudžbina</SheetTitle>
                     <SheetClose asChild>
                         <button
                             className="text-gray-500 hover:text-gray-700 transition"
@@ -128,7 +128,7 @@ const ReadOnlyCart: React.FC<ReadOnlyCartProps> = ({ order, isOpen, onClose }) =
 
                     {/* Main Courses Section */}
                     <div>
-                        <h3 className="text-lg font-semibold mb-2">Glavna jela</h3>
+                        <h3 className="text-lg font-semibold mb-2 text-gray-700">Glavna jela</h3>
                         {mainCourses.length > 0 ? (
                             <div className="space-y-2">
                                 {mainCourses.map((item, index) => (
@@ -157,7 +157,7 @@ const ReadOnlyCart: React.FC<ReadOnlyCartProps> = ({ order, isOpen, onClose }) =
 
                     {/* Side Dishes Section */}
                     <div>
-                        <h3 className="text-lg font-semibold mb-2">Prilozi</h3>
+                        <h3 className="text-lg font-semibold mb-2 text-gray-700">Prilozi</h3>
                         {sideDishes.length > 0 ? (
                             <div className="space-y-2">
                                 {sideDishes.map((item, index) => (
