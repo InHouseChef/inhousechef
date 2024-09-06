@@ -117,11 +117,8 @@ const Cart = () => {
         const details = <OrderDetails 
             number={selectedOrder.number}
             orderDate={selectedOrder.orderDate}
-            orderCreatedAt={selectedOrder.created}
             shiftStart={aLaCarteShift?.shiftStartAt}
-            shiftEnd={aLaCarteShift?.shiftEndAt} 
-            placedAt={selectedOrder.placedAt}
-            confirmedAt={selectedOrder.confirmedAt} />
+            shiftEnd={aLaCarteShift?.shiftEndAt} />
 
         if (selectedOrder.state === 'Draft') {
             message = (
@@ -158,11 +155,8 @@ const Cart = () => {
             const details = <OrderDetails 
                 number={selectedOrder.number}
                 orderDate={selectedOrder.orderDate}
-                orderCreatedAt={selectedOrder.created}
                 shiftStart={shift.shiftStartAt}
-                shiftEnd={shift.shiftEndAt} 
-                placedAt={selectedOrder.placedAt}
-                confirmedAt={selectedOrder.confirmedAt} />
+                shiftEnd={shift.shiftEndAt} />
 
             if (selectedOrder.state === 'Draft') {
                 message = (
