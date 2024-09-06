@@ -2,9 +2,7 @@
 
 import { ReadUserCompanyResponse } from '@/api/companies'
 import { readUserCompany } from '@/api/companies/repository/hooks/readUserCompany'
-import { useCartStore } from '@/app/(protected)/employee/newstate'
 import { Loader } from '@/components'
-import { useSafeReplace } from '@/hooks'
 import { useReadIdentity } from '@/hooks/useIdentity'
 import { useRoles } from '@/providers/RoleProvider/RoleProvider'
 import { useCompanyStore } from '@/state'
@@ -53,7 +51,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
         if (identity && (roles.Employee || roles.CompanyManager)) {
             const company = getCompany()
             if (company.companyCode && company.companyId) {
-                return router.push(`/employee/companies/${company.companyCode}`)
+                return router.push(`/companies/${company.companyCode}`)
             } else {
                 setIsFetchingCompany(true)
                 readUserCompany().then(company => {

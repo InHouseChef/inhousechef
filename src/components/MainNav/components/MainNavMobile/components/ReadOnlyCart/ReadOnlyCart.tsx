@@ -2,9 +2,9 @@ import React from 'react';
 import { ReadMyOrderResponse } from '@/api/order';
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { X } from 'lucide-react'; // Icon for the close button
-import { useCartStore } from '@/app/(protected)/employee/newstate';
+import { useCartStore } from '@/app/(protected)/newstate';
 import { formatDateSerbianLatin } from '@/utils/date';
-import { OrderDetails } from '@/app/(protected)/employee/companies/[companyCode]/components/NewCompanyOrderForm/Cart/OrderDetails/OrderDetails';
+import { OrderDetails } from '@/app/(protected)/companies/[companyCode]/components/NewCompanyOrderForm/Cart/OrderDetails/OrderDetails';
 
 interface ReadOnlyCartProps {
     order: ReadMyOrderResponse | null;

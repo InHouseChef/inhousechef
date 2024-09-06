@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { ALaCarteShift, Shift, useCartStore } from '@/app/(protected)/employee/newstate';
+import { ALaCarteShift, Shift, useCartStore } from '@/app/(protected)/newstate';
 import { formatTimeWithoutSeconds } from '@/utils/date';
 
 interface ShiftSelectorProps {

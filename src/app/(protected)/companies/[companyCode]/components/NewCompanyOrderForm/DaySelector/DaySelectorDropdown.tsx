@@ -1,4 +1,4 @@
-import { useCartStore } from '@/app/(protected)/employee/newstate'
+import { useCartStore } from '@/app/(protected)/newstate'
 import { getToLocalISOString } from '@/utils/date'
 import { ChevronDownIcon } from 'lucide-react' // Assuming you're using lucide-react for icons
 import clsx from 'clsx'
