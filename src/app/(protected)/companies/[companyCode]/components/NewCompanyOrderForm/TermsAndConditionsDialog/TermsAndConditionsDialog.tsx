@@ -32,7 +32,7 @@ export const TermsAndConditionsDialog = ({ acceptedTerms }: TermsAndConditionsDi
                 <DialogHeader>
                     <DialogTitle>Uslovi korišćenja</DialogTitle>
                     <DialogDescription>
-                        <div className='mt-2 max-h-[50vh] overflow-y-auto text-center rounded-lg border p-2'>
+                        <div className='mt-2 max-h-[50vh] overflow-y-auto text-center text-gray-700 rounded-md p-2'>
                             <h2 className='text-center text-xl font-bold mb-4'>UGOVOR O KORIŠĆENJU APLIKACIJE</h2>
                             <p className='mb-4'>
                                 <strong>1. UVODNE ODREDBE</strong>
@@ -49,7 +49,7 @@ export const TermsAndConditionsDialog = ({ acceptedTerms }: TermsAndConditionsDi
                                 <br />
                                 i
                                 <br />
-                                Naziv korisnika: [Ime i prezime/ Magma seating Odzaci]
+                                Naziv korisnika: [Ime i prezime/ Magna seating Odzaci]
                                 <br />
                                 Adresa korisnika: [Adresa korisnika]
                                 <br />

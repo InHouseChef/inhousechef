@@ -1,27 +1,51 @@
-import { useCartStore } from '@/app/(protected)/newstate'
-import { getToLocalISOString } from '@/utils/date'
-import { ChevronDownIcon } from 'lucide-react' // Assuming you're using lucide-react for icons
-import clsx from 'clsx'
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react';
+import { useCartStore } from '@/app/(protected)/newstate';
+import { getToLocalISOString } from '@/utils/date';
+import { ChevronDownIcon } from 'lucide-react';
+import clsx from 'clsx';
 
 export const DaySelectorDropdown: React.FC = () => {
-    const { activeDay, setActiveDay, hasALaCardPermission, setActiveShift } = useCartStore()
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+    const { activeDay, setActiveDay, hasALaCardPermission, setActiveShift } = useCartStore();
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
-    const todayDate = getToLocalISOString(new Date()).split('T')[0]
-    const tomorrowDate = getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0]
+    const todayDate = getToLocalISOString(new Date()).split('T')[0];
+    const tomorrowDate = getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0];
+
+    useEffect(() => {
+        const handleOutsideClick = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        const handleOutsideTouch = (event: TouchEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        // Add both mousedown and touchstart event listeners
+        document.addEventListener('mousedown', handleOutsideClick);
+        document.addEventListener('touchstart', handleOutsideTouch);
+
+        return () => {
+            // Remove both mousedown and touchstart event listeners
+            document.removeEventListener('mousedown', handleOutsideClick);
+            document.removeEventListener('touchstart', handleOutsideTouch);
+        };
+    }, [dropdownRef]);
 
     const handleDayChange = (day: 'today' | 'tomorrow') => {
-        const selectedDate = day === 'today' ? todayDate : tomorrowDate
-        setActiveDay(selectedDate)
-        setActiveShift(undefined)
-        setIsDropdownOpen(false)
-    }
+        const selectedDate = day === 'today' ? todayDate : tomorrowDate;
+        setActiveDay(selectedDate);
+        setActiveShift(undefined);
+        setIsDropdownOpen(false);
+    };
 
     if (!hasALaCardPermission) {
-        // If the user doesn't have A La Carte permission, only show the option for tomorrow
         if (activeDay !== tomorrowDate) {
-            setActiveDay(tomorrowDate)
+            setActiveDay(tomorrowDate);
         }
         return (
             <div className='flex flex-col items-left justify-left text-gray-700 font-bold'>
@@ -32,11 +56,11 @@ export const DaySelectorDropdown: React.FC = () => {
                     <span className='font-normal'>Sutra</span>
                 </div>
             </div>
-        )
+        );
     }
 
     return (
-        <div className='relative'>
+        <div className='relative' ref={dropdownRef}>
             <div
                 className='flex flex-col items-left justify-left cursor-pointer text-gray-700 font-bold'
                 onClick={() => setIsDropdownOpen(prev => !prev)}
@@ -74,5 +98,5 @@ export const DaySelectorDropdown: React.FC = () => {
                 </div>
             )}
         </div>
-    )
-}
+    );
+};
