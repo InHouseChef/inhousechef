@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useCartStore } from '@/app/(protected)/employee/newstate';
+import { useCartStore } from '@/app/(protected)/newstate';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { CartMainCourseDrawer } from '../CartMainCourseDrawer/CartMainCourseDrawer';
@@ -8,7 +8,7 @@ import { X } from 'lucide-react'; // Icon for the close button
 import { formatDateSerbianLatin } from '@/utils/date';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { OrderDetails } from './OrderDetails/OrderDetails';
-import emptyCart from '../../../../../../../../../public/images/empty-cart.png';
+import emptyCart from '../../../../../../../../public/images/empty-cart.png';
 
 const Cart = () => {
     const { 

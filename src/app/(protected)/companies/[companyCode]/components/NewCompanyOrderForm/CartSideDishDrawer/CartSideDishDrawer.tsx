@@ -1,5 +1,5 @@
 import { DailyMenuMeal } from '@/api/daily-menus'
-import { useCartStore } from '@/app/(protected)/employee/newstate'
+import { useCartStore } from '@/app/(protected)/newstate'
 import { Button } from '@/components/ui/button'
 import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import { useState } from 'react'

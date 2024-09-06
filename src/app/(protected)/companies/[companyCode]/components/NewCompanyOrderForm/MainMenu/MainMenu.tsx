@@ -1,5 +1,5 @@
 import { DailyMenuMeal } from '@/api/daily-menus'
-import { useCartStore } from '@/app/(protected)/employee/newstate'
+import { useCartStore } from '@/app/(protected)/newstate'
 import { DateLocalIso } from '@/types'
 import { getToLocalISOString } from '@/utils/date'
 import React, { useEffect, useState } from 'react'

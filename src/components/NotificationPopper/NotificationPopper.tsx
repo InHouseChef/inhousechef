@@ -1,4 +1,4 @@
-import { useCartStore } from '@/app/(protected)/employee/newstate'
+import { useCartStore } from '@/app/(protected)/newstate'
 import { useEffect } from 'react'
 import { toast, Toaster } from 'sonner'
 

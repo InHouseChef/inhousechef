@@ -1,6 +1,6 @@
 import { ReadMyOrderResponse } from '@/api/order'
 import { useReadMyOrders } from '@/api/order/repository/hooks/readMyOrder'
-import { calculateDateRange, getOrderStateLabel } from '@/app/(protected)/employee/companies/[companyCode]/utils'
+import { calculateDateRange, getOrderStateLabel } from '@/app/(protected)/companies/[companyCode]/utils'
 import { Loader } from '@/components/Loader'
 import { getToLocalISOString } from '@/utils/date'
 import clsx from 'clsx'

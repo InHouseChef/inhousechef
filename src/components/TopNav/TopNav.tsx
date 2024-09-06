@@ -6,9 +6,9 @@ import { useEffect } from 'react'
 import { MainNavMobile } from '../MainNav'
 import { TopNavHamburger } from './components/TopNavHamburger'
 import { TopNavLogo } from './components/TopNavLogo'
-import { DaySelectorDropdown } from '@/app/(protected)/employee/companies/[companyCode]/components/NewCompanyOrderForm/DaySelector/DaySelectorDropdown'
+import { DaySelectorDropdown } from '@/app/(protected)/companies/[companyCode]/components/NewCompanyOrderForm/DaySelector/DaySelectorDropdown'
 import { ShoppingCartIcon } from 'lucide-react'
-import { useCartStore } from '@/app/(protected)/employee/newstate'
+import { useCartStore } from '@/app/(protected)/newstate'
 
 export const TopNav = () => {
     const { isOpen, setIsOpen, handleClose } = useDialogControl()

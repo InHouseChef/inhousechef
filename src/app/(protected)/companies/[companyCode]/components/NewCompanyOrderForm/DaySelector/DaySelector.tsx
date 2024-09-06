@@ -1,4 +1,4 @@
-import { useCartStore } from '@/app/(protected)/employee/newstate'
+import { useCartStore } from '@/app/(protected)/newstate'
 import { getToLocalISOString } from '@/utils/date'
 import clsx from 'clsx'
 import React from 'react'
