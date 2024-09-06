@@ -8,7 +8,7 @@ const BUTTON_VARIANTS = cva(
         variants: {
             variant: {
                 solid: 'text-white px-4 py-2',
-                outline: 'border text-black px-4 py-2',
+                outline: 'border text-gray-700 px-4 py-2',
                 text: 'active:shadow-none'
             },
             state: {
@@ -97,7 +97,7 @@ const BUTTON_VARIANTS = cva(
                 variant: 'text',
                 state: 'secondary',
                 disabled: false,
-                className: 'text-black hover:text-primary'
+                className: 'text-gray-700 hover:text-primary'
             },
             {
                 variant: 'text',

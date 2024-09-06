@@ -60,7 +60,7 @@ export const ActiveOrders = () => {
             {(isFetching || isRefetching) && <Loader className='flex min-h-[50vh] items-center justify-center' />}
             {!isFetching && !isRefetching && activeOrders?.length === 0 && (
                 <div className='flex items-center justify-center min-h-[50vh]'>
-                    <p className='text-md text-black-900 text-center'>Nemate aktivnih porudžbina.</p>
+                    <p className='text-md text-gray-700-900 text-center'>Nemate aktivnih porudžbina.</p>
                 </div>
             )}
             {!isFetching &&
@@ -72,7 +72,7 @@ export const ActiveOrders = () => {
                         return (
                             <div key={order.id} className='mb-4 bg-white'>
                                 <div className='mb-2 flex flex-row gap-8'>
-                                    <p className='text-md text-black-900 font-medium'>Status:</p>
+                                    <p className='text-md text-gray-700-900 font-medium'>Status:</p>
                                     <p
                                         className={clsx('text-md font-bold', {
                                             'text-[#2F80ED]/75': order.state === 'Draft',
@@ -82,9 +82,9 @@ export const ActiveOrders = () => {
                                         })}>
                                         {getOrderStateLabel(order.state)}
                                     </p>
-                                    {type === 'Immediate' && <p className='text-md text-black-900 font-medium'>Za odmah</p>}
+                                    {type === 'Immediate' && <p className='text-md text-gray-700-900 font-medium'>Za odmah</p>}
                                     {type === 'Scheduled' && (
-                                        <p className='text-md text-black-900 font-medium'>Za {formatEuropeanDate(forDate)}</p>
+                                        <p className='text-md text-gray-700-900 font-medium'>Za {formatEuropeanDate(forDate)}</p>
                                     )}
                                 </div>
                                 <div className='border-grey-300 flex items-center justify-between border-t py-4'>

@@ -78,7 +78,7 @@ export const ShiftSelector: React.FC<ShiftSelectorProps> = ({
                                 'flex-1 cursor-pointer rounded-lg p-2 h-full flex items-center justify-center text-sm text-center',
                                 {
                                     'bg-primary text-white drop-shadow-primary': selectedShiftId === aLaCarteShift.id && isALaCarteShiftActive(),
-                                    'text-black': selectedShiftId !== aLaCarteShift.id && isALaCarteShiftActive(),
+                                    'text-gray-700': selectedShiftId !== aLaCarteShift.id && isALaCarteShiftActive(),
                                     'text-gray-400 cursor-not-allowed bg-gray-100': !isALaCarteShiftActive(), // Disable if not active
                                 }
                             )}
@@ -118,7 +118,7 @@ export const ShiftSelector: React.FC<ShiftSelectorProps> = ({
                                     'flex-1 cursor-pointer rounded-lg p-2 h-full text-xs flex flex-col items-center justify-center text-center',
                                     {
                                         'bg-primary text-white drop-shadow-primary': selectedShiftId === shift.id && !isShiftDisabled,
-                                        'text-black': selectedShiftId !== shift.id && !isShiftDisabled,
+                                        'text-gray-700': selectedShiftId !== shift.id && !isShiftDisabled,
                                         'text-gray-400 cursor-not-allowed bg-gray-100': isShiftDisabled, // Apply disabled styles
                                     },
                                     {

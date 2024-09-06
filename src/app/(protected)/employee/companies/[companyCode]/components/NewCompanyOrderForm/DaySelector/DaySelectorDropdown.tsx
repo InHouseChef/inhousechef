@@ -24,7 +24,7 @@ export const DaySelectorDropdown: React.FC = () => {
             setActiveDay(tomorrowDate)
         }
         return (
-            <div className='flex flex-col items-left justify-left text-primary font-bold'>
+            <div className='flex flex-col items-left justify-left text-gray-700 font-bold'>
                 <div>
                     Naručivanje za
                 </div>
@@ -38,7 +38,7 @@ export const DaySelectorDropdown: React.FC = () => {
     return (
         <div className='relative'>
             <div
-                className='flex flex-col items-left justify-left cursor-pointer text-primary font-bold'
+                className='flex flex-col items-left justify-left cursor-pointer text-gray-700 font-bold'
                 onClick={() => setIsDropdownOpen(prev => !prev)}
             >
                 <span className='mr-1'>Naručivanje za</span>
@@ -46,7 +46,7 @@ export const DaySelectorDropdown: React.FC = () => {
                     <div className='font-normal'>
                         {activeDay === todayDate ? 'Danas' : 'Sutra'}
                     </div>
-                    <ChevronDownIcon className='ml-2 text-black' />
+                    <ChevronDownIcon className='ml-2 text-gray-700' />
                 </div>
             </div>
             {isDropdownOpen && (

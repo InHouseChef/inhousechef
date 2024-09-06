@@ -63,7 +63,7 @@ export const OrderHistory = () => {
             {(isFetching || isRefetching) && <Loader className='flex min-h-[50vh] items-center justify-center' />}
             {isFetching && isRefetching && orderHistory?.length === 0 && (
                 <div className='flex items-center justify-center min-h-[50vh]'>
-                    <p className='text-md text-black-900 text-center'>Niste do sada ništa poručivali.</p>
+                    <p className='text-md text-gray-700-900 text-center'>Niste do sada ništa poručivali.</p>
                 </div>
             )}
             {!isFetching &&
@@ -76,7 +76,7 @@ export const OrderHistory = () => {
                             className='mb-4 cursor-pointer bg-white'
                         >
                             <div className='mb-2 flex flex-row gap-8'>
-                                <p className='text-md text-black-900 font-medium'>Status:</p>
+                                <p className='text-md text-gray-700-900 font-medium'>Status:</p>
                                 <p
                                     className={clsx('text-md font-bold', {
                                         'text-[#2F80ED]/75': order.state === 'Draft',

@@ -281,7 +281,7 @@ const Cart = () => {
                                     {isShiftValid && (
                                         <Button
                                             variant="link"
-                                            className="mt-2 text-primary"
+                                            className="mt-2 text-grey-900"
                                             onClick={() => setIsMainCourseDrawerOpen(true)}
                                             disabled={!isShiftValid}
                                         >
@@ -338,7 +338,7 @@ const Cart = () => {
                                     {isShiftValid && (
                                         <Button
                                             variant="link"
-                                            className="mt-2 text-primary"
+                                            className="mt-2 text-gray-700"
                                             onClick={() => setIsSideDishDrawerOpen(true)}
                                             disabled={!isShiftValid}
                                         >

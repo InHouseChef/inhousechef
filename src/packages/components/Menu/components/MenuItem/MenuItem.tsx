@@ -27,7 +27,7 @@ export const MenuItem: MenuItemComponent = ({ children, onClick, active, ...rest
                 '[&:hover>a]:text-white',
                 {
                     'text-primary': active,
-                    'text-black': !active
+                    'text-gray-700': !active
                 }
             )}
             // active={active}

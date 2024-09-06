@@ -12,7 +12,7 @@ const MealTypeSelector = ({ selectedMealType, onMealTypeChange }: MealTypeSelect
                 <li
                     className={clsx('flex-1 cursor-pointer rounded-full py-3.5 text-center drop-shadow-primary', {
                         'bg-primary text-white': selectedMealType === 'MainCourse',
-                        'text-black': selectedMealType !== 'MainCourse'
+                        'text-gray-700': selectedMealType !== 'MainCourse'
                     })}
                     onClick={() => onMealTypeChange('MainCourse')}>
                     Glavna jela
@@ -20,7 +20,7 @@ const MealTypeSelector = ({ selectedMealType, onMealTypeChange }: MealTypeSelect
                 <li
                     className={clsx('flex-1 cursor-pointer rounded-full py-3.5 text-center drop-shadow-primary', {
                         'bg-primary text-white': selectedMealType === 'SideDish',
-                        'text-black': selectedMealType !== 'SideDish'
+                        'text-gray-700': selectedMealType !== 'SideDish'
                     })}
                     onClick={() => onMealTypeChange('SideDish')}>
                     Prilozi

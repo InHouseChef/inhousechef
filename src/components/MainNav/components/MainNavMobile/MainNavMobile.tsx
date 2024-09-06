@@ -64,7 +64,7 @@ export interface CloseSectionProps {
 export const CloseSection = ({ close, heading }: CloseSectionProps) => {
     return (
         <SheetClose asChild>
-            <button onClick={close} className='mb-4 text-right text-black'>
+            <button onClick={close} className='mb-4 text-right text-gray-700'>
                 <div className='flex-start flex gap-4'>
                     <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200'>
                         <ChevronLeft className='h-5 w-5' />

@@ -8,7 +8,7 @@ interface EventButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export const EventButton = forwardRef<HTMLButtonElement, EventButtonProps>(
     ({ children, type = 'button', isLoading, className, ...rest }, ref) => (
         <button
-            className={`disabled:text-grey800 flex h-max items-center gap-1 rounded border-0 bg-transparent p-0 text-black transition-colors duration-200 hover:text-primary ${className}`}
+            className={`disabled:text-grey800 flex h-max items-center gap-1 rounded border-0 bg-transparent p-0 text-gray-700 transition-colors duration-200 hover:text-primary ${className}`}
             type={type}
             ref={ref}
             {...rest}>

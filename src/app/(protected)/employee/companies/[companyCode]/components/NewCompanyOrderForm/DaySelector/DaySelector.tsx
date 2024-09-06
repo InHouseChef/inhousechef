@@ -30,7 +30,7 @@ const DaySelector: React.FC = () => {
                 <li
                     className={clsx('ml-2 flex-1 cursor-pointer rounded-lg py-2 text-center', {
                         'bg-primary text-white': activeDay === getToLocalISOString(new Date()).split('T')[0],
-                        'text-black': activeDay !== getToLocalISOString(new Date()).split('T')[0]
+                        'text-gray-700': activeDay !== getToLocalISOString(new Date()).split('T')[0]
                     })}
                     onClick={() => handleDayChange('today')}>
                     Za danas
@@ -39,7 +39,7 @@ const DaySelector: React.FC = () => {
                     className={clsx('mr-2 flex-1 cursor-pointer rounded-lg py-2 text-center', {
                         'bg-primary text-white':
                             activeDay === getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0],
-                        'text-black': activeDay !== getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0]
+                        'text-gray-700': activeDay !== getToLocalISOString(new Date(Date.now() + 86400000)).split('T')[0]
                     })}
                     onClick={() => handleDayChange('tomorrow')}>
                     Za sutra
