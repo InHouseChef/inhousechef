@@ -6,9 +6,9 @@ import { useEffect } from 'react'
 import { MainNavMobile } from '../MainNav'
 import { TopNavHamburger } from './components/TopNavHamburger'
 import { TopNavLogo } from './components/TopNavLogo'
-import { DaySelectorDropdown } from '@/app/(protected)/employee/companies/[companyCode]/components/NewCompanyOrderForm/DaySelector/DaySelectorDropdown'
+import { DaySelectorDropdown } from '@/app/(protected)/companies/[companyCode]/components/NewCompanyOrderForm/DaySelector/DaySelectorDropdown'
 import { ShoppingCartIcon } from 'lucide-react'
-import { useCartStore } from '@/app/(protected)/employee/newstate'
+import { useCartStore } from '@/app/(protected)/newstate'
 
 export const TopNav = () => {
     const { isOpen, setIsOpen, handleClose } = useDialogControl()
@@ -42,7 +42,7 @@ export const TopNav = () => {
                     <DaySelectorDropdown />
                 </div>
                 <div className='flex flex-row items-center justify-center gap-4'>
-                    <div className='relative'>
+                    <div className='relative text-gray-700'>
                         <ShoppingCartIcon onClick={handleOpenCart} />
                         {selectedOrder && (
                             <div className='absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full'></div>

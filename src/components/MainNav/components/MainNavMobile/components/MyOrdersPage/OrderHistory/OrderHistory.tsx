@@ -1,6 +1,6 @@
 import { ReadMyOrderResponse } from '@/api/order'
 import { useReadMyOrders } from '@/api/order/repository/hooks/readMyOrder'
-import { calculateDateRange, getOrderStateLabel } from '@/app/(protected)/employee/companies/[companyCode]/utils'
+import { calculateDateRange, getOrderStateLabel } from '@/app/(protected)/companies/[companyCode]/utils'
 import { Loader } from '@/components/Loader'
 import { getToLocalISOString } from '@/utils/date'
 import clsx from 'clsx'
@@ -61,7 +61,7 @@ export const OrderHistory = () => {
     return (
         <div className='relative mt-6'>
             {(isFetching || isRefetching) && <Loader className='flex min-h-[50vh] items-center justify-center' />}
-            {isFetching && isRefetching && orderHistory?.length === 0 && (
+            {!isFetching && !isRefetching && orderHistory?.length === 0 && (
                 <div className='flex items-center justify-center min-h-[50vh]'>
                     <p className='text-md text-gray-700 text-center'>Niste do sada ništa poručivali.</p>
                 </div>

@@ -1,8 +1,8 @@
 import { DailyMenuMeal, useReadDailyMenus } from '@/api/daily-menus'
 import { MealTypeEnum } from '@/api/meals'
-import { MealCard } from '@/app/(protected)/employee/companies/[companyCode]/components/NewCompanyOrderForm/MealCard/MealCard'
-import { MealDrawer } from '@/app/(protected)/employee/companies/[companyCode]/components/NewCompanyOrderForm/MealDrawer/MealDrawer'
-import { calculateDateRange } from '@/app/(protected)/employee/companies/[companyCode]/utils'
+import { MealCard } from '@/app/(protected)/companies/[companyCode]/components/NewCompanyOrderForm/MealCard/MealCard'
+import { MealDrawer } from '@/app/(protected)/companies/[companyCode]/components/NewCompanyOrderForm/MealDrawer/MealDrawer'
+import { calculateDateRange } from '@/app/(protected)/companies/[companyCode]/utils'
 import { formatDateSerbianLatin, getToLocalISOString } from '@/utils/date'
 import { useState } from 'react'
 

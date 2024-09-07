@@ -92,7 +92,6 @@ export interface CartStore {
     updateSelectedOrder(): void
     clearSelectedOrder: () => void
     resetCart: () => void
-    clearCart: () => void
     setIsOpen: (isOpen: boolean) => void
     shouldDisableOrder: (order: ScheduledOrderDetails | ImmediateOrderDetails | undefined) => boolean
 
@@ -197,24 +196,33 @@ const api = {
     }
 }
 
+// Define the initial state separately
+const initialState = {
+    companyCode: undefined,
+    userRole: RolesEnum.Employee,
+    hasALaCardPermission: false,
+    activeDay: getToLocalISOString(new Date()).split('T')[0] as DateLocalIso,
+    activeShift: undefined,
+    activeMenus: [],
+    activeALaCarteMenus: [],
+    regularShifts: [],
+    aLaCarteShift: undefined,
+    immediateOrders: [],
+    scheduledOrders: [],
+    selectedOrder: undefined,
+    isOpen: false,
+    message: {
+        text: '',
+        description: ''
+    },
+    messageType: undefined,
+};
+
 export const useCartStore = create<CartStore>()(
     devtools(
         persist(
             immer((set, get) => ({
-                companyCode: undefined,
-                userRole: RolesEnum.Employee,
-                hasALaCardPermission: false,
-                activeDay: getToLocalISOString(new Date()).split('T')[0] as DateLocalIso,
-                regularShifts: [],
-                immediateOrders: [],
-                scheduledOrders: [],
-                selectedOrder: undefined,
-                isOpen: false,
-                message: {
-                    text: '',
-                    description: ''
-                },
-                messageType: undefined,
+                ...initialState,
 
                 shouldDisableOrder: order => {
                     if (!order) return true
@@ -465,11 +473,7 @@ export const useCartStore = create<CartStore>()(
                 },
 
                 resetCart: () => {
-                    set(state => {})
-                },
-
-                clearCart: () => {
-                    set(() => null)
+                    set(() => initialState); // Reset state to the initial values
                 },
 
                 fetchShifts: async () => {

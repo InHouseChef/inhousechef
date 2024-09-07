@@ -1,8 +1,12 @@
-import { useCartStore } from '@/app/(protected)/employee/newstate'
+import { useCartStore } from '@/app/(protected)/newstate'
 import { useEffect } from 'react'
 import { toast, Toaster } from 'sonner'
 
 export const NotificationPopper = () => {
+    const store = useCartStore()
+
+    if (!store) return null;
+
     const { message, messageType, setMessage } = useCartStore()
 
     useEffect(() => {

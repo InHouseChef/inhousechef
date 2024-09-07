@@ -1,5 +1,5 @@
 import { DailyMenuMeal } from '@/api/daily-menus'
-import { useCartStore } from '@/app/(protected)/employee/newstate'
+import { useCartStore } from '@/app/(protected)/newstate'
 import { DateLocalIso } from '@/types'
 import { getToLocalISOString } from '@/utils/date'
 import React, { useEffect, useState } from 'react'
@@ -48,7 +48,7 @@ const MainMenu: React.FC = () => {
     }
 
     const alacardMeals = activeShift?.id === aLaCarteShift?.id && activeALaCarteMenus ? activeALaCarteMenus[0]?.meals : []
-    const regularMeals = activeMenus ? activeMenus[0].meals : []
+    const regularMeals = activeMenus && activeMenus[0] ? activeMenus[0].meals : []
 
     const mealsToDisplay =
         (activeShift?.id === aLaCarteShift?.id && activeALaCarteMenus ? alacardMeals : regularMeals)?.filter(

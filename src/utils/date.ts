@@ -320,3 +320,10 @@ export const timeStringToMinutes = (timeString: string): number => {
     const [hours, minutes, seconds] = timeString.split(':').map(Number)
     return hours * 60 + minutes + seconds / 60
 }
+
+export const getSerbianLocalDateTime = (date: Date | DateLocalIso | DateTimeIsoUtc) => {
+    const serbianLocale = 'sr-RS';
+    const formattedDate = formatEuropeanDate(date);
+    const formattedTime = new Date(date).toLocaleTimeString(serbianLocale);
+    return `${formattedDate} ${formattedTime}`;
+}

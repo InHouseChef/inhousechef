@@ -1,5 +1,5 @@
 import { DailyMenuMeal } from '@/api/daily-menus'
-import { useCartStore } from '@/app/(protected)/employee/newstate'
+import { useCartStore } from '@/app/(protected)/newstate'
 import { Button } from '@/components/ui/button'
 import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import { useEffect, useState } from 'react'
@@ -66,6 +66,10 @@ export const MealDrawer = ({ meal, isOpen, onClose, isReadOnly }: MealDrawerProp
                         {meal.description ? <p className='mt-4 text-sm text-gray-600'>{meal.description}</p> : undefined}
                     </DrawerHeader>
 
+                    {isReadOnly && (
+                        <DrawerFooter className='items-center justify-between my-4'>
+                        </DrawerFooter>
+                    )}
                     {!isReadOnly && (
                         <DrawerFooter className='items-center justify-between'>
                             <div className='flex items-center justify-between gap-2'>
