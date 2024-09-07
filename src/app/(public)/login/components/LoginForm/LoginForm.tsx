@@ -50,39 +50,6 @@ export const LoginForm = () => {
         )
     }
 
-    // const onSubmit = async (formData: z.infer<typeof createClientCredentialsSchema>) => {
-    //     setIsPending(true)
-    //     createLogin({
-    //         path: {},
-    //         body: { username: formData.username, password: formData.password, grantType: 'password_credentials' }
-    //     })
-    //         .then(data => {
-    //             setIdentity(data)
-    //         })
-    //         .catch((error: AxiosError) => {
-    //             console.log(error)
-    //             if (error.response) {
-    //                 if (error.response.status === 401) {
-    //                     setErrorMessage('Korisničko ime ili lozinka nije ispravna.')
-    //                 } else {
-    //                     setErrorMessage(
-    //                         'Došlo je do greške. Molimo pokušajte ponovo kasnije. U slučaju da se greška ponovi, kontaktirajte podršku.'
-    //                     )
-    //                 }
-    //             } else if (error.request) {
-    //                 setErrorMessage('Nema odgovora sa servera. Molimo proverite Vašu konekciju.')
-    //             } else {
-    //                 setErrorMessage(
-    //                     'Došlo je do neočekivane greške. Molimo pokušajte ponovo. U slučaju da se greška ponovi, kontaktirajte podršku.'
-    //                 )
-    //             }
-    //         })
-    //         .finally(() => {
-    //             setIsPending(false)
-    //             setErrorMessage(null)
-    //         })
-    // }
-
     useEffect(() => {
         console.log(error, isError)
     }, [error, isError])

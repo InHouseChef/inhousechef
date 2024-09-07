@@ -3,6 +3,7 @@
 import { ReadUserCompanyResponse } from '@/api/companies'
 import { readUserCompany } from '@/api/companies/repository/hooks/readUserCompany'
 import { Loader } from '@/components'
+import { NotificationPopper } from '@/components/NotificationPopper/NotificationPopper'
 import { useReadIdentity } from '@/hooks/useIdentity'
 import { useRoles } from '@/providers/RoleProvider/RoleProvider'
 import { useCompanyStore } from '@/state'
@@ -51,6 +52,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
     return (
         <section className='w-full bg-primary'>
             <div className='flex h-full items-center justify-center'>{children}</div>
+            <NotificationPopper />
         </section>
     )
 }
