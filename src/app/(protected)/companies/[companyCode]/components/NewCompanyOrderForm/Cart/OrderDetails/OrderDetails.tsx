@@ -1,5 +1,5 @@
 import { DateLocalIso, DateTimeIsoUtc, Time } from "@/types";
-import { formatEuropeanDate, formatTimeWithoutSeconds } from "@/utils/date";
+import { formatEuropeanDate, formatTimeWithoutSeconds, getSerbianLocalDateTime } from "@/utils/date";
 
 export type OrderDetailsProps = {
     number: string,
@@ -9,14 +9,6 @@ export type OrderDetailsProps = {
     shiftEnd?: Time
     placedAt?: DateTimeIsoUtc
     confirmedAt?: DateTimeIsoUtc
-}
-
-const serbianLocale = 'sr-RS';
-
-export const getSerbianLocalDateTime = (date: Date | DateLocalIso | DateTimeIsoUtc) => {
-    const formattedDate = formatEuropeanDate(date);
-    const formattedTime = new Date(date).toLocaleTimeString(serbianLocale);
-    return `${formattedDate} ${formattedTime}`;
 }
 
 export const OrderDetails = ({ number, orderDate, orderCreatedAt, shiftStart, shiftEnd, placedAt, confirmedAt }: OrderDetailsProps) => {

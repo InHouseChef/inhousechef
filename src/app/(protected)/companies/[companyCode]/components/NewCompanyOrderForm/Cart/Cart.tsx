@@ -5,7 +5,7 @@ import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger 
 import { CartMainCourseDrawer } from '../CartMainCourseDrawer/CartMainCourseDrawer';
 import { CartSideDishDrawer } from '../CartSideDishDrawer/CartSideDishDrawer';
 import { X } from 'lucide-react'; // Icon for the close button
-import { formatDateSerbianLatin } from '@/utils/date';
+import { formatEuropeanDate } from '@/utils/date';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { OrderDetails } from './OrderDetails/OrderDetails';
 import emptyCart from '../../../../../../../../public/images/empty-cart.png';
@@ -163,8 +163,8 @@ const Cart = () => {
                     <>
                         {details}
                         <div className="p-4 bg-yellow-100 rounded-md text-center text-sm text-yellow-700">
-                            Ovu započetu porudžbinu možete poručiti do <strong>{formatDateSerbianLatin(new Date(selectedOrder.orderDate))}</strong>
-                            &nbsp;<strong>{orderDeadlineTime.toLocaleTimeString(serbianLocale)}</strong>&nbsp; Nakon tog vremena, porudžbina će biti automatski odbačena.
+                            Ovu započetu porudžbinu možete poručiti do <strong>{formatEuropeanDate(new Date(selectedOrder.orderDate))}</strong>
+                            &nbsp;<strong>{orderDeadlineTime.toLocaleTimeString(serbianLocale)}</strong>. Nakon tog vremena, porudžbina će biti automatski odbačena.
                         </div>
                     </>
                 );
@@ -173,8 +173,8 @@ const Cart = () => {
                     <>
                         {details}
                         <div className="p-4 bg-blue-100 rounded-md text-center text-sm text-blue-700">
-                            Vaša porudžbina je poručena i može se izmeniti do <strong>{formatDateSerbianLatin(new Date(selectedOrder.orderDate))}</strong>
-                            <strong>&nbsp;{orderDeadlineTime.toLocaleTimeString(serbianLocale)}</strong>&nbsp;. Nakon toga, porudžbina će biti zaključana i poslužena u izabranom periodu.
+                            Vaša porudžbina je poručena i može se izmeniti do <strong>{formatEuropeanDate(new Date(selectedOrder.orderDate))}</strong>
+                            <strong>&nbsp;{orderDeadlineTime.toLocaleTimeString(serbianLocale)}</strong>. Nakon toga, porudžbina će biti zaključana i poslužena u izabranom periodu.
                         </div>
                     </>
                 );
