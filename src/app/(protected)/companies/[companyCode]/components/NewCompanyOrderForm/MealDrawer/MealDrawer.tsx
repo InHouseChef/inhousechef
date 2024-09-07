@@ -66,6 +66,10 @@ export const MealDrawer = ({ meal, isOpen, onClose, isReadOnly }: MealDrawerProp
                         {meal.description ? <p className='mt-4 text-sm text-gray-600'>{meal.description}</p> : undefined}
                     </DrawerHeader>
 
+                    {isReadOnly && (
+                        <DrawerFooter className='items-center justify-between my-4'>
+                        </DrawerFooter>
+                    )}
                     {!isReadOnly && (
                         <DrawerFooter className='items-center justify-between'>
                             <div className='flex items-center justify-between gap-2'>

@@ -125,9 +125,9 @@ const Cart = () => {
                 <>
                     {details}
                     <div className="p-4 bg-yellow-100 rounded-md text-center text-sm text-yellow-700">
-                        Ovu započetu porudžbinu možete poručiti dok traje "A La Carte" smena za današnji dan, 
-                        od <strong>{shiftStartTime.toLocaleTimeString(serbianLocale)}</strong> do <strong>{shiftEndTime.toLocaleTimeString(serbianLocale)}</strong>. 
-                        Nakon tog perioda porudžbina će biti automatski odbačena.
+                        <p>Ovu započetu porudžbinu možete poručiti dok traje "A La Carte" smena za današnji dan</p>
+                        <p>od <strong>{shiftStartTime.toLocaleTimeString(serbianLocale)}</strong> do <strong>{shiftEndTime.toLocaleTimeString(serbianLocale)}</strong></p>
+                        <p>Nakon tog perioda porudžbina će biti automatski odbačena.</p>
                     </div>
                 </>
             );
@@ -136,8 +136,8 @@ const Cart = () => {
                 <>
                     {details}
                     <div className="p-4 bg-blue-100 rounded-md text-center text-sm text-blue-700">
-                        Vaša porudžbina je poručena i više ne može biti izmenjena. 
-                        Biće poslužena u naredna <strong>dva sata</strong>.
+                        <p>Vaša porudžbina je poručena i više ne može biti izmenjena.</p>
+                        <p>Biće poslužena u naredna <strong>dva sata</strong>.</p>
                     </div>
                 </>
             );
@@ -163,8 +163,9 @@ const Cart = () => {
                     <>
                         {details}
                         <div className="p-4 bg-yellow-100 rounded-md text-center text-sm text-yellow-700">
-                            Ovu započetu porudžbinu možete poručiti do <strong>{formatEuropeanDate(new Date(selectedOrder.orderDate))}</strong>
-                            &nbsp;<strong>{orderDeadlineTime.toLocaleTimeString(serbianLocale)}</strong>. Nakon tog vremena, porudžbina će biti automatski odbačena.
+                            <p>Ovu započetu porudžbinu možete poručiti do </p>
+                            <p><strong>{formatEuropeanDate(new Date(selectedOrder.orderDate))}</strong> <strong>{orderDeadlineTime.toLocaleTimeString(serbianLocale)}</strong></p>
+                            <p>Nakon tog vremena, porudžbina će biti automatski odbačena.</p>
                         </div>
                     </>
                 );
@@ -173,8 +174,9 @@ const Cart = () => {
                     <>
                         {details}
                         <div className="p-4 bg-blue-100 rounded-md text-center text-sm text-blue-700">
-                            Vaša porudžbina je poručena i može se izmeniti do <strong>{formatEuropeanDate(new Date(selectedOrder.orderDate))}</strong>
-                            <strong>&nbsp;{orderDeadlineTime.toLocaleTimeString(serbianLocale)}</strong>. Nakon toga, porudžbina će biti zaključana i poslužena u izabranom periodu.
+                            <p>Vaša porudžbina je poručena i može se izmeniti do</p>
+                            <p><strong>{formatEuropeanDate(new Date(selectedOrder.orderDate))}</strong> <strong>{orderDeadlineTime.toLocaleTimeString(serbianLocale)}</strong></p>
+                            <p>Nakon toga, porudžbina će biti zaključana i poslužena u izabranom periodu.</p>
                         </div>
                     </>
                 );
