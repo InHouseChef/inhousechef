@@ -16,6 +16,7 @@ import { MyProfilePage } from './components/MyProfilePage/MyProfilePage'
 import { TermsAndConditionsPage } from './components/TermsAndConditionsPage/TermsAndConditionsPage'
 import { UsersPage } from './components/UsersPage/UsersPage'
 import { CartIcon, LogoutIcon, MenuIcon, TermsAndConditionsIcon, UserGroupIcon, UserProfileIcon } from './icons'
+import { RequireCompanyAuthorization } from '@/components/RequireAuthorization/RequireAuthorization'
 
 interface MainNavMobileProps {
     isNavOpen: boolean
@@ -150,6 +151,23 @@ export const MainNavMobile = ({ isNavOpen, onOverlayClick }: MainNavMobileProps)
                                     <span className='text-lg font-medium text-gray-700'>{'Moj profil'}</span>
                                     <ChevronRight className='ml-auto text-gray-400' />
                                 </li>
+                                <RequireCompanyAuthorization role='CompanyManager'>
+                                    <li
+                                        className={clsx(
+                                            'flex cursor-pointer items-center gap-4 rounded-b-lg border-b bg-gray-100 px-4 py-6 transition-all last:border-b-0 hover:bg-gray-200'
+                                        )}
+                                        onClick={() => openDrawer('users')}
+                                        key={'users'}>
+                                        <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-100'>
+                                            {/* Replace with your icon component */}
+                                            {<UserGroupIcon />}
+                                        </div>
+                                        <span className='text-lg font-medium text-gray-700'>
+                                            {'Upravljanje korisnicima'}
+                                        </span>
+                                        <ChevronRight className='ml-auto text-gray-400' />
+                                    </li>
+                                </RequireCompanyAuthorization>
                             </ul>
                             <ul>
                                 {TERMS_AND_CONDITIONS.map(({ path, label, icon }, index) => (

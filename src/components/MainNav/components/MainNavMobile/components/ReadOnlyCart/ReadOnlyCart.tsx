@@ -3,7 +3,7 @@ import { ReadMyOrderResponse } from '@/api/order';
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { X } from 'lucide-react'; // Icon for the close button
 import { useCartStore } from '@/app/(protected)/newstate';
-import { formatDateSerbianLatin } from '@/utils/date';
+import { formatEuropeanDate } from '@/utils/date';
 import { OrderDetails } from '@/app/(protected)/companies/[companyCode]/components/NewCompanyOrderForm/Cart/OrderDetails/OrderDetails';
 
 interface ReadOnlyCartProps {
@@ -73,8 +73,8 @@ const ReadOnlyCart: React.FC<ReadOnlyCartProps> = ({ order, isOpen, onClose }) =
                     <>
                         {details}
                         <div className="p-4 bg-yellow-100 rounded-md text-center text-sm text-yellow-700">
-                            Ovu započetu porudžbinu možete izmeniti do <strong>{formatDateSerbianLatin(new Date(order.orderDate))}</strong>
-                            &nbsp;<strong>{orderDeadlineTime.toLocaleTimeString(serbianLocale)}</strong>&nbsp; Nakon tog vremena, porudžbina će biti automatski odbačena.
+                            Ovu započetu porudžbinu možete izmeniti do <strong>{formatEuropeanDate(new Date(order.orderDate))}</strong>
+                            <strong>{orderDeadlineTime.toLocaleTimeString(serbianLocale)}</strong>&nbsp; Nakon tog vremena, porudžbina će biti automatski odbačena.
                         </div>
                     </>
                 );
@@ -83,8 +83,8 @@ const ReadOnlyCart: React.FC<ReadOnlyCartProps> = ({ order, isOpen, onClose }) =
                     <>
                         {details}
                         <div className="p-4 bg-blue-100 rounded-md text-center text-sm text-blue-700">
-                            Vaša porudžbina je poručena i može se izmeniti do <strong>{formatDateSerbianLatin(new Date(order.orderDate))}</strong>
-                            &nbsp;<strong>{orderDeadlineTime.toLocaleTimeString(serbianLocale)}&nbsp;</strong>. Nakon toga, porudžbina će biti zaključana i poslužena u izabranom periodu.
+                            Vaša porudžbina je poručena i može se izmeniti do <strong>{formatEuropeanDate(new Date(order.orderDate))}</strong>
+                            <strong>{orderDeadlineTime.toLocaleTimeString(serbianLocale)}&nbsp;</strong>. Nakon toga, porudžbina će biti zaključana i poslužena u izabranom periodu.
                         </div>
                     </>
                 );
@@ -93,7 +93,7 @@ const ReadOnlyCart: React.FC<ReadOnlyCartProps> = ({ order, isOpen, onClose }) =
                     <>
                         {details}
                         <div className="p-4 bg-green-100 rounded-md text-center text-sm text-green-700">
-                            Hvala Vam na porudžbini! <br/> Biće poslužena <strong>{formatDateSerbianLatin(new Date(order.orderDate))}</strong> u periodu od 
+                            Hvala Vam na porudžbini! <br/> Biće poslužena <strong>{formatEuropeanDate(new Date(order.orderDate))}</strong> u periodu od  
                             <strong>{shiftStartTime.toLocaleTimeString(serbianLocale)}</strong> do <strong>{shiftEndTime.toLocaleTimeString(serbianLocale)}</strong>.
                         </div>
                     </>
