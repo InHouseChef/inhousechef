@@ -3,7 +3,7 @@ import { ReadMyOrderResponse } from '@/api/order';
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { X } from 'lucide-react'; // Icon for the close button
 import { useCartStore } from '@/app/(protected)/newstate';
-import { formatEuropeanDate } from '@/utils/date';
+import { formatEuropeanDate, formatTimeWithoutSeconds } from '@/utils/date';
 import { OrderDetails } from '@/app/(protected)/companies/[companyCode]/components/NewCompanyOrderForm/Cart/OrderDetails/OrderDetails';
 
 interface ReadOnlyCartProps {
@@ -74,7 +74,7 @@ const ReadOnlyCart: React.FC<ReadOnlyCartProps> = ({ order, isOpen, onClose }) =
                         {details}
                         <div className="p-4 bg-yellow-100 rounded-md text-center text-sm text-yellow-700">
                             <p>Ovu započetu porudžbinu možete izmeniti do</p>
-                            <p><strong>{formatEuropeanDate(new Date(order.orderDate))}</strong> <strong>{orderDeadlineTime.toLocaleTimeString(serbianLocale)}</strong></p>
+                            <p><strong>{formatEuropeanDate(new Date(order.orderDate))}</strong> <strong>{formatTimeWithoutSeconds(orderDeadlineTime.toLocaleTimeString(serbianLocale))}</strong></p>
                             <p>Nakon tog vremena, porudžbina će biti automatski odbačena.</p>
                         </div>
                     </>
@@ -85,7 +85,7 @@ const ReadOnlyCart: React.FC<ReadOnlyCartProps> = ({ order, isOpen, onClose }) =
                         {details}
                         <div className="p-4 bg-blue-100 rounded-md text-center text-sm text-blue-700">
                             <p>Vaša porudžbina je poručena i može se izmeniti do</p>
-                            <p><strong>{formatEuropeanDate(new Date(order.orderDate))}</strong> <strong>{orderDeadlineTime.toLocaleTimeString(serbianLocale)}</strong></p>
+                            <p><strong>{formatEuropeanDate(new Date(order.orderDate))}</strong> <strong>{formatTimeWithoutSeconds(orderDeadlineTime.toLocaleTimeString(serbianLocale))}</strong></p>
                             <p>Nakon toga, porudžbina će biti zaključana i poslužena u izabranom periodu.</p>
                         </div>
                     </>
@@ -97,7 +97,7 @@ const ReadOnlyCart: React.FC<ReadOnlyCartProps> = ({ order, isOpen, onClose }) =
                         <div className="p-4 bg-green-100 rounded-md text-center text-sm text-green-700">
                             <p>Hvala Vam na porudžbini!</p>
                             <p>Biće poslužena <strong>{formatEuropeanDate(new Date(order.orderDate))}</strong></p>
-                            <p>od <strong>{shiftStartTime.toLocaleTimeString(serbianLocale)}</strong> do <strong>{shiftEndTime.toLocaleTimeString(serbianLocale)}</strong></p>
+                            <p>od <strong>{formatTimeWithoutSeconds(shiftStartTime.toLocaleTimeString(serbianLocale))}</strong> do <strong>{formatTimeWithoutSeconds(shiftEndTime.toLocaleTimeString(serbianLocale))}</strong></p>
                         </div>
                     </>
                 );
