@@ -1,9 +1,9 @@
 import { ReadUserResponse, useUpdateUserALaCardPermission } from '@/api/users';
 import { readUsers } from '@/api/users/repository/hooks/readUsers';
-import { Loader } from '@/components';
 import { DEFAULT_OFFSET_PAGINATION_REQUEST } from '@/constants';
 import { CheckCircle2Icon } from 'lucide-react';
 import { useEffect, useState, useRef, useCallback } from 'react';
+import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 
 export type UserPageTableProps = {
     toggleRefresh: boolean;
@@ -26,15 +26,12 @@ export const UserPageTable = ({
     const [hasMore, setHasMore] = useState(true);
     const [listHeight, setListHeight] = useState<number>(0);
     const [refreshKey, setRefreshKey] = useState(0);
-    const observer = useRef<IntersectionObserver | null>(null);
-    const lastUserElementRef = useRef<HTMLDivElement | null>(null);
     const parentRef = useRef<HTMLDivElement | null>(null);
 
     const { mutate: updateUserALaCardPermission } = useUpdateUserALaCardPermission();
 
     // Memoized fetch function to prevent unnecessary re-renders
     const fetchUsers = useCallback(async () => {
-        console.log('Fetching users');
         setIsLoading(true);
         const roleFilter = selectedRole !== 'All' ? selectedRole : undefined;
         const permissionFilter = selectedPermission !== 'All' ? selectedPermission === 'true' : undefined;
@@ -81,12 +78,9 @@ export const UserPageTable = ({
 
     // Refetch users when selectedRole, selectedPermission, or toggleRefresh changes
     useEffect(() => {
-        console.log('Refreshing users table');
         setPage(0);
         setUsersData([]);
         setHasMore(true);
-
-        // Use functional update to avoid multiple rerenders
         setRefreshKey((prevKey) => prevKey + 1);
     }, [selectedRole, selectedPermission, toggleRefresh]);
 
@@ -94,21 +88,6 @@ export const UserPageTable = ({
     useEffect(() => {
         fetchUsers();
     }, [page, refreshKey, fetchUsers]);
-
-    useEffect(() => {
-        if (isLoading) return;
-        if (observer.current) observer.current.disconnect();
-
-        observer.current = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting && hasMore) {
-                setPage((prevPage) => prevPage + 1);
-            }
-        });
-
-        if (lastUserElementRef.current) {
-            observer.current.observe(lastUserElementRef.current);
-        }
-    }, [isLoading, hasMore]);
 
     const handlePermissionChange = (userId: string, currentPermission: boolean) => {
         updateUserALaCardPermission(
@@ -124,43 +103,61 @@ export const UserPageTable = ({
         );
     };
 
-    return (
-        <div className="relative">
-            <div ref={parentRef} className="overflow-y-auto" style={{ height: `${listHeight}px`, padding: '10px' }}>
-                {usersData.map((user, index) => (
-                    <div
-                        key={user.id}
-                        ref={index === usersData.length - 1 ? lastUserElementRef : null}
-                        className="flex cursor-pointer items-center justify-between border-b bg-white py-4 pr-8"
-                        onClick={() => onEditUser(user)}
-                    >
-                        <div className="flex flex-col">
-                            <span className="text-lg font-semibold">{user.fullName}</span>
-                            {user.role === 'Employee' && (
-                                <span className="text-xs text-gray-700">
-                                    <strong>#{user.username}</strong> | Radnik
-                                </span>
-                            )}
-                            {user.role === 'CompanyManager' && (
-                                <span className="text-xs text-gray-700">
-                                    <strong>#{user.username}</strong> | Menadžer
-                                </span>
-                            )}
-                        </div>
-                        <div className="flex flex-col items-center">
-                            <CheckCircle2Icon
-                                className={`cursor-pointer ${user.aLaCardPermission ? 'text-green-700' : 'text-gray-700'}`}
-                                size={24}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handlePermissionChange(user.id, user.aLaCardPermission);
-                                }}
-                            />
-                            <span className="text-sm text-gray-700">A la carte</span>
-                        </div>
-                    </div>
-                ))}
+    // Virtualized row renderer
+    const Row = ({ index, style }: ListChildComponentProps) => {
+        const user = usersData[index];
+        return (
+            <div
+                key={user.id}
+                style={style}
+                className="flex cursor-pointer items-center justify-between border-b bg-white py-4 pr-8"
+                onClick={() => onEditUser(user)}
+            >
+                <div className="flex flex-col">
+                    <span className="text-lg font-semibold">{user.fullName}</span>
+                    {user.role === 'Employee' && (
+                        <span className="text-xs text-gray-700">
+                            <strong>#{user.username}</strong> | Radnik
+                        </span>
+                    )}
+                    {user.role === 'CompanyManager' && (
+                        <span className="text-xs text-gray-700">
+                            <strong>#{user.username}</strong> | Menadžer
+                        </span>
+                    )}
+                </div>
+                <div className="flex flex-col items-center">
+                    <CheckCircle2Icon
+                        className={`cursor-pointer ${user.aLaCardPermission ? 'text-green-700' : 'text-gray-700'}`}
+                        size={24}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handlePermissionChange(user.id, user.aLaCardPermission);
+                        }}
+                    />
+                    <span className="text-sm text-gray-700">A la carte</span>
+                </div>
             </div>
+        );
+    };
+
+    return (
+        <div ref={parentRef} className="relative">
+            <List
+                className="overflow-y-auto"
+                height={listHeight}
+                itemCount={usersData.length}
+                itemSize={80} // Adjust the size as needed
+                width="100%"
+                onItemsRendered={({ visibleStopIndex }) => {
+                    // Load more users when scrolling to the bottom
+                    if (visibleStopIndex === usersData.length - 1 && hasMore && !isLoading) {
+                        setPage((prevPage) => prevPage + 1);
+                    }
+                }}
+            >
+                {Row}
+            </List>
         </div>
     );
 };

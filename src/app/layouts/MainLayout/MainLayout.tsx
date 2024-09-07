@@ -23,23 +23,6 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
     const getCompany = useCompanyStore(state => state.getCompany)
 
     useEffect(() => {
-        const handleBeforeUnload = (event: any) => {
-          // This message is required to show the confirmation dialog
-          const message = 'Da li ste sigurni da želite da napustite stranicu? Vaše izmene neće biti sačuvane.';
-          event.returnValue = message;
-          return message;
-        };
-    
-        // Attach the event listener
-        window.addEventListener('beforeunload', handleBeforeUnload);
-    
-        // Clean up the event listener on component unmount
-        return () => {
-          window.removeEventListener('beforeunload', handleBeforeUnload);
-        };
-      }, []);
-
-    useEffect(() => {
         if (!isFetched) return
 
         if (!identity) return router.push('/login')
