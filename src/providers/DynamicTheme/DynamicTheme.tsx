@@ -1,7 +1,6 @@
 'use client'
 
 import { Loader } from '@/components'
-import { NotificationPopper } from '@/components/NotificationPopper/NotificationPopper'
 import { useBaseUrl, useSettings, useTheme } from '@/hooks'
 import localFont from 'next/font/local'
 import { useRouter } from 'next/navigation'
@@ -47,7 +46,6 @@ export const DynamicTheme = ({ children }: DynamicThemeProps) => {
             <body className={`${satoshi.variable} flex min-h-dvh w-full overflow-hidden font-satoshi`}>
                 {isLoading ? <Loader /> : children}
             </body>
-            <NotificationPopper />
         </>
     )
 }

@@ -45,12 +45,6 @@ export const useSettings = () => {
         if (companyUserResponse && companyUserResponse.branding) setBranding(companyUserResponse.branding)
     }, [companyUserResponse])
 
-    useEffect(() => {
-        if (!companyCode) {
-            setBranding(null)
-        }
-    }, [companyCode])
-
     return {
         branding,
         isLoading: isLoadingCompanyUserResponse,

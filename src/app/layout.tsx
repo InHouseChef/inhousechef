@@ -36,11 +36,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     return (
         <html lang='en'>
             <QueryProvider>
-                <DynamicTheme>
-                    <RoleProvider>
-                        <MainLayout>{children}</MainLayout>
-                    </RoleProvider>
-                </DynamicTheme>
+                <RoleProvider>
+                    <DynamicTheme>
+                    <MainLayout>{children}</MainLayout>
+                    </DynamicTheme>
+                </RoleProvider>
             </QueryProvider>
         </html>
     )

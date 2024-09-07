@@ -48,7 +48,7 @@ const MainMenu: React.FC = () => {
     }
 
     const alacardMeals = activeShift?.id === aLaCarteShift?.id && activeALaCarteMenus ? activeALaCarteMenus[0]?.meals : []
-    const regularMeals = activeMenus ? activeMenus[0].meals : []
+    const regularMeals = activeMenus && activeMenus[0] ? activeMenus[0].meals : []
 
     const mealsToDisplay =
         (activeShift?.id === aLaCarteShift?.id && activeALaCarteMenus ? alacardMeals : regularMeals)?.filter(
