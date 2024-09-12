@@ -45,6 +45,21 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
                 })
             }
         }
+
+        if (identity && roles.RestaurantWorker) {
+            const company = getCompany()
+            if (company.companyCode && company.companyId) {
+                return router.push(`/restaurant/companies/${company.companyCode}/dashboard`)
+            } else {
+                setIsFetchingCompany(true)
+                readUserCompany().then(company => {
+                    setIsFetchingCompany(false)
+                    setCompany(company.companyCode, company.companyId)
+                    setUserCompany(company)
+                })
+            }
+        }
+
     }, [identity, isFetchingIdentity, userCompany])
 
     if (isFetchingCompany || isFetchingIdentity) return <Loader />
