@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
+import { DEFAULT_OFFSET_PAGINATION_REQUEST } from '@/constants';
 import { usePathParams } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { OffsetPagination, TablePlaceholder } from '@/packages/components';
@@ -26,8 +27,8 @@ export const OrdersList = () => {
     const [searchTerm, setSearchTerm] = useState<string | null>(null);
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string| null>(null);
     const [totalCount, setTotalCount] = useState<number>(0);
-    const [pageSize, setPageSize] = useState<number>(10);
-    const [currentPage, setCurrentPage] = useState<number>(0);
+    const [pageSize, setPageSize] = useState<number>(DEFAULT_OFFSET_PAGINATION_REQUEST.size);
+    const [currentPage, setCurrentPage] = useState<number>(DEFAULT_OFFSET_PAGINATION_REQUEST.page);
     const [selectedShift, setSelectedShift] = useState<string | null>(null); // Shift filter state
     const [selectedState, setSelectedState] = useState<string | null>(null); // Order state filter state
     const { data: shifts } = useReadShifts({path: { companyCode }});
@@ -81,33 +82,74 @@ export const OrdersList = () => {
     const columnHelper = createColumnHelper<ReadOrderResponse | ImmediateOrderDetails | ScheduledOrderDetails>();
     const columns = useMemo(() => [
         columnHelper.accessor('number', {
-            header: "Broj porudžbine",
-            cell: info => <strong>{info.getValue()}</strong>,
+            header: () => <div className='text-gray-900 font-bold'>Broj porudžbine</div>,
+            cell: info => <div className='text-gray-500 font-bold'>#{info.getValue()}</div>,
+        }),
+        columnHelper.accessor('orderItems', {
+            header: '',
+            cell: info => {
+                const orderItems = info.getValue();
+
+                const single = (
+                    <div className='relative h-20 w-20 flex-shrink-0 rounded-lg bg-gray-200 shadow'>
+                        <img
+                            src={orderItems[0].imageUrl}
+                            alt={orderItems[0].name}
+                            className='h-20 w-20 rounded-lg object-cover'
+                        />
+                    </div>
+                )
+
+                const multiple = (
+                    <div className='relative grid h-20 w-20 flex-shrink-0 grid-cols-2 gap-1 rounded-lg bg-gray-200 p-2 shadow'>
+                        {orderItems.slice(0, 4).map((item, index) => (
+                            <div key={index} className='h-8 w-8'>
+                                <img
+                                    src={item.imageUrl}
+                                    alt={item.name}
+                                    className='h-full w-full rounded-md object-cover'
+                                />
+                            </div>
+                        ))}
+                        {Array.from({ length: 4 - orderItems.slice(0, 4).length }).map(
+                            (_, index) => (
+                                <div key={index} className='h-8 w-8 rounded-md bg-gray-200'></div>
+                            )
+                        )}
+                    </div>
+                )
+
+                return (
+                    <>
+                    {orderItems.length === 1 ? single : multiple}
+                    </>
+                )
+            }
         }),
         columnHelper.accessor('orderDate', {
-            header: 'Datum',
-            cell: info => <strong>{formatEuropeanDate(info.getValue())}</strong>
+            header: () => <div className='text-gray-900 font-bold'>Datum</div>,
+            cell: info => <div className='text-gray-500 font-bold'>{formatEuropeanDate(info.getValue())}</div>
         }),
         columnHelper.accessor('orderedForShiftId', {
-            header: 'Smena',
+            header: () => <div className='text-gray-900 font-bold'>Smena</div>,
             cell: info => {
                 const shift = shifts?.find(shift => shift.id === info.getValue());
                 const shiftStartTime = shift ? formatTimeWithoutSeconds(shift?.shiftStartAt) : undefined;
                 const shiftEndTime = shift ? formatTimeWithoutSeconds(shift?.shiftEndAt) : undefined;
                 return (
-                    <strong>
+                    <div className='text-gray-500 font-bold'>
                         {shift && `${shiftStartTime} - ${shiftEndTime}`}
-                    </strong>
+                    </div>
                 )
             }
         }),
         columnHelper.accessor('orderItems', {
-            header: 'Cena',
-            cell: info => <strong>{`${info.getValue().reduce((total, item) => total + item.price * item.quantity, 0) || 0} RSD`}</strong>
+            header: () => <div className='text-gray-900 font-bold'>Cena</div>,
+            cell: info => <div className='text-gray-500 font-bold'>{`${info.getValue().reduce((total, item) => total + item.price * item.quantity, 0) || 0} RSD`}</div>
         }),
         columnHelper.accessor('state', {
-            header: 'Stanje',
-            cell: info => <strong>{info.getValue()}</strong>
+            header: () => <div className='text-gray-900 font-bold'>Stanje</div>,
+            cell: info => <div className='text-gray-500 font-bold'>{info.getValue()}</div>
         }),
     ], [shifts]);
 
@@ -121,10 +163,11 @@ export const OrdersList = () => {
         setDebouncedSearchTerm(null);
         setSelectedShift(null);
         setSelectedState(null);
-        if (!date || date.toDateString() !== new Date().toDateString()) {
+        if (!date) {
             setDate(new Date());
         }
-        setCurrentPage(0); // Reset pagination as well
+        setCurrentPage(DEFAULT_OFFSET_PAGINATION_REQUEST.page);
+        setPageSize(DEFAULT_OFFSET_PAGINATION_REQUEST.size);
     };
 
     const handleDateSelection = (dates: Date[] | Date | undefined) => {
