@@ -85,47 +85,6 @@ export const OrdersList = () => {
             header: () => <div className='text-gray-900 font-bold'>Broj porudžbine</div>,
             cell: info => <div className='text-gray-500 font-bold'>#{info.getValue()}</div>,
         }),
-        columnHelper.accessor('orderItems', {
-            header: '',
-            cell: info => {
-                const orderItems = info.getValue();
-
-                const single = (
-                    <div className='relative h-20 w-20 flex-shrink-0 rounded-lg bg-gray-200 shadow'>
-                        <img
-                            src={orderItems[0].imageUrl}
-                            alt={orderItems[0].name}
-                            className='h-20 w-20 rounded-lg object-cover'
-                        />
-                    </div>
-                )
-
-                const multiple = (
-                    <div className='relative grid h-20 w-20 flex-shrink-0 grid-cols-2 gap-1 rounded-lg bg-gray-200 p-2 shadow'>
-                        {orderItems.slice(0, 4).map((item, index) => (
-                            <div key={index} className='h-8 w-8'>
-                                <img
-                                    src={item.imageUrl}
-                                    alt={item.name}
-                                    className='h-full w-full rounded-md object-cover'
-                                />
-                            </div>
-                        ))}
-                        {Array.from({ length: 4 - orderItems.slice(0, 4).length }).map(
-                            (_, index) => (
-                                <div key={index} className='h-8 w-8 rounded-md bg-gray-200'></div>
-                            )
-                        )}
-                    </div>
-                )
-
-                return (
-                    <>
-                    {orderItems.length === 1 ? single : multiple}
-                    </>
-                )
-            }
-        }),
         columnHelper.accessor('orderDate', {
             header: () => <div className='text-gray-900 font-bold'>Datum</div>,
             cell: info => <div className='text-gray-500 font-bold'>{formatEuropeanDate(info.getValue())}</div>
@@ -144,6 +103,7 @@ export const OrdersList = () => {
             }
         }),
         columnHelper.accessor('orderItems', {
+            id: 'orderItemsForPrice',
             header: () => <div className='text-gray-900 font-bold'>Cena</div>,
             cell: info => <div className='text-gray-500 font-bold'>{`${info.getValue().reduce((total, item) => total + item.price * item.quantity, 0) || 0} RSD`}</div>
         }),
