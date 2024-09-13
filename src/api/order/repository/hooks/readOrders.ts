@@ -13,11 +13,12 @@ import { createBaseUrlQuery } from '@/utils'
 import { useQuery } from '@tanstack/react-query'
 import { ReadOrderResponse } from '../../contract'
 import { ORDER_KEYS } from '../keys'
+import { ImmediateOrderDetails, ScheduledOrderDetails } from '@/app/(protected)/newstate'
 
 interface ReadOrdersPath extends CompanyPath {}
 interface ReadOrdersParams extends QueryParams<ReadOrdersPath> {}
 
-const readOrders = ({ path: { companyCode }, query }: ReadOrdersParams): OffsetResultsPromise<ReadOrderResponse> =>
+export const readOrders = ({ path: { companyCode }, query }: ReadOrdersParams): OffsetResultsPromise<ReadOrderResponse | ImmediateOrderDetails | ScheduledOrderDetails> =>
     axiosPrivate.get(`/companies/${companyCode}/orders?${createBaseUrlQuery(query)}`)
 
 interface UseReadOrdersParams extends DefaultQueryParams<ReadOrdersPath>, QueryOptions {}

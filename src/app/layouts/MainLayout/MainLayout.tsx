@@ -49,7 +49,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
         if (identity && roles.RestaurantWorker) {
             const company = getCompany()
             if (company.companyCode && company.companyId) {
-                return router.push(`/restaurant/companies/${company.companyCode}/dashboard`)
+                return router.push(`/restaurant/companies/${company.companyCode}/orders`)
             } else {
                 setIsFetchingCompany(true)
                 readUserCompany().then(company => {
