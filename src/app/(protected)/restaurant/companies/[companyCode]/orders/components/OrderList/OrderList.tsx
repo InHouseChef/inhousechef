@@ -19,7 +19,8 @@ import { OffsetPaginationRequest } from '@/packages/types';
 import { formatEuropeanDate, formatTimeWithoutSeconds, getSerbianLocalDateTime, getToLocalISOString } from '@/utils/date';
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
 import { CalendarIcon, SearchIcon } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import ScheduledOrderOverview from '../ScheduledOrderOverview/ScheduledOrderOverview';
 
 export const OrdersList = () => {
     const { companyCode } = usePathParams<{ companyCode: string }>()
@@ -35,6 +36,8 @@ export const OrdersList = () => {
     const [date, setDate] = useState<Date>(new Date())
     const [isCalendarOpen, setIsCalendarOpen] = useState(false)
     const [isFetching, setIsFetching] = useState(false)
+    const [selectedOrder, setSelectedOrder] = useState<ScheduledOrderDetails | undefined>();
+    const [isOrderOverviewDialogOpen, setIsOrderOverviewDialogOpen] = useState(false);
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -73,46 +76,6 @@ export const OrdersList = () => {
         };
     }, [searchTerm]);
 
-    const sortedShifts = shifts?.slice().sort(
-        (a, b) =>
-            new Date(`1970-01-01T${a.shiftStartAt}`).getTime() -
-            new Date(`1970-01-01T${b.shiftStartAt}`).getTime()
-    );
-
-    const columnHelper = createColumnHelper<ReadOrderResponse | ImmediateOrderDetails | ScheduledOrderDetails>();
-    const columns = useMemo(() => [
-        columnHelper.accessor('number', {
-            header: () => <div className='text-gray-900 font-bold'>Broj porudžbine</div>,
-            cell: info => <div className='text-gray-500 font-bold'>#{info.getValue()}</div>,
-        }),
-        columnHelper.accessor('orderDate', {
-            header: () => <div className='text-gray-900 font-bold'>Datum</div>,
-            cell: info => <div className='text-gray-500 font-bold'>{formatEuropeanDate(info.getValue())}</div>
-        }),
-        columnHelper.accessor('orderedForShiftId', {
-            header: () => <div className='text-gray-900 font-bold'>Smena</div>,
-            cell: info => {
-                const shift = shifts?.find(shift => shift.id === info.getValue());
-                const shiftStartTime = shift ? formatTimeWithoutSeconds(shift?.shiftStartAt) : undefined;
-                const shiftEndTime = shift ? formatTimeWithoutSeconds(shift?.shiftEndAt) : undefined;
-                return (
-                    <div className='text-gray-500 font-bold'>
-                        {shift && `${shiftStartTime} - ${shiftEndTime}`}
-                    </div>
-                )
-            }
-        }),
-        columnHelper.accessor('orderItems', {
-            id: 'orderItemsForPrice',
-            header: () => <div className='text-gray-900 font-bold'>Cena</div>,
-            cell: info => <div className='text-gray-500 font-bold'>{`${info.getValue().reduce((total, item) => total + item.price * item.quantity, 0) || 0} RSD`}</div>
-        }),
-        columnHelper.accessor('state', {
-            header: () => <div className='text-gray-900 font-bold'>Stanje</div>,
-            cell: info => <div className='text-gray-500 font-bold'>{info.getValue()}</div>
-        }),
-    ], [shifts]);
-
     const onPaginationChange = (newPagination: OffsetPaginationRequest): void => {
         setCurrentPage(newPagination.page);
         setPageSize(newPagination.size);
@@ -123,7 +86,7 @@ export const OrdersList = () => {
         setDebouncedSearchTerm(null);
         setSelectedShift(null);
         setSelectedState(null);
-        if (!date) {
+        if (!date || date.toDateString() !== new Date().toDateString()) {
             setDate(new Date());
         }
         setCurrentPage(DEFAULT_OFFSET_PAGINATION_REQUEST.page);
@@ -150,6 +113,57 @@ export const OrdersList = () => {
 
         setDate(dates[0])
     }
+
+    const onOrderClick = useCallback((order: ScheduledOrderDetails) => {
+        console.log(order)
+        setSelectedOrder(order);
+        setIsOrderOverviewDialogOpen(true);
+    }, []);
+
+    const onOrderDialogClose = () => {
+        setSelectedOrder(undefined);
+        setIsOrderOverviewDialogOpen(false);
+    }
+
+    const sortedShifts = shifts?.slice().sort(
+        (a, b) =>
+            new Date(`1970-01-01T${a.shiftStartAt}`).getTime() -
+            new Date(`1970-01-01T${b.shiftStartAt}`).getTime()
+    );
+
+    const columnHelper = createColumnHelper<ReadOrderResponse | ImmediateOrderDetails | ScheduledOrderDetails>();
+    const columns = useMemo(() => [
+        columnHelper.accessor('number', {
+            header: () => <div className='text-gray-900 font-bold'>Broj porudžbine</div>,
+            cell: info => <div className='text-gray-500 font-bold cursor-pointer'>#{info.getValue()}</div>,
+        }),
+        columnHelper.accessor('orderDate', {
+            header: () => <div className='text-gray-900 font-bold'>Datum</div>,
+            cell: info => <div className='text-gray-500 font-bold'>{formatEuropeanDate(info.getValue())}</div>
+        }),
+        columnHelper.accessor('orderedForShiftId', {
+            header: () => <div className='text-gray-900 font-bold'>Smena</div>,
+            cell: info => {
+                const shift = shifts?.find(shift => shift.id === info.getValue());
+                const shiftStartTime = shift ? formatTimeWithoutSeconds(shift?.shiftStartAt) : undefined;
+                const shiftEndTime = shift ? formatTimeWithoutSeconds(shift?.shiftEndAt) : undefined;
+                return (
+                    <div className='text-gray-500 font-bold'>
+                        {shift && `${shiftStartTime} - ${shiftEndTime}`}
+                    </div>
+                )
+            }
+        }),
+        columnHelper.accessor('orderItems', {
+            id: 'orderItemsForPrice',
+            header: () => <div className='text-gray-900 font-bold'>Cena</div>,
+            cell: info => <div className='text-gray-500 font-bold'>{`${info.getValue().reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2) || 0} RSD`}</div>
+        }),
+        columnHelper.accessor('state', {
+            header: () => <div className='text-gray-900 font-bold'>Stanje</div>,
+            cell: info => <div className='text-gray-500 font-bold'>{info.getValue()}</div>
+        }),
+    ], [shifts]);
 
     return (
         <div>
@@ -224,7 +238,7 @@ export const OrdersList = () => {
 
             <div className='px-4 overflow-y-auto'>
                 {isFetching && <TablePlaceholder />}
-                {!isFetching && <DataTable columns={columns as ColumnDef<ReadOrderResponse, unknown>[]} data={ordersData} />}
+                {!isFetching && <DataTable columns={columns as ColumnDef<ReadOrderResponse, unknown>[]} data={ordersData} onRowClick={onOrderClick} />}
 
                 <div className='flex flex-row py-4 items-center justify-between'>
                     <div className='flex w-16 justify-end'>
@@ -255,6 +269,13 @@ export const OrdersList = () => {
                         visiblePages={5} />
                 </div>
             </div>
+
+                <ScheduledOrderOverview
+                    order={selectedOrder}
+                    isOpen={isOrderOverviewDialogOpen}
+                    onClose={onOrderDialogClose}
+                    shifts={shifts || []}
+                />
         </div>
     );
 };

@@ -8,10 +8,10 @@ import { TopNavLogo } from '@/components/TopNav/components/TopNavLogo'
 import { MainNavLink } from '../../types'
 
 export const RESTAURANT_LINKS: MainNavLink[] = [
-    {
-        label: 'Pregled',
-        path: 'dashboard'
-    },
+    // {
+    //     label: 'Pregled',
+    //     path: 'dashboard'
+    // },
     {
         label: 'Porudžbine',
         path: 'orders'
