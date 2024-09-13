@@ -6,15 +6,18 @@ import { useReadShifts } from '@/api/shifts';
 import { ImmediateOrderDetails, ScheduledOrderDetails } from '@/app/(protected)/newstate';
 import { DataTable } from '@/components';
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
 import { usePathParams } from '@/hooks';
-import { OffsetPagination } from '@/packages/components';
+import { cn } from '@/lib/utils';
+import { OffsetPagination, TablePlaceholder } from '@/packages/components';
 import { OffsetPaginationRequest } from '@/packages/types';
-import { DateLocalIso } from '@/types';
-import { formatTimeWithoutSeconds, getToLocalISOString } from '@/utils/date';
+import { formatEuropeanDate, formatTimeWithoutSeconds, getSerbianLocalDateTime, getToLocalISOString } from '@/utils/date';
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
-import { SearchIcon } from 'lucide-react';
+import { CalendarIcon, SearchIcon } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 
 export const OrdersList = () => {
@@ -27,32 +30,37 @@ export const OrdersList = () => {
     const [currentPage, setCurrentPage] = useState<number>(0);
     const [selectedShift, setSelectedShift] = useState<string | null>(null); // Shift filter state
     const [selectedState, setSelectedState] = useState<string | null>(null); // Order state filter state
-    const activeDay = getToLocalISOString(new Date()).split('T')[0] as DateLocalIso;
     const { data: shifts } = useReadShifts({path: { companyCode }});
+    const [date, setDate] = useState<Date>(new Date())
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false)
+    const [isFetching, setIsFetching] = useState(false)
 
     useEffect(() => {
         const fetchOrders = async () => {
             const shift = selectedShift !== 'All' ? selectedShift : undefined;
             const state = selectedState !== 'All' ? selectedState : undefined;
+            const formattedDate = date ? getToLocalISOString(date).split('T')[0] : undefined;
 
+            setIsFetching(true);
             const res = await readScheduledOrders({
                 path: { companyCode },
                 query: {
                     pagination: { page: currentPage, size: pageSize },
                     filter: { 
-                        forDate: activeDay, 
+                        forDate: formattedDate, 
                         searchByNumber: debouncedSearchTerm,
                         shiftId: shift, // Add shift filter if selected
                         orderState: state,   // Add order state filter if selected
                     }
                 },
             });
+            setIsFetching(false);
             setOrdersData(res.results || []);
             setTotalCount(res.totalCount || 0);
         };
 
         fetchOrders();
-    }, [pageSize, currentPage, debouncedSearchTerm, selectedShift, selectedState]);
+    }, [pageSize, currentPage, debouncedSearchTerm, selectedShift, selectedState, date]);
 
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -78,7 +86,7 @@ export const OrdersList = () => {
         }),
         columnHelper.accessor('orderDate', {
             header: 'Datum',
-            cell: info => <strong>{info.getValue()}</strong>
+            cell: info => <strong>{formatEuropeanDate(info.getValue())}</strong>
         }),
         columnHelper.accessor('orderedForShiftId', {
             header: 'Smena',
@@ -113,8 +121,32 @@ export const OrdersList = () => {
         setDebouncedSearchTerm(null);
         setSelectedShift(null);
         setSelectedState(null);
+        if (!date || date.toDateString() !== new Date().toDateString()) {
+            setDate(new Date());
+        }
         setCurrentPage(0); // Reset pagination as well
     };
+
+    const handleDateSelection = (dates: Date[] | Date | undefined) => {
+        setIsCalendarOpen(false);
+
+        if (dates === undefined) {
+            setDate(new Date())
+            return
+        }
+
+        if (!Array.isArray(dates)) {
+            setDate(dates)
+            return
+        }
+
+        if (dates.length === 0) {
+            setDate(new Date())
+            return
+        }
+
+        setDate(dates[0])
+    }
 
     return (
         <div>
@@ -126,6 +158,29 @@ export const OrdersList = () => {
                     iconPosition='right'
                     onChange={(e) => setSearchTerm(e.target.value)} 
                     value={searchTerm || ''} />
+
+                <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                    <PopoverTrigger asChild>
+                            <Button
+                            variant={"outline"}
+                            className={cn(
+                                "justify-start text-left text-sm gap-2",
+                                !date && "text-muted-foreground"
+                            )}
+                            >
+                            <CalendarIcon className="h-4 w-4" />
+                            {<div className='w-20'>{date ? date.toLocaleDateString('sr-RS') : 'Izaberi datum'}</div>}
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                            mode="single"
+                            selected={date}
+                            onSelect={handleDateSelection}
+                            initialFocus
+                            />
+                    </PopoverContent>
+                </Popover>
 
                 {/* Shift Filter */}
                 <Select
@@ -165,7 +220,8 @@ export const OrdersList = () => {
             </div>
 
             <div className='px-4 overflow-y-auto'>
-                <DataTable columns={columns as ColumnDef<ReadOrderResponse, unknown>[]} data={ordersData} />
+                {isFetching && <TablePlaceholder />}
+                {!isFetching && <DataTable columns={columns as ColumnDef<ReadOrderResponse, unknown>[]} data={ordersData} />}
 
                 <div className='flex flex-row py-4 items-center justify-between'>
                     <div className='flex w-16 justify-end'>
