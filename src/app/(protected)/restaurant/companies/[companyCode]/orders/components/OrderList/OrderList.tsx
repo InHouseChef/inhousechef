@@ -10,17 +10,18 @@ import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Skeleton } from '@/components/ui/skeleton';
 import { DEFAULT_OFFSET_PAGINATION_REQUEST } from '@/constants';
 import { usePathParams } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { OffsetPagination, TablePlaceholder } from '@/packages/components';
 import { OffsetPaginationRequest } from '@/packages/types';
-import { formatEuropeanDate, formatTimeWithoutSeconds, getSerbianLocalDateTime, getToLocalISOString } from '@/utils/date';
+import { formatEuropeanDate, formatTimeWithoutSeconds, getToLocalISOString } from '@/utils/date';
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
 import { CalendarIcon, SearchIcon } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import ScheduledOrderOverview from '../ScheduledOrderOverview/ScheduledOrderOverview';
+import { ReadUserResponse } from '@/api/users';
+import { readUsersByIds } from '@/api/users/repository/hooks/readUsersByIds';
 
 export const OrdersList = () => {
     const { companyCode } = usePathParams<{ companyCode: string }>()
@@ -38,6 +39,7 @@ export const OrdersList = () => {
     const [isFetching, setIsFetching] = useState(false)
     const [selectedOrder, setSelectedOrder] = useState<ScheduledOrderDetails | undefined>();
     const [isOrderOverviewDialogOpen, setIsOrderOverviewDialogOpen] = useState(false);
+    const [companyUsers, setCompanyUsers] = useState<ReadUserResponse[]>([]);
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -53,11 +55,22 @@ export const OrdersList = () => {
                     filter: { 
                         forDate: formattedDate, 
                         searchByNumber: debouncedSearchTerm,
-                        shiftId: shift, // Add shift filter if selected
-                        orderState: state,   // Add order state filter if selected
+                        shiftId: shift,
+                        orderState: state,
                     }
                 },
             });
+            if (res.results.length > 0) {
+                const companyUsers = await readUsersByIds({
+                    path: { companyCode },
+                    query: {
+                        filter: {
+                            companyUserIds: [...new Set(res.results.map(order => order.customerId))]
+                        }
+                    }
+                })
+                setCompanyUsers(companyUsers.companyUsers)
+            }
             setIsFetching(false);
             setOrdersData(res.results || []);
             setTotalCount(res.totalCount || 0);
@@ -115,7 +128,6 @@ export const OrdersList = () => {
     }
 
     const onOrderClick = useCallback((order: ScheduledOrderDetails) => {
-        console.log(order)
         setSelectedOrder(order);
         setIsOrderOverviewDialogOpen(true);
     }, []);
@@ -275,6 +287,7 @@ export const OrdersList = () => {
                     isOpen={isOrderOverviewDialogOpen}
                     onClose={onOrderDialogClose}
                     shifts={shifts || []}
+                    user={companyUsers.find(user => user.id === selectedOrder?.customerId)}
                 />
         </div>
     );
