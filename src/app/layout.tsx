@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
                     type: 'image/x-icon'
                 },
                 {
-                    url: '/images/favicon-dark.svg',
+                    url: '/images/favicon-light.svg',
                     media: '(prefers-color-scheme: dark)',
                     rel: 'icon',
                     type: 'image/x-icon'
