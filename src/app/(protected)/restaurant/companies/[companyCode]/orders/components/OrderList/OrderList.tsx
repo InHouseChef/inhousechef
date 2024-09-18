@@ -250,36 +250,41 @@ export const OrdersList = () => {
 
             <div className='px-4 overflow-y-auto'>
                 {isFetching && <TablePlaceholder />}
-                {!isFetching && <DataTable columns={columns as ColumnDef<ReadOrderResponse, unknown>[]} data={ordersData} onRowClick={onOrderClick} />}
+                {
+                    !isFetching && 
+                    <>
+                        <DataTable columns={columns as ColumnDef<ReadOrderResponse, unknown>[]} data={ordersData} onRowClick={onOrderClick} />
 
-                <div className='flex flex-row py-4 items-center justify-between'>
-                    <div className='flex w-16 justify-end'>
-                        <Select
-                            onValueChange={value => {
-                                setPageSize(Number(value))
-                                setCurrentPage(0) // Reset to first page when page size changes
-                            }}
-                            value={String(pageSize)}>
-                            <SelectTrigger>
-                                <SelectValue placeholder='Orders per page' />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value='10'>10</SelectItem>
-                                <SelectItem value='25'>25</SelectItem>
-                                <SelectItem value='50'>50</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <OffsetPagination 
-                        pagination={{
-                            page: currentPage,
-                            size: pageSize
-                        }} 
-                        totalCount={totalCount}
-                        onPaginationChange={onPaginationChange}
-                        showBoundaryPages={true}
-                        visiblePages={5} />
-                </div>
+                        <div className='flex flex-row py-4 items-center justify-between'>
+                            <div className='flex w-16 justify-end'>
+                                <Select
+                                    onValueChange={value => {
+                                        setPageSize(Number(value))
+                                        setCurrentPage(0) // Reset to first page when page size changes
+                                    }}
+                                    value={String(pageSize)}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder='Orders per page' />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value='10'>10</SelectItem>
+                                        <SelectItem value='25'>25</SelectItem>
+                                        <SelectItem value='50'>50</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <OffsetPagination 
+                                pagination={{
+                                    page: currentPage,
+                                    size: pageSize
+                                }} 
+                                totalCount={totalCount}
+                                onPaginationChange={onPaginationChange}
+                                showBoundaryPages={true}
+                                visiblePages={5} />
+                        </div>
+                    </>
+                }
             </div>
 
                 <ScheduledOrderOverview
