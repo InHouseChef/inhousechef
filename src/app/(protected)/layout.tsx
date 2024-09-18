@@ -17,7 +17,6 @@ export default function Layout({ children }: ProtectedLayoutProps) {
         return (
             <ClientProtectedLayout>
                 <div className='flex flex-grow flex-col overflow-x-clip'>
-                    <TopNav />
                     {children}
                 </div>
             </ClientProtectedLayout>

@@ -2,24 +2,23 @@ import { MainNavLink } from '../types'
 
 export const LINKS: MainNavLink[] = [
     {
-        label: 'Dashboard',
+        label: 'Pregled',
         path: 'admin/dashboard'
     },
     {
-        label: 'Companies',
+        label: 'Kompanije',
         path: 'admin/companies'
     },
     {
-        label: 'Daily Menus',
+        label: 'Dnevni meniji',
         path: 'admin/daily-menus'
     },
     {
-        label: 'A La Card Menus',
+        label: 'A La Carte meniji',
         path: 'admin/alacard-menus'
     },
     {
-        label: 'Meals',
+        label: 'Obroci',
         path: 'admin/meals'
     }
 ]
-

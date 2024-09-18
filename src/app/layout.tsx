@@ -38,7 +38,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <QueryProvider>
                 <RoleProvider>
                     <DynamicTheme>
-                    <MainLayout>{children}</MainLayout>
+                        <MainLayout>{children}</MainLayout>
                     </DynamicTheme>
                 </RoleProvider>
             </QueryProvider>

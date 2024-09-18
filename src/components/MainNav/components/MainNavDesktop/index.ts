@@ -1,1 +1,0 @@
-export { MainNavDesktop } from './MainNavDesktop'

@@ -5,12 +5,12 @@ import { deleteDailyMenu } from '@/api/daily-menus/repository/hooks/deleteDailyM
 import { ReadMealResponse, readMeals } from '@/api/meals'
 import { Header, Loader } from '@/components'
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
 import { Form } from '@/components/ui/form'
 import { DEFAULT_COLLECTION_OFFSET_PAGINATION_REQUEST } from '@/constants'
 import { toDateIso } from '@/utils/date'
 import { useEffect, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
+import { Calendar } from './Calendar/Calendar'
 
 interface MenuScheduleFormData {
     meals: ReadMealResponse[]

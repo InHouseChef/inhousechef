@@ -8,6 +8,7 @@ interface UserResponse {
     fullName: string
     aLaCardPermission: boolean
     acceptedTerms: boolean
+    uniqueIdentifier?: string
 }
 
 export interface ReadMyUserResponse {
