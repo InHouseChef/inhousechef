@@ -53,7 +53,7 @@ const MainMenu: React.FC = () => {
     const mealsToDisplay =
         (activeShift?.id === aLaCarteShift?.id && activeALaCarteMenus ? alacardMeals : regularMeals)?.filter(
             meal => meal.type === selectedMealType
-        ) || []
+        ).sort((a, b) => b.price - a.price) || []
 
     const mealsInActiveOrder = !isOrderDisabled && selectedOrder?.orderItems.filter(meal => meal.type === selectedMealType) || []
 
