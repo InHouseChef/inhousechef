@@ -1,16 +1,22 @@
 'use client'
 
-import { RequireCompanyAuthorization } from '@/components'
+import { RequireCompanyAuthorization, TopNav } from '@/components'
 import { NewCompanyOrderForm } from './components/NewCompanyOrderForm/NewCompanyOrderForm'
 
 export default function CompanyPage() {
     return (
         <>
             <RequireCompanyAuthorization role='Employee'>
-                <NewCompanyOrderForm />
+                <>
+                    <TopNav />
+                    <NewCompanyOrderForm />
+                </>
             </RequireCompanyAuthorization>
             <RequireCompanyAuthorization role='CompanyManager'>
-                <NewCompanyOrderForm />
+                <>
+                    <TopNav />
+                    <NewCompanyOrderForm />
+                </>
             </RequireCompanyAuthorization>
         </>
     )

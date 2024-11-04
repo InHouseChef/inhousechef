@@ -12,7 +12,6 @@ export const useReadUserCompany = (params?: UseReadUserCompanyParams) => {
     const { identity, jwt } = useIdentity()
 
     return useQuery({
-        gcTime: 0,
         queryKey: COMPANY_USER_KEYS.base,
         queryFn: () => readUserCompany(),
         enabled:

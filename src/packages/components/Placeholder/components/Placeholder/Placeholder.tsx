@@ -11,7 +11,7 @@ export const Placeholder = ({ w = '100%', h = 40, r = 4 }: PlaceholderProps) => 
 
     return (
         <div
-            className='bg-grey500 animate-pulse'
+            className='bg-gray-300 animate-pulse'
             style={{
                 width: wValue,
                 height: hValue,
