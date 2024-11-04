@@ -5,7 +5,7 @@ export const getCompanyMetadataIcons = async () => {
 
     const lightFavicon = userCompany.branding?.logoUrl || '/images/favicon-light.svg'
 
-    const darkFavicon = userCompany.branding?.logoUrl || '/images/favicon-dark.svg'
+    const darkFavicon = userCompany.branding?.logoUrl || '/images/favicon-light.svg'
 
     return {
         icon: [

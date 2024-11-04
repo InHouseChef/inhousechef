@@ -18,3 +18,10 @@ export interface CreateShiftResponse extends Shift {
     id: string
     companyId: string
 }
+
+export interface ALaCarteShift {
+    id: string
+    shiftStartAt: Time
+    shiftEndAt: Time
+}
+

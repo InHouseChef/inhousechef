@@ -2,8 +2,8 @@ import { DateLocalIso, DateTimeIsoUtc, Time } from "@/types";
 import { formatEuropeanDate, formatTimeWithoutSeconds, getSerbianLocalDateTime } from "@/utils/date";
 
 export type OrderDetailsProps = {
-    number: string,
-    orderDate: DateLocalIso,
+    number?: string,
+    orderDate?: DateLocalIso,
     orderCreatedAt?: DateTimeIsoUtc,
     shiftStart?: Time,
     shiftEnd?: Time
@@ -16,7 +16,7 @@ export const OrderDetails = ({ number, orderDate, orderCreatedAt, shiftStart, sh
     const shiftEndTime = new Date(`${orderDate}T${shiftEnd}`);
 
     const serbianLocale = 'sr-RS';
-    const orderDateFormatted = formatEuropeanDate(new Date(orderDate));
+    const orderDateFormatted = orderDate ? formatEuropeanDate(new Date(orderDate)) : undefined;
     const shiftStartTimeFormatted = formatTimeWithoutSeconds(shiftStartTime.toLocaleTimeString(serbianLocale));
     const shiftEndTimeFormatted = formatTimeWithoutSeconds(shiftEndTime.toLocaleTimeString(serbianLocale));
     const orderCreatedAtFormatted = orderCreatedAt ? getSerbianLocalDateTime(orderCreatedAt) : undefined;
@@ -25,14 +25,18 @@ export const OrderDetails = ({ number, orderDate, orderCreatedAt, shiftStart, sh
 
     return (
         <div className='flex flex-col w-full'>
-            <div className='flex flex-row items-center justify-between'>
-                <p className='text-center text-sm text-gray-700'>Broj porudžbine</p>
-                <p className='text-center text-sm text-gray-700'>#<strong>{number}</strong></p>
-            </div>
-            <div className='flex flex-row items-center justify-between'>
-                <p className='text-center text-sm text-gray-700'>Porudžbina za dan</p>
-                <p className='text-center text-sm text-gray-700'><strong>{orderDateFormatted}</strong></p>
-            </div>
+            {number && (
+                <div className='flex flex-row items-center justify-between'>
+                    <p className='text-center text-sm text-gray-700'>Broj porudžbine</p>
+                    <p className='text-center text-sm text-gray-700'>#<strong>{number}</strong></p>
+                </div>
+            )}
+            {orderDate && (
+                <div className='flex flex-row items-center justify-between'>
+                    <p className='text-center text-sm text-gray-700'>Porudžbina za dan</p>
+                    <p className='text-center text-sm text-gray-700'><strong>{orderDateFormatted}</strong></p>
+                </div>
+            )}
             {shiftStart && shiftEnd && (
                 <div className='flex flex-row items-center justify-between'>
                     <p className='text-center text-sm text-gray-700'>Smena</p>
