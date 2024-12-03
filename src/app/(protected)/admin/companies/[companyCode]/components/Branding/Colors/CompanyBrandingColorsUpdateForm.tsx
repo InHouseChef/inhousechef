@@ -8,7 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { RgbaColorPicker } from 'react-colorful'
+import { RgbColorPicker } from 'react-colorful'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -85,9 +85,9 @@ export const CompanyBrandingColorsUpdateForm = ({ companyCode }: CompanyUpdateFo
         return { r, g, b, a }
     }
 
-    const rgbaToHex = ({ r, g, b, a }: { r: number; g: number; b: number; a: number }) =>
+    const rgbToHex = ({ r, g, b }: { r: number; g: number; b: number; }) =>
         `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}${Math.round(
-            a * 255
+            1 * 255
         )
             .toString(16)
             .padStart(2, '0')}`
@@ -143,9 +143,9 @@ export const CompanyBrandingColorsUpdateForm = ({ companyCode }: CompanyUpdateFo
                                 <FormItem>
                                     <FormLabel>Primary Color</FormLabel>
                                     <FormControl>
-                                        <RgbaColorPicker
+                                        <RgbColorPicker
                                             color={hexToRgba(primaryColor)}
-                                            onChange={color => setPrimaryColor(rgbaToHex(color))}
+                                            onChange={color => setPrimaryColor(rgbToHex(color))}
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -159,9 +159,9 @@ export const CompanyBrandingColorsUpdateForm = ({ companyCode }: CompanyUpdateFo
                                 <FormItem>
                                     <FormLabel>Secondary Color</FormLabel>
                                     <FormControl>
-                                        <RgbaColorPicker
+                                        <RgbColorPicker
                                             color={hexToRgba(secondaryColor)}
-                                            onChange={color => setSecondaryColor(rgbaToHex(color))}
+                                            onChange={color => setSecondaryColor(rgbToHex(color))}
                                         />
                                     </FormControl>
                                     <FormMessage />

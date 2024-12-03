@@ -23,7 +23,7 @@ const config = {
         },
         extend: {
             dropShadow: {
-                primary: '0 25px 25px rgba(var(--color-primary), 0.15)'
+                primary: '0 25px 25px rgba(var(--color-primary) 0.15)'
             },
             fontFamily: {
                 satoshi: ['var(--font-satoshi)']
@@ -35,11 +35,11 @@ const config = {
                 background: 'hsl(var(--background))',
                 foreground: 'hsl(var(--foreground))',
                 primary: {
-                    DEFAULT: 'var(--color-primary)',
+                    DEFAULT: 'rgba(var(--color-primary), <alpha-value>)',
                     foreground: 'hsl(var(--primary-foreground))'
                 },
                 secondary: {
-                    DEFAULT: 'var(--color-secondary)',
+                    DEFAULT: 'rgba(var(--color-primary), <alpha-value>)',
                     foreground: 'hsl(var(--secondary-foreground))'
                 },
                 destructive: {
@@ -69,7 +69,7 @@ const config = {
                 sm: 'calc(var(--radius) - 4px)'
             },
             boxShadow: {
-                primary: '0px 10px 20px rgba(0,0,0), 0.15)'
+                primary: '0px 10px 20px rgba(0,0,0) 0.15)'
             },
             keyframes: {
                 'accordion-down': {
