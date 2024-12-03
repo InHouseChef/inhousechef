@@ -85,7 +85,7 @@ export const CompanyBrandingColorsUpdateForm = ({ companyCode }: CompanyUpdateFo
         return { r, g, b, a }
     }
 
-    const rgbToHex = ({ r, g, b, a }: { r: number; g: number; b: number; a: number }) =>
+    const rgbToHex = ({ r, g, b }: { r: number; g: number; b: number; }) =>
         `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}${Math.round(
             1 * 255
         )
